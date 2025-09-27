@@ -1,0 +1,696 @@
+/* Visual Comments Frontend Styles */
+
+// Variables
+$primary-color: #2271b1;
+$danger-color: #d63638;
+$warning-color: #dba617;
+$success-color: #00a32a;
+$text-color: #1d2327;
+$border-color: #c3c4c7;
+$background-color: #fff;
+$overlay-bg: rgba(0, 0, 0, 0.8);
+
+// Base styles
+.cht-visual-comments {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  
+  * {
+    box-sizing: border-box;
+  }
+}
+
+// Admin Bar Toggle Status
+#wp-admin-bar-cht-toggle {
+  .cht-toggle-status {
+    color: #a7aaad;
+    font-weight: normal;
+    
+    &.active {
+      color: $success-color;
+      font-weight: bold;
+    }
+  }
+}
+
+// Toggle Button
+.cht-toggle-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  background: $background-color;
+  border-radius: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  
+  &.active {
+    background: $primary-color;
+    color: white;
+    
+    .cht-toggle-btn {
+      background: transparent;
+      color: inherit;
+    }
+  }
+  
+  .cht-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: $text-color;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+  }
+  
+  .cht-toggle-hide {
+    padding: 12px 8px;
+    background: transparent;
+    border: none;
+    border-left: 1px solid $border-color;
+    cursor: pointer;
+    color: #646970;
+    font-size: 16px;
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+  }
+  
+  .cht-comments-count {
+    margin-left: 4px;
+    font-size: 12px;
+    opacity: 0.8;
+  }
+}
+
+// Overlay
+.cht-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: $overlay-bg;
+  z-index: 99998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+  cursor: pointer;
+  
+  .cht-overlay-message {
+    background: $background-color;
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 400px;
+    text-align: center;
+    animation: slideUp 0.4s ease;
+    position: relative;
+    cursor: default;
+    
+    .cht-overlay-close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #646970;
+      
+      &:hover {
+        color: $danger-color;
+      }
+    }
+    
+    h3 {
+      margin: 0 0 10px 0;
+      color: $primary-color;
+      font-size: 18px;
+    }
+    
+    p {
+      margin: 0 0 20px 0;
+      color: #646970;
+    }
+    
+    .cht-overlay-hint {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #f0f0f1;
+      
+      small {
+        color: #a0a5aa;
+        font-style: italic;
+      }
+    }
+  }
+  
+  .cht-overlay-instructions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+  }
+  
+  .cht-instruction-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    
+    .cht-instruction-icon {
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+    }
+    
+    span:last-child {
+      font-size: 14px;
+      color: $text-color;
+    }
+  }
+}
+
+// Comment Popup
+.cht-comment-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cht-comment-popup {
+  background: $background-color;
+  border-radius: 8px;
+  width: 350px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  animation: popupSlideIn 0.2s ease;
+  
+  .cht-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid $border-color;
+    
+    h4 {
+      margin: 0;
+      font-size: 16px;
+      color: $text-color;
+    }
+    
+    .cht-popup-close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #646970;
+      padding: 4px;
+      
+      &:hover {
+        color: $danger-color;
+      }
+    }
+  }
+  
+  .cht-popup-body {
+    padding: 20px;
+    
+    .cht-element-info {
+      margin-bottom: 12px;
+      
+      small {
+        color: #646970;
+        font-size: 12px;
+      }
+      
+      code {
+        background: #f0f0f1;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 11px;
+      }
+    }
+    
+    .cht-comment-textarea {
+      width: 100%;
+      border: 1px solid $border-color;
+      border-radius: 4px;
+      padding: 12px;
+      font-size: 14px;
+      resize: vertical;
+      
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+        box-shadow: 0 0 0 1px $primary-color;
+      }
+    }
+  }
+  
+  .cht-popup-footer {
+    padding: 16px 20px;
+    border-top: 1px solid $border-color;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+}
+
+// Comments Display Container
+.cht-comments-display {
+  position: relative;
+  pointer-events: none; // Allow clicks to pass through to page elements
+  
+  // Ensure markers are clickable
+  .cht-comment-marker {
+    pointer-events: auto;
+  }
+}
+
+// Comment Markers
+.cht-comment-marker {
+  position: absolute;
+  cursor: pointer;
+  z-index: 10000;
+  pointer-events: auto;
+  
+  .cht-marker-dot {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: $danger-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    border: 3px solid white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+  
+  .cht-marker-pulse {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(214, 54, 56, 0.3);
+    animation: pulse 2s infinite;
+  }
+  
+  &.selected .cht-marker-dot {
+    transform: scale(1.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+  
+  &.in_progress .cht-marker-dot {
+    background: $warning-color;
+  }
+  
+  &.resolved .cht-marker-dot {
+    background: $success-color;
+  }
+}
+
+// Comment Detail Popup
+.cht-comment-detail-popup {
+  background: $background-color;
+  border-radius: 8px;
+  width: 380px;
+  max-width: 90vw;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  animation: popupSlideIn 0.2s ease;
+  
+  .cht-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid $border-color;
+    cursor: move;
+    background: #f9f9f9;
+    
+    .cht-popup-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      
+      strong {
+        color: $text-color;
+        font-size: 14px;
+      }
+    }
+    
+    .cht-status-badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      color: white;
+      font-size: 11px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    .cht-popup-close {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: #646970;
+      padding: 4px;
+      
+      &:hover {
+        color: $danger-color;
+      }
+    }
+  }
+  
+  .cht-popup-content {
+    padding: 16px;
+  }
+  
+  .cht-comment-screenshot {
+    margin-bottom: 16px;
+    
+    img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid $border-color;
+      
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+  
+  .cht-comment-content {
+    margin-bottom: 16px;
+    
+    .cht-comment-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      
+      strong {
+        color: $text-color;
+        font-size: 13px;
+      }
+      
+      .cht-comment-date {
+        font-size: 11px;
+        color: #646970;
+      }
+    }
+    
+    .cht-comment-text {
+      color: $text-color;
+      line-height: 1.5;
+      margin: 0;
+    }
+    
+    .cht-element-info {
+      margin-top: 8px;
+      
+      small {
+        color: #646970;
+        font-size: 11px;
+      }
+      
+      code {
+        background: #f0f0f1;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 10px;
+      }
+      
+      .cht-goto-element {
+        background: $primary-color;
+        color: white;
+        border: none;
+        padding: 4px 8px;
+        border-radius: 3px;
+        font-size: 10px;
+        margin-left: 8px;
+        cursor: pointer;
+        
+        &:hover {
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+  
+  .cht-status-controls {
+    margin-bottom: 16px;
+    
+    label {
+      font-size: 12px;
+      color: $text-color;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .cht-status-select {
+      padding: 6px 8px;
+      border: 1px solid $border-color;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+  }
+  
+  .cht-replies {
+    margin-bottom: 16px;
+    
+    h5 {
+      margin: 0 0 12px 0;
+      font-size: 13px;
+      color: $text-color;
+    }
+    
+    .cht-reply {
+      background: #f9f9f9;
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      
+      .cht-reply-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+        
+        strong {
+          font-size: 12px;
+          color: $text-color;
+        }
+        
+        .cht-reply-date {
+          font-size: 10px;
+          color: #646970;
+        }
+      }
+      
+      p {
+        margin: 0;
+        font-size: 13px;
+        color: $text-color;
+        line-height: 1.4;
+      }
+    }
+  }
+  
+  .cht-reply-form {
+    margin-bottom: 12px;
+    
+    textarea {
+      width: 100%;
+      border: 1px solid $border-color;
+      border-radius: 4px;
+      padding: 10px;
+      font-size: 13px;
+      margin-bottom: 10px;
+      
+      &:focus {
+        outline: none;
+        border-color: $primary-color;
+      }
+    }
+    
+    .cht-reply-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+  }
+  
+  .cht-comment-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+}
+
+// Buttons
+.cht-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  &.cht-btn-primary {
+    background: $primary-color;
+    color: white;
+    
+    &:hover:not(:disabled) {
+      background: darken($primary-color, 10%);
+    }
+  }
+  
+  &.cht-btn-secondary {
+    background: $border-color;
+    color: $text-color;
+    
+    &:hover:not(:disabled) {
+      background: darken($border-color, 10%);
+    }
+  }
+}
+
+// Spinner
+.cht-spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+// Animations
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popupSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .cht-comment-popup,
+  .cht-comment-detail-popup {
+    width: 90vw;
+    max-width: 350px;
+  }
+  
+  .cht-toggle-button {
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  .cht-overlay .cht-overlay-message {
+    margin: 20px;
+    padding: 20px;
+  }
+}
+
+// No comments message
+.cht-no-comments {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  pointer-events: none;
+  
+  p {
+    margin: 0;
+    color: #646970;
+    font-style: italic;
+  }
+}

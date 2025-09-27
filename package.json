@@ -1,0 +1,37 @@
+{
+  "name": "client-handoff-toolkit",
+  "version": "1.0.0",
+  "description": "A comprehensive solution for agency-client transitions with visual commenting system",
+  "main": "index.js",
+  "scripts": {
+    "build": "wp-scripts build",
+    "start": "wp-scripts start",
+    "dev": "wp-scripts start",
+    "format": "wp-scripts format",
+    "lint:css": "wp-scripts lint-style",
+    "lint:js": "wp-scripts lint-js",
+    "packages-update": "wp-scripts packages-update"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^26.0.0"
+  },
+  "dependencies": {
+    "@wordpress/element": "^5.0.0",
+    "@wordpress/api-fetch": "^6.0.0",
+    "@wordpress/components": "^25.0.0",
+    "@wordpress/i18n": "^4.0.0",
+    "@wordpress/data": "^9.0.0",
+    "@wordpress/hooks": "^3.0.0",
+    "html2canvas": "^1.4.1",
+    "react-draggable": "^4.4.5"
+  },
+  "author": "Your Name",
+  "license": "GPL-2.0-or-later",
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "visual-comments",
+    "client-handoff",
+    "elementor"
+  ]
+}
