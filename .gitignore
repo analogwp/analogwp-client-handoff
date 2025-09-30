@@ -6,6 +6,12 @@ vendor/
 assets/dist/
 build/
 
+# Distribution packages
+build-package/
+*.zip
+*-testing/
+*-release/
+
 # Development
 .DS_Store
 .env
@@ -44,3 +50,12 @@ debug.log
 package-lock.json
 yarn.lock
 composer.lock
+
+# Testing and documentation generated files
+TESTING_CHECKLIST.md
+DISTRIBUTION_READY.md
+
+# Development tools
+.phpunit.result.cache
+coverage/
+.nyc_output/

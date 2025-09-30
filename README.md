@@ -1,24 +1,26 @@
 # Client Handoff Toolkit - Visual Commenting System
 
-**A comprehensive WordPress plugin for streamlined agency-client collaboration with an intuitive visual commenting system, task management, and seamless handoff workflow.**
+**A comprehensive WordPress plugin for streamlined agency-client collaboration with an intuitive visual commenting system, advanced task management, timesheet tracking, and seamless handoff workflow.**
 
-[![WordPress](https://img.shields.io/badge/WordPress-5.0%2B-blue.svg)](https://wordpress.org/)
+[![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue.svg)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-purple.svg)](https://php.net/)
 [![License](https://img.shields.io/badge/License-GPL%20v2%2B-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
-[![Version](https://img.shields.io/badge/Version-1.0.0-orange.svg)](https://github.com/analogwp/analogwp-client-handoff)
+[![Version](https://img.shields.io/badge/Version-1.1.0-orange.svg)](https://github.com/analogwp/analogwp-client-handoff)
 
 ---
 
 ## 🎯 **Overview**
 
-The Client Handoff Toolkit transforms how agencies and clients collaborate during website projects. Instead of lengthy email chains and confusing feedback documents, clients can simply **click on any element** of their website to leave visual comments with automatic screenshots.
+The Client Handoff Toolkit transforms how agencies and clients collaborate during website projects. Instead of lengthy email chains and confusing feedback documents, clients can simply **click on any element** of their website to leave visual comments with automatic screenshots. 
+
+**🆕 Version 1.1.0** introduces powerful new features including task editing, persistent timesheet tracking, and modern toast notifications for an enhanced user experience.
 
 ### **Perfect For:**
-- **Web Agencies** - Streamline client feedback collection
-- **Freelance Developers** - Professional client collaboration
-- **Website Maintenance** - Ongoing client communication
-- **Design Reviews** - Visual feedback on layouts and content
-- **Bug Reporting** - Clear visual documentation of issues
+- **Web Agencies** - Streamline client feedback collection with time tracking
+- **Freelance Developers** - Professional client collaboration with project management
+- **Website Maintenance** - Ongoing client communication with task history
+- **Design Reviews** - Visual feedback on layouts with time tracking
+- **Bug Reporting** - Clear visual documentation with resolution tracking
 
 ---
 
@@ -31,23 +33,178 @@ The Client Handoff Toolkit transforms how agencies and clients collaborate durin
 - ✅ **Priority Levels**: Low, Medium, High priority classification system
 - ✅ **Real-Time Collaboration**: Reply to comments with threaded conversations
 
-### 📊 **Task Management** ✅ **IMPLEMENTED**
+### 📊 **Advanced Task Management** ✅ **IMPLEMENTED**
 - ✅ **Status Tracking**: Open → In Progress → Resolved workflow
 - ✅ **Kanban Board View**: Drag-and-drop interface for task management
+- ✅ **🆕 Task Editing**: Edit existing tasks with pre-populated modal forms
 - ✅ **Filter & Search**: Find comments by status, user, or priority
-- ⚠️ **Admin Dashboard**: Basic statistics available (charts implementation planned for v1.2)
-- ⚠️ **User Assignment**: Basic user tracking (enhancement needed for team assignment)
+- ✅ **User Assignment**: Basic user tracking and assignment
 - ✅ **Page Integration**: Comments linked to specific WordPress pages/posts
+- ✅ **🆕 Modern UI**: Enhanced button placement and user interactions
 
-### 🎨 **User Experience** ✅ **IMPLEMENTED**
+### ⏱️ **Timesheet & Tracking** ✅ **NEW IN v1.1.0**
+- ✅ **🆕 Task-Specific Timesheets**: Each task maintains its own time tracking data
+- ✅ **🆕 Persistent Time Entries**: Add/remove time entries that survive page refreshes
+- ✅ **🆕 Time Validation**: Smart validation for hours (0-23) and minutes (0-59)
+- ✅ **🆕 Real-time Totals**: Automatic calculation of total time per task
+- ✅ **🆕 Professional Interface**: Clean timesheet UI in task detail sidebar
+- ✅ **🆕 Database Persistence**: All timesheet data stored in database with JSON format
+
+### 🔔 **Modern Notifications** ✅ **NEW IN v1.1.0**
+- ✅ **🆕 react-hot-toast Integration**: Modern toast notification system
+- ✅ **🆕 Smart Positioning**: Notifications positioned above WordPress admin bar
+- ✅ **🆕 Success/Error Feedback**: Clear feedback for all operations
+- ✅ **🆕 Non-intrusive Design**: Auto-dismiss with smooth animations
+- ✅ **🆕 Confirmation Dialogs**: Modern confirmation dialogs replace browser alerts
+
+### 🎨 **User Experience** ✅ **ENHANCED**
 - ✅ **Responsive Design**: Modern interface optimized for all devices
 - ✅ **Admin Bar Integration**: Easy toggle controls without disrupting workflow
 - ✅ **React-Based Interface**: Modern, fast, and interactive components
 - ✅ **WordPress Native**: Seamlessly integrates with WordPress admin styling
 - ✅ **Drag & Drop**: Movable comment popups for better usability
+- ✅ **🆕 Enhanced Interactions**: Improved button placement and event handling
 
 ### 🔒 **Security & Performance** ✅ **IMPLEMENTED**
 - ✅ **Nonce Verification**: All AJAX requests protected against CSRF
+- ✅ **User Capability Checks**: Role-based access control system
+- ✅ **Data Sanitization**: All inputs sanitized before database storage
+- ✅ **SQL Injection Prevention**: Prepared statements used throughout
+- ✅ **XSS Protection**: Output escaping implemented properly
+- ✅ **🆕 Enhanced Validation**: Improved input validation for timesheet data
+
+### 🚀 **Planned Features** ❌ **ROADMAP**
+- ❌ **Email Notifications**: Automatic notifications for new comments (v1.2)
+- ❌ **Advanced Timesheet**: Dedicated timesheet table for better performance (v1.2)
+- ❌ **Real-time Collaboration**: Live updates across browser tabs (v1.2)
+- ❌ **Bulk Operations**: Multi-task editing capabilities (v1.2)
+- ❌ **Export Features**: CSV/PDF export for timesheets and tasks (v1.2)
+- ❌ **Elementor Integration**: Better element targeting for page builders (v1.3)
+- ❌ **Advanced Analytics**: Detailed reporting and insights (v1.3)
+- ❌ **Multi-language Support**: WPML/Polylang integration (v1.4)
+
+---
+
+## 🆕 **What's New in v1.1.0**
+
+### **🎯 Task Editing System**
+- **Edit Any Task**: Click the edit (pencil) icon on any task card
+- **Pre-filled Forms**: Modal automatically populates with existing task data
+- **Seamless Updates**: Changes save immediately with proper validation
+- **Available Everywhere**: Edit buttons in both kanban and list views
+
+### **⏱️ Timesheet Functionality**
+- **Individual Tracking**: Each task has its own separate timesheet
+- **Add Time Entries**: Enter hours, minutes, and optional descriptions
+- **Persistent Data**: All timesheet data survives page refreshes and sessions
+- **Total Calculations**: Automatic time totals per task
+- **Professional UI**: Clean interface in task detail sidebar
+
+### **🔔 Modern Notifications**
+- **Toast System**: Replaced WordPress notices with modern react-hot-toast
+- **Perfect Positioning**: Notifications appear above admin bar, not underneath
+- **Better UX**: Success/error feedback for all operations
+- **Smooth Animations**: Non-intrusive auto-dismiss functionality
+
+### **🛠️ Technical Improvements**
+- **Database Upgrade**: Automatic `timesheet` column addition
+- **Enhanced Components**: Improved React component architecture
+- **Better State Management**: Proper synchronization across components
+- **Error Handling**: Graceful error recovery with user feedback
+
+---
+
+## 🚀 **Quick Start Guide**
+
+### **Step 1: Installation**
+
+**Option A: Upload Plugin Files**
+1. Download/clone the plugin to `/wp-content/plugins/analogwp-client-handoff/`
+2. Install dependencies: `npm install`
+3. Build assets: `npm run build`
+4. Activate in WordPress Admin > Plugins
+5. 🆕 **Database automatically upgrades** to support new features
+
+**Option B: Development Setup**
+```bash
+# Clone and setup for development
+git clone [repo-url] /path/to/wordpress/wp-content/plugins/analogwp-client-handoff/
+cd analogwp-client-handoff
+npm install
+npm run start  # For development with hot reload
+```
+
+### **Step 2: Configure Settings**
+1. Go to **WordPress Admin > Client Handoff**
+2. Set user permissions (who can add comments)
+3. Configure screenshot settings
+4. Save settings
+
+### **Step 3: Start Using New Features**
+1. **Add Comments**: Visit any page and click "Page Tasks & Comments"
+2. **🆕 Edit Tasks**: Click the edit (pencil) icon on any existing task
+3. **🆕 Track Time**: Open any task detail and use the Timesheet section
+4. **🆕 Enjoy Modern UI**: Experience improved notifications and interactions
+
+---
+
+## 📋 **Detailed Usage**
+
+### **For Clients (Adding Feedback)**
+
+1. **Enable Comment Mode**
+   - Look for "Page Tasks & Comments" in the top admin bar
+   - Or use the sidebar toggle button (right side of screen)
+
+2. **Add Visual Comments**
+   - Click on any element you want to comment on
+   - A popup form will appear at the click location
+   - Enter your feedback and select priority level
+   - Click "Save Comment" - screenshot automatically captured
+   - 🆕 **Enjoy improved notifications** with modern toast system
+
+3. **🆕 Edit Existing Comments**
+   - Click the edit (pencil) icon on any task card
+   - Modify details in the pre-populated form
+   - Save changes and see immediate updates
+
+### **For Developers/Agencies (Managing Tasks & Time)**
+
+1. **Admin Dashboard**
+   - Navigate to **Client Handoff > Visual Comments**
+   - View all comments in a comprehensive kanban board
+   - Filter by status, priority, user, or page
+   - 🆕 **Use improved interface** with better notifications
+
+2. **🆕 Task Management**
+   - **Edit Tasks**: Click edit button on any task card
+   - **Update Status**: Drag tasks between columns or use dropdowns
+   - **Priority Management**: Change priority levels easily
+   - **Modern Confirmations**: No more browser alert dialogs
+
+3. **🆕 Time Tracking**
+   - **Open Task Details**: Click on any task to open detail view
+   - **Access Timesheet**: Scroll to timesheet section in sidebar
+   - **Add Time**: Enter hours, minutes, and description
+   - **Track Progress**: View real-time totals per task
+   - **Persistent Data**: All time entries survive page refreshes
+
+### **🆕 Advanced Features**
+
+1. **Timesheet Management**
+   - Each task maintains separate timesheet data
+   - Add time entries with validation (0-23 hours, 0-59 minutes)
+   - Optional descriptions for time entries
+   - Remove individual time entries
+   - Automatic total calculation
+
+2. **Enhanced UI/UX**
+   - Modern toast notifications for all actions
+   - Improved button placement and interactions
+   - Better error handling with user-friendly messages
+   - Responsive design optimized for all devices
+
+---
 - ✅ **User Capability Checks**: Role-based access control system
 - ✅ **Data Sanitization**: All inputs sanitized before database storage
 - ✅ **SQL Injection Prevention**: Prepared statements used throughout

@@ -9,6 +9,6 @@ module.exports = {
     },
     output: {
         ...defaultConfig.output,
-        path: path.resolve(process.cwd(), 'assets', 'dist')
+        path: path.resolve(process.cwd(), 'build')
     }
 };

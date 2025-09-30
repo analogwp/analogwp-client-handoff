@@ -177,9 +177,10 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 	 */
 	public function activate() {
 		// Create database tables
-		if ( $this->database ) {
-			$this->database->create_tables();
+		if ( ! $this->database ) {
+			$this->database = new AGWP_CHT_Database();
 		}
+		$this->database->create_tables();
 
 		// Flush rewrite rules
 		flush_rewrite_rules();
