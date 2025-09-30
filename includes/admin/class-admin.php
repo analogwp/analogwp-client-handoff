@@ -49,36 +49,27 @@ class AGWP_CHT_Admin {
 			__( 'Client Handoff', 'analogwp-client-handoff' ),
 			__( 'Client Handoff', 'analogwp-client-handoff' ),
 			'manage_options',
-			'analogwp-client-handoff',
+			'agwp-cht-dashboard',
 			array( $this, 'render_admin_page' ),
 			'dashicons-feedback',
 			30
 		);
 
 		add_submenu_page(
-			'analogwp-client-handoff',
-			__( 'Dashboard', 'analogwp-client-handoff' ),
-			__( 'Dashboard', 'analogwp-client-handoff' ),
+			'agwp-cht-dashboard',
+			__( 'Tasks', 'analogwp-client-handoff' ),
+			__( 'Tasks', 'analogwp-client-handoff' ),
 			'manage_options',
-			'analogwp-client-handoff',
+			'agwp-cht-dashboard',
 			array( $this, 'render_admin_page' )
 		);
 
 		add_submenu_page(
-			'analogwp-client-handoff',
-			__( 'Comments', 'analogwp-client-handoff' ),
-			__( 'Comments', 'analogwp-client-handoff' ),
-			'manage_options',
-			'analogwp-client-handoff-comments',
-			array( $this, 'render_admin_page' )
-		);
-
-		add_submenu_page(
-			'analogwp-client-handoff',
+			'agwp-cht-dashboard',
 			__( 'Settings', 'analogwp-client-handoff' ),
 			__( 'Settings', 'analogwp-client-handoff' ),
 			'manage_options',
-			'analogwp-client-handoff-settings',
+			'agwp-cht-settings',
 			array( $this, 'render_admin_page' )
 		);
 	}
@@ -90,14 +81,15 @@ class AGWP_CHT_Admin {
 	 * @param WP_Admin_Bar $wp_admin_bar WordPress admin bar object.
 	 */
 	public function add_admin_bar_toggle( $wp_admin_bar ) {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		// Only show on frontend, not in admin.
+		if ( is_admin() || ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
 
 		$wp_admin_bar->add_node(
 			array(
 				'id'    => 'agwp-cht-toggle',
-				'title' => __( 'Toggle Comments', 'analogwp-client-handoff' ),
+				'title' => __( 'Tasks & Comments', 'analogwp-client-handoff' ),
 				'href'  => '#',
 				'meta'  => array(
 					'class' => 'agwp-cht-admin-bar-toggle',
@@ -126,13 +118,11 @@ class AGWP_CHT_Admin {
 
 		// Determine which admin page to render.
 		switch ( $page_slug ) {
-			case 'toplevel_page_analogwp-client-handoff':
+			case 'toplevel_page_agwp-cht-dashboard':
+			case 'client-handoff_page_agwp-cht-dashboard':
 				$this->render_dashboard_page();
 				break;
-			case 'client-handoff_page_analogwp-client-handoff-comments':
-				$this->render_comments_page();
-				break;
-			case 'client-handoff_page_analogwp-client-handoff-settings':
+			case 'client-handoff_page_agwp-cht-settings':
 				$this->render_settings_page();
 				break;
 			default:
@@ -149,7 +139,6 @@ class AGWP_CHT_Admin {
 	private function render_dashboard_page() {
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'Client Handoff Dashboard', 'analogwp-client-handoff' ); ?></h1>
 			<div id="agwp-cht-admin-dashboard"></div>
 		</div>
 		<?php
@@ -158,17 +147,6 @@ class AGWP_CHT_Admin {
 	/**
 	 * Render comments page.
 	 *
-	 * @since 1.0.0
-	 */
-	private function render_comments_page() {
-		?>
-		<div class="wrap">
-			<h1><?php esc_html_e( 'Client Handoff Comments', 'analogwp-client-handoff' ); ?></h1>
-			<div id="agwp-cht-admin-comments"></div>
-		</div>
-		<?php
-	}
-
 	/**
 	 * Render settings page.
 	 *
@@ -177,7 +155,6 @@ class AGWP_CHT_Admin {
 	private function render_settings_page() {
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'Client Handoff Settings', 'analogwp-client-handoff' ); ?></h1>
 			<div id="agwp-cht-admin-settings"></div>
 		</div>
 		<?php

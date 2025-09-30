@@ -43,6 +43,7 @@ class AGWP_CHT_Database {
 			id int(11) NOT NULL AUTO_INCREMENT,
 			post_id int(11) NOT NULL,
 			user_id int(11) NOT NULL DEFAULT 0,
+			assigned_to int(11) DEFAULT 0,
 			comment_text text NOT NULL,
 			element_selector varchar(500) DEFAULT '',
 			screenshot_url varchar(500) DEFAULT '',
@@ -51,9 +52,12 @@ class AGWP_CHT_Database {
 			page_url varchar(500) NOT NULL,
 			status varchar(20) DEFAULT 'open',
 			priority varchar(20) DEFAULT 'medium',
+			timesheet longtext DEFAULT NULL,
 			created_at timestamp DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (id),
 			KEY post_id (post_id),
+			KEY user_id (user_id),
+			KEY assigned_to (assigned_to),
 			KEY status (status),
 			KEY priority (priority),
 			KEY created_at (created_at)
@@ -69,46 +73,85 @@ class AGWP_CHT_Database {
 			created_at timestamp DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (id),
 			KEY comment_id (comment_id),
-			KEY created_at (created_at),
-			FOREIGN KEY (comment_id) REFERENCES $comments_table(id) ON DELETE CASCADE
+			KEY created_at (created_at)
 		) $charset_collate;";
 
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $comments_sql );
 		dbDelta( $replies_sql );
 
+		// Run database upgrades.
+		$this->upgrade_database();
+
 		// Update database version.
 		update_option( 'agwp_cht_db_version', AGWP_CHT_VERSION );
 	}
 
 	/**
-	 * Get comments for a specific page.
+	 * Upgrade database schema if needed.
 	 *
 	 * @since 1.0.0
-	 * @param string $page_url Page URL.
-	 * @return array|null Comments data or null on error.
 	 */
-	public function get_comments( $page_url ) {
+	public function upgrade_database() {
 		global $wpdb;
 
-		if ( empty( $page_url ) ) {
-			return null;
+		$comments_table = $wpdb->prefix . 'agwp_cht_comments';
+
+		// Check if timesheet column exists, if not add it.
+		$column_exists = $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = %s AND TABLE_NAME = %s AND COLUMN_NAME = %s',
+				DB_NAME,
+				$comments_table,
+				'timesheet'
+			)
+		);
+
+		if ( empty( $column_exists ) ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->query( "ALTER TABLE {$comments_table} ADD COLUMN timesheet longtext DEFAULT NULL" );
 		}
+	}
+
+	/**
+	 * Get comments for a specific page or all comments.
+	 *
+	 * @since 1.0.0
+	 * @param string $page_url Optional. Page URL. If empty, returns all comments.
+	 * @return array|null Comments data or null on error.
+	 */
+	public function get_comments( $page_url = '' ) {
+		global $wpdb;
 
 		$comments_table = $wpdb->prefix . 'agwp_cht_comments';
 		$replies_table  = $wpdb->prefix . 'agwp_cht_comment_replies';
 
-		// Prepare and execute query.
-		$comments = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT c.*, u.display_name as user_name, u.user_email
+		// Prepare query based on whether page_url is provided
+		if ( empty( $page_url ) ) {
+			// Get all comments for admin dashboard.
+			$comments = $wpdb->get_results(
+				"SELECT c.*, u.display_name as user_name, u.user_email,
+				        a.display_name as assigned_name, a.user_email as assigned_email
                 FROM {$comments_table} c
                 LEFT JOIN {$wpdb->users} u ON c.user_id = u.ID
-                WHERE c.page_url = %s
-                ORDER BY c.created_at DESC",
-				$page_url
-			)
-		);
+                LEFT JOIN {$wpdb->users} a ON c.assigned_to = a.ID
+                ORDER BY c.created_at DESC"
+			);
+		} else {
+			// Get comments for specific page.
+			$comments = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT c.*, u.display_name as user_name, u.user_email,
+					        a.display_name as assigned_name, a.user_email as assigned_email
+					FROM {$comments_table} c
+					LEFT JOIN {$wpdb->users} u ON c.user_id = u.ID
+					LEFT JOIN {$wpdb->users} a ON c.assigned_to = a.ID
+					WHERE c.page_url = %s
+					ORDER BY c.created_at DESC",
+					$page_url
+				)
+			);
+		}
 
 		if ( empty( $comments ) ) {
 			return array();
@@ -153,7 +196,8 @@ class AGWP_CHT_Database {
 
 		$insert_data = array(
 			'post_id'          => isset( $data['post_id'] ) ? intval( $data['post_id'] ) : 0,
-			'user_id'          => isset( $data['user_id'] ) ? intval( $data['user_id'] ) : get_current_user_id(),
+			'user_id'          => get_current_user_id(), // Always set to current user (creator)
+			'assigned_to'      => isset( $data['assigned_to'] ) ? intval( $data['assigned_to'] ) : 0,
 			'comment_text'     => sanitize_textarea_field( wp_unslash( $data['comment_text'] ) ),
 			'element_selector' => isset( $data['element_selector'] ) ? sanitize_text_field( wp_unslash( $data['element_selector'] ) ) : '',
 			'screenshot_url'   => isset( $data['screenshot_url'] ) ? sanitize_url( wp_unslash( $data['screenshot_url'] ) ) : '',
@@ -164,13 +208,18 @@ class AGWP_CHT_Database {
 			'priority'         => isset( $data['priority'] ) ? sanitize_text_field( wp_unslash( $data['priority'] ) ) : 'medium',
 		);
 
+		error_log( 'AGWP CHT DB: Attempting insert with data: ' . print_r( $insert_data, true ) );
 		$result = $wpdb->insert( $table_name, $insert_data );
+		error_log( 'AGWP CHT DB: Insert result: ' . ( $result !== false ? 'success' : 'failed' ) );
 
 		if ( false === $result ) {
+			error_log( 'AGWP CHT DB: Insert failed. Error: ' . $wpdb->last_error );
 			return false;
 		}
 
-		return $wpdb->insert_id;
+		$insert_id = $wpdb->insert_id;
+		error_log( 'AGWP CHT DB: Insert ID: ' . $insert_id );
+		return $insert_id;
 	}
 
 	/**
@@ -195,6 +244,68 @@ class AGWP_CHT_Database {
 			array( 'status' => sanitize_text_field( $status ) ),
 			array( 'id' => intval( $comment_id ) ),
 			array( '%s' ),
+			array( '%d' )
+		);
+
+		return false !== $result;
+	}
+
+	/**
+	 * Update comment with multiple fields.
+	 *
+	 * @since 1.0.0
+	 * @param int   $comment_id Comment ID.
+	 * @param array $updates Array of field => value pairs to update.
+	 * @return bool True on success, false on error.
+	 */
+	public function update_comment( $comment_id, $updates ) {
+		global $wpdb;
+
+		if ( empty( $comment_id ) || empty( $updates ) || ! is_array( $updates ) ) {
+			return false;
+		}
+
+		$table_name = $wpdb->prefix . 'agwp_cht_comments';
+
+		// Define allowed fields and their formats.
+		$allowed_fields = array(
+			'status'         => '%s',
+			'priority'       => '%s',
+			'assigned_to'    => '%d',
+			'category'       => '%s',
+			'due_date'       => '%s',
+			'time_estimation' => '%s',
+			'comment_text'   => '%s',
+			'timesheet'      => '%s',
+		);
+
+		$update_data = array();
+		$formats     = array();
+
+		// Process updates, only allowing whitelisted fields.
+		foreach ( $updates as $field => $value ) {
+			if ( isset( $allowed_fields[ $field ] ) ) {
+				if ( 'assigned_to' === $field ) {
+					$update_data[ $field ] = intval( $value );
+				} elseif ( 'comment_text' === $field ) {
+					$update_data[ $field ] = sanitize_textarea_field( $value );
+				} else {
+					$update_data[ $field ] = sanitize_text_field( $value );
+				}
+				$formats[] = $allowed_fields[ $field ];
+			}
+		}
+
+		// If no valid fields to update, return false.
+		if ( empty( $update_data ) ) {
+			return false;
+		}
+
+		$result = $wpdb->update(
+			$table_name,
+			$update_data,
+			array( 'id' => intval( $comment_id ) ),
+			$formats,
 			array( '%d' )
 		);
 

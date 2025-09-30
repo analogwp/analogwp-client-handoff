@@ -1,5 +1,25 @@
 /* Modern Admin Dashboard Styles */
 
+/* Icon Styles */
+.cht-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  flex-shrink: 0;
+  margin-right: 6px;
+
+  /* For buttons that are icon-only, remove margin */
+  .cht-delete-category &,
+  .cht-edit-category & {
+    margin-right: 0;
+  }
+}
+
+.cht-page-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
 /* Variables */
 :root {
   --cht-primary: #4f46e5;
@@ -18,7 +38,6 @@
 
 /* Main WordPress Admin Layout */
 .cht-admin-app-wp {
-  background: var(--cht-bg);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   min-height: 100vh;
 }
@@ -346,13 +365,38 @@
   
   .cht-task-footer {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
+    
+    .cht-task-users {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      
+      .cht-task-creator,
+      .cht-task-assignee {
+        .cht-user-label {
+          display: block;
+          font-size: 10px;
+          color: var(--cht-text-light);
+          margin-bottom: 2px;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+      }
+      
+      .cht-task-assignee {
+        .cht-user-label {
+          color: var(--cht-primary);
+        }
+      }
+    }
     
     .cht-task-user {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       
       .cht-user-avatar {
         width: 24px;
@@ -366,10 +410,16 @@
         font-size: 10px;
         font-weight: 600;
         color: #fff;
+        
+        &.cht-user-avatar-small {
+          width: 20px;
+          height: 20px;
+          font-size: 8px;
+        }
       }
       
       .cht-user-name {
-        font-size: 12px;
+        font-size: 11px;
         color: var(--cht-text-light);
         font-weight: 500;
       }
@@ -1064,7 +1114,7 @@
 /* Add Task Modal Styles - Sidebar Version */
 .cht-modal-overlay {
   position: fixed;
-  top: 0;
+  top: 32px; /* Account for WordPress admin bar */
   left: 0;
   right: 0;
   bottom: 0;
@@ -1073,6 +1123,13 @@
   align-items: stretch;
   justify-content: flex-end;
   z-index: 10000;
+}
+
+/* Account for mobile admin bar height */
+@media screen and (max-width: 782px) {
+  .cht-modal-overlay {
+    top: 46px; /* Larger admin bar on mobile */
+  }
 }
 
 .cht-modal-content {
@@ -1224,6 +1281,29 @@
       }
     }
     
+    .cht-page-url-display {
+      margin-top: 8px;
+      padding: 8px 12px;
+      background: #f8fafc;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      
+      small {
+        color: var(--cht-text-light);
+        font-size: 12px;
+        
+        .cht-page-link {
+          color: var(--cht-primary);
+          text-decoration: none;
+          margin-left: 4px;
+          
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+    
     .cht-date-input-container {
       position: relative;
       
@@ -1359,5 +1439,701 @@
       background: var(--cht-bg);
       color: var(--cht-text);
     }
+  }
+}
+
+/* ======================================
+   SETTINGS PAGE STYLES
+   ====================================== */
+
+.cht-settings-app {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: var(--cht-shadow);
+  overflow: hidden;
+}
+
+.cht-settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  background: #fff;
+  border-bottom: 1px solid var(--cht-border);
+}
+
+.cht-settings-nav {
+  display: flex;
+  
+  .cht-nav-tab {
+    padding: 16px 24px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: var(--cht-text-light);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: #e9ecef;
+      color: var(--cht-text);
+    }
+    
+    &.active {
+      background: #fff;
+      color: var(--cht-primary);
+      border-bottom-color: var(--cht-primary);
+    }
+  }
+}
+
+.cht-settings-actions {
+  padding: 16px 24px;
+  display: flex;
+  gap: 12px;
+  
+  .button {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid;
+    transition: all 0.2s ease;
+    
+    &.button-primary {
+      background: var(--cht-primary);
+      border-color: var(--cht-primary);
+      color: #fff;
+      
+      &:hover {
+        background: var(--cht-primary-dark);
+        border-color: var(--cht-primary-dark);
+      }
+      
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+    
+    &.button-secondary {
+      background: #fff;
+      border-color: var(--cht-border);
+      color: var(--cht-text);
+      
+      &:hover {
+        background: var(--cht-bg);
+      }
+    }
+  }
+}
+
+.cht-settings-content {
+  padding: 32px 24px;
+}
+
+.cht-settings-section {
+  max-width: 800px;
+  
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--cht-text);
+    margin-bottom: 24px;
+    margin-top: 0;
+  }
+}
+
+.cht-setting-group {
+  margin-bottom: 24px;
+  
+  label {
+    display: block;
+    font-weight: 500;
+    color: var(--cht-text);
+    margin-bottom: 8px;
+    cursor: pointer;
+    
+    input[type="checkbox"] {
+      margin-right: 8px;
+    }
+  }
+  
+  input[type="text"],
+  input[type="email"],
+  input[type="number"],
+  input[type="range"],
+  textarea {
+    width: 100%;
+    max-width: 400px;
+    padding: 8px 12px;
+    border: 1px solid var(--cht-border);
+    border-radius: 6px;
+    font-size: 14px;
+    
+    &:focus {
+      outline: none;
+      border-color: var(--cht-primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+  }
+  
+  textarea {
+    min-height: 100px;
+    resize: vertical;
+  }
+  
+  .description {
+    font-size: 13px;
+    color: var(--cht-text-light);
+    margin-top: 4px;
+  }
+}
+
+/* Categories Tab Specific Styles */
+.cht-categories-container {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 32px;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+.cht-categories-left {
+  h3 {
+    margin-bottom: 16px;
+  }
+  
+  p {
+    color: var(--cht-text-light);
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+  }
+}
+
+.cht-add-category {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  
+  input {
+    flex: 1;
+    max-width: none;
+  }
+  
+  .button {
+    padding: 8px 16px;
+    background: var(--cht-primary);
+    color: #fff;
+    border: 1px solid var(--cht-primary);
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    
+    &:hover:not(:disabled) {
+      background: var(--cht-primary-dark);
+      border-color: var(--cht-primary-dark);
+    }
+    
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.cht-categories-list {
+  .cht-category-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid var(--cht-border);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    background: #fff;
+    
+    &:hover {
+      background: var(--cht-bg);
+    }
+    
+    .cht-delete-category,
+    .cht-edit-category {
+      background: none;
+      border: none;
+      padding: 4px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      
+      &:hover {
+        background: rgba(0, 0, 0, 0.05);
+      }
+    }
+    
+    .cht-category-name {
+      flex: 1;
+      font-weight: 500;
+      color: var(--cht-text);
+    }
+  }
+}
+
+.cht-categories-right {
+  .cht-feedback-section {
+    background: var(--cht-bg);
+    padding: 24px;
+    border-radius: 8px;
+    border: 1px solid var(--cht-border);
+    
+    h3 {
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+    
+    input,
+    textarea {
+      margin-bottom: 16px;
+    }
+    
+    .button {
+      width: 100%;
+      padding: 12px;
+      background: var(--cht-primary);
+      color: #fff;
+      border: 1px solid var(--cht-primary);
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      
+      &:hover:not(:disabled) {
+        background: var(--cht-primary-dark);
+        border-color: var(--cht-primary-dark);
+      }
+      
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+/* ====================================
+   TOAST NOTIFICATIONS
+   ==================================== */
+
+/* React Hot Toast container positioning */
+.cht-toast-container {
+  top: 52px !important; /* Account for WP admin bar (32px) + margin (20px) */
+  z-index: 999999 !important;
+
+  /* Mobile adjustments */
+  @media (max-width: 782px) {
+    top: 66px !important; /* WP admin bar is taller on mobile (46px) + margin (20px) */
+  }
+}
+
+/* Legacy toast notification container positioning (backup) */
+.cht-notifications-container {
+  position: fixed !important;
+  top: 32px !important; /* Account for WP admin bar */
+  right: 20px !important;
+  z-index: 999999 !important;
+  width: 350px;
+  max-width: calc(100vw - 40px);
+  pointer-events: none;
+
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    top: 46px !important; /* WP admin bar is taller on mobile */
+    right: 10px !important;
+    left: 10px !important;
+    width: auto;
+    max-width: none;
+  }
+}
+
+/* Individual notification wrapper */
+.cht-notification-item {
+  margin-bottom: 12px !important;
+  pointer-events: auto;
+  animation: cht-slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: right center;
+
+  &.cht-notification-exit {
+    animation: cht-slideOutRight 0.3s ease-in forwards;
+  }
+}
+
+/* WordPress Notice component styling overrides */
+.cht-notification-item .components-notice {
+  background: #fff !important;
+  border-left: 4px solid var(--cht-primary) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 8px !important;
+  padding: 16px 20px 16px 24px !important; /* Extra left padding for colored border */
+  margin: 0 !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  border-left: 4px solid var(--cht-primary) !important;
+
+  /* Success notifications */
+  &.is-success {
+    border-left-color: var(--cht-success) !important;
+    
+    .components-notice__content {
+      color: #065f46 !important; /* Darker green for better readability */
+    }
+  }
+
+  /* Error notifications */
+  &.is-error {
+    border-left-color: var(--cht-danger) !important;
+    
+    .components-notice__content {
+      color: #991b1b !important; /* Darker red for better readability */
+    }
+  }
+
+  /* Warning notifications */
+  &.is-warning {
+    border-left-color: var(--cht-warning) !important;
+    
+    .components-notice__content {
+      color: #92400e !important; /* Darker orange for better readability */
+    }
+  }
+
+  /* Info notifications */
+  &.is-info {
+    border-left-color: var(--cht-primary) !important;
+    
+    .components-notice__content {
+      color: #3730a3 !important; /* Darker blue for better readability */
+    }
+  }
+
+  /* Notice content */
+  .components-notice__content {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-weight: 500 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  /* Dismiss button styling */
+  .components-notice__dismiss {
+    position: absolute !important;
+    top: 8px !important;
+    right: 8px !important;
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 6px !important;
+    background: rgba(0, 0, 0, 0.05) !important;
+    border: none !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--cht-text-light) !important;
+    transition: all 0.2s ease !important;
+    opacity: 0.7 !important;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.1) !important;
+      color: var(--cht-text) !important;
+      transform: scale(1.05);
+      opacity: 1 !important;
+    }
+
+    &:focus {
+      outline: 2px solid var(--cht-primary) !important;
+      outline-offset: 2px !important;
+      opacity: 1 !important;
+    }
+
+    svg {
+      width: 16px !important;
+      height: 16px !important;
+    }
+  }
+}
+
+/* Animation keyframes */
+@keyframes cht-slideInRight {
+  from {
+    transform: translateX(120%) scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes cht-slideOutRight {
+  from {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    max-height: 200px;
+  }
+  to {
+    transform: translateX(120%) scale(0.9);
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0;
+  }
+}
+
+/* Progress bar for auto-dismiss */
+.cht-notification-item .cht-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: currentColor;
+  opacity: 0.3;
+  animation: cht-progressBar 5s linear forwards;
+  border-radius: 0 0 8px 8px;
+}
+
+@keyframes cht-progressBar {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .cht-notification-item .components-notice {
+    background: #1f2937 !important;
+    color: #f9fafb !important;
+    
+    .components-notice__content {
+      color: #f9fafb !important;
+    }
+    
+    &::after {
+      background: rgba(31, 41, 55, 0.95);
+    }
+  }
+}
+
+/* Timesheet Styles */
+.cht-task-timesheet {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--cht-border);
+
+  h3 {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--cht-text);
+  }
+}
+
+.cht-add-time-entry {
+  margin-bottom: 20px;
+
+  .cht-time-inputs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .cht-time-input-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .cht-time-input {
+      width: 50px;
+      padding: 6px 8px;
+      border: 1px solid var(--cht-border);
+      border-radius: 4px;
+      font-size: 14px;
+      text-align: center;
+
+      &:focus {
+        outline: none;
+        border-color: var(--cht-primary);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      }
+    }
+
+    label {
+      font-size: 12px;
+      color: var(--cht-text-light);
+      font-weight: 500;
+    }
+  }
+
+  .cht-time-description {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--cht-border);
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 12px;
+
+    &:focus {
+      outline: none;
+      border-color: var(--cht-primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    &::placeholder {
+      color: var(--cht-text-light);
+    }
+  }
+
+  .cht-add-time-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--cht-primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: var(--cht-primary-dark);
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
+  }
+}
+
+.cht-time-entries {
+  .cht-time-total {
+    padding: 12px 16px;
+    background: #f8fafc;
+    border: 1px solid var(--cht-border);
+    border-radius: 6px;
+    margin-bottom: 16px;
+    text-align: center;
+    color: var(--cht-text);
+    font-size: 16px;
+  }
+}
+
+.cht-time-entries-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cht-time-entry-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: white;
+  border: 1px solid var(--cht-border);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--cht-shadow);
+  }
+}
+
+.cht-time-entry-info {
+  flex: 1;
+
+  .cht-time-entry-duration {
+    font-weight: 600;
+    color: var(--cht-text);
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+
+  .cht-time-entry-desc {
+    color: var(--cht-text-light);
+    font-size: 13px;
+    margin-bottom: 2px;
+  }
+
+  .cht-time-entry-date {
+    color: var(--cht-text-light);
+    font-size: 12px;
+  }
+}
+
+.cht-remove-time-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--cht-text-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #fee2e2;
+    color: var(--cht-danger);
+  }
+}
+
+/* Edit button styles */
+.cht-edit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--cht-text-light);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-right: 4px;
+
+  &:hover {
+    background: #f3f4f6;
+    color: var(--cht-primary);
+  }
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.cht-task-action-btn {
+  &:not(:last-child) {
+    margin-right: 4px;
   }
 }

@@ -19,6 +19,14 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
   }
 }
 
+// Heroicon styles
+.cht-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
 // Admin Bar Toggle Status
 #wp-admin-bar-cht-toggle {
   .cht-toggle-status {
@@ -733,8 +741,6 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
   color: white;
   border: none;
   border-radius: 50%;
-  font-size: 14px;
-  font-weight: bold;
   cursor: pointer;
   z-index: 100000;
   display: flex;
@@ -742,6 +748,11 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
   justify-content: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease;
+
+  .cht-icon {
+    width: 18px;
+    height: 18px;
+  }
 
   // Account for WordPress admin bar when present
   body.admin-bar & {
@@ -759,6 +770,11 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
   
   &:active {
     transform: scale(0.95);
+  }
+  
+  // When sidebar is hidden, position button at right edge
+  &.cht-sidebar-hidden {
+    right: 20px;
   }
 }
 
@@ -869,12 +885,19 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     .cht-toggle-arrow {
       background: none;
       border: none;
-      font-size: 12px;
       color: #646970;
       cursor: pointer;
-      padding: 2px 4px;
+      padding: 4px;
       border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       transition: color 0.2s ease, background-color 0.2s ease;
+
+      .cht-icon {
+        width: 14px;
+        height: 14px;
+      }
       
       &:hover {
         color: $text-color;

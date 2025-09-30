@@ -132,26 +132,75 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
                 windowHeight: window.innerHeight,
                 onclone: (clonedDoc, element) => {
                     try {
-                        // Simple approach: replace only the most common problematic patterns
+                        // More comprehensive color function replacement
                         const allElements = clonedDoc.querySelectorAll('*');
                         allElements.forEach(el => {
                             try {
-                                // Only handle inline styles to avoid disrupting computed styles
+                                // Handle inline styles
                                 if (el.style && el.style.cssText) {
                                     let cssText = el.style.cssText;
-                                    if (cssText.includes('color(') || cssText.includes('Color(')) {
-                                        // Replace with safe fallbacks
-                                        cssText = cssText.replace(/color\([^)]+\)/g, '#000000');
-                                        cssText = cssText.replace(/Color\([^)]+\)/g, '#000000');
+                                    
+                                    // Replace all modern CSS color functions that html2canvas can't parse
+                                    cssText = cssText.replace(/color\([^)]+\)/gi, '#000000');
+                                    cssText = cssText.replace(/lab\([^)]+\)/gi, '#000000');  
+                                    cssText = cssText.replace(/lch\([^)]+\)/gi, '#000000');
+                                    cssText = cssText.replace(/oklab\([^)]+\)/gi, '#000000');
+                                    cssText = cssText.replace(/oklch\([^)]+\)/gi, '#000000');
+                                    cssText = cssText.replace(/hwb\([^)]+\)/gi, '#000000');
+                                    
+                                    if (cssText !== el.style.cssText) {
                                         el.style.cssText = cssText;
                                     }
+                                }
+                                
+                                // Also check computed styles and try to replace problematic CSS custom properties
+                                if (window.getComputedStyle) {
+                                    const computedStyle = window.getComputedStyle(el);
+                                    ['color', 'background-color', 'border-color'].forEach(prop => {
+                                        try {
+                                            const value = computedStyle.getPropertyValue(prop);
+                                            if (value && (value.includes('color(') || value.includes('lab(') || value.includes('lch('))) {
+                                                el.style.setProperty(prop, '#000000', 'important');
+                                            }
+                                        } catch (e) {
+                                            // Skip if we can't access the property
+                                        }
+                                    });
                                 }
                             } catch (e) {
                                 // Skip problematic elements
                             }
                         });
+                        
+                        // Also try to remove problematic CSS custom properties
+                        try {
+                            const styleSheets = clonedDoc.styleSheets;
+                            Array.from(styleSheets).forEach(sheet => {
+                                try {
+                                    if (sheet.cssRules) {
+                                        Array.from(sheet.cssRules).forEach(rule => {
+                                            if (rule.style) {
+                                                let cssText = rule.style.cssText;
+                                                if (cssText.includes('color(') || cssText.includes('lab(') || cssText.includes('lch(')) {
+                                                    // Replace the problematic color functions
+                                                    cssText = cssText.replace(/color\([^)]+\)/gi, '#000000');
+                                                    cssText = cssText.replace(/lab\([^)]+\)/gi, '#000000');
+                                                    cssText = cssText.replace(/lch\([^)]+\)/gi, '#000000');
+                                                    rule.style.cssText = cssText;
+                                                }
+                                            }
+                                        });
+                                    }
+                                } catch (e) {
+                                    // Skip inaccessible stylesheets (CORS)
+                                }
+                            });
+                        } catch (e) {
+                            // Skip if we can't access stylesheets
+                        }
                     } catch (e) {
                         // If cloning cleanup fails, continue anyway
+                        console.warn('Style cleanup failed:', e);
                     }
                 },
                 ignoreElements: (element) => {
@@ -227,11 +276,8 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
                 (captureSize - actualWidth) / 2, (captureSize - actualHeight) / 2, actualWidth, actualHeight // Destination (centered)
             );
 
-            // Add a subtle border to show the capture area
-            croppedCtx.strokeStyle = '#ff6b35';
-            croppedCtx.lineWidth = 2;
-            croppedCtx.strokeRect(1, 1, captureSize - 2, captureSize - 2);
-
+            // Don't add border to screenshots anymore
+            
             // Convert to data URL
             const dataURL = croppedCanvas.toDataURL('image/png', 1.0);
             console.log('Screenshot captured successfully, size:', dataURL.length);
@@ -252,14 +298,18 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
             try {
                 console.log('Attempting fallback screenshot capture...');
                 
+                // Recalculate dimensions for fallback since they might be out of scope
+                const fallbackFullWidth = Math.max(document.body.scrollWidth, document.documentElement.scrollWidth);
+                const fallbackFullHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+                
                 const simpleCanvas = await html2canvas(document.body, {
                     useCORS: true,
                     allowTaint: false,
                     backgroundColor: '#ffffff',
                     scale: 0.8,
                     logging: false,
-                    width: Math.min(fullWidth, 3000),
-                    height: Math.min(fullHeight, 3000),
+                    width: Math.min(fallbackFullWidth, 3000),
+                    height: Math.min(fallbackFullHeight, 3000),
                     x: 0,
                     y: 0,
                     foreignObjectRendering: false,
@@ -325,8 +375,8 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
                 croppedCtx.fillRect(0, 0, captureSize, captureSize);
 
                 // Scale coordinates for the smaller canvas
-                const scaleX = simpleCanvas.width / fullWidth;
-                const scaleY = simpleCanvas.height / fullHeight;
+                const scaleX = simpleCanvas.width / fallbackFullWidth;
+                const scaleY = simpleCanvas.height / fallbackFullHeight;
                 const scaledStartX = startX * scaleX;
                 const scaledStartY = startY * scaleY;
                 const scaledWidth = actualWidth * scaleX;

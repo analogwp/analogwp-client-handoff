@@ -1,10 +1,15 @@
 /**
  * WordPress dependencies
  */
-import { useState } from '@wordpress/element';
+import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
-const AddTaskModal = ({ isOpen, onClose, onSave, users, pages }) => {
+/**
+ * Internal dependencies
+ */
+import { showToast } from './ToastProvider';
+
+const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null }) => {
     const [formData, setFormData] = useState({
         taskName: '',
         status: 'open',
@@ -18,6 +23,38 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages }) => {
         description: ''
     });
 
+    // Populate form data when editing a task
+    useEffect(() => {
+        if (editTask) {
+            setFormData({
+                taskName: editTask.comment_text || '',
+                status: editTask.status || 'open',
+                assignedUser: editTask.assigned_to || editTask.user_id || '',
+                category: editTask.category || '',
+                pageId: editTask.post_id || '',
+                dueDate: editTask.due_date || '',
+                timeHours: editTask.time_estimation ? editTask.time_estimation.split(':')[0] || '' : '',
+                timeMinutes: editTask.time_estimation ? editTask.time_estimation.split(':')[1] || '' : '',
+                priority: editTask.priority || 'medium',
+                description: editTask.comment_text || ''
+            });
+        } else {
+            // Reset form for new task
+            setFormData({
+                taskName: '',
+                status: 'open',
+                assignedUser: '',
+                category: '',
+                pageId: '',
+                dueDate: '',
+                timeHours: '',
+                timeMinutes: '',
+                priority: 'medium',
+                description: ''
+            });
+        }
+    }, [editTask, isOpen]);
+
     const handleInputChange = (field, value) => {
         setFormData(prev => ({
             ...prev,
@@ -26,24 +63,46 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages }) => {
     };
 
     const handleSave = async () => {
+        // Validation
         if (!formData.taskName.trim()) {
-            alert(__('Please enter a task name', 'analogwp-client-handoff'));
+            showToast.error(__('Please enter a task name', 'analogwp-client-handoff'));
             return;
         }
 
+        if (!formData.pageId) {
+            showToast.error(__('Please select a page for this task', 'analogwp-client-handoff'));
+            return;
+        }
+
+        // Find selected page to get URL
+        const selectedPage = pages.find(page => page.id == formData.pageId); // Use == for string/number comparison
+        const pageUrl = selectedPage ? selectedPage.url : '';
+
         const taskData = {
-            action: 'agwp_cht_add_new_task', 
-            nonce: window.chtAdmin.nonce,
-            comment_text: description,
-            post_id: selectedPage,
-            user_id: assignedUser,
-            priority: priority,
-            category: category,
-            due_date: dueDate,
-            time_estimation: timeEstimation,
-            status: status
-        };        try {
+            comment_text: formData.description || formData.taskName,
+            post_id: formData.pageId || 0,
+            page_url: pageUrl,
+            assigned_to: formData.assignedUser || 0,
+            priority: formData.priority,
+            status: formData.status,
+            category: formData.category,
+            due_date: formData.dueDate,
+            time_estimation: formData.timeHours && formData.timeMinutes ? 
+                `${formData.timeHours}:${formData.timeMinutes.padStart(2, '0')}` : ''
+        };
+
+        // Add task ID if we're editing
+        if (editTask) {
+            taskData.id = editTask.id;
+        }
+
+        try {
             await onSave(taskData);
+            showToast.success(editTask ? 
+                __('Task updated successfully!', 'analogwp-client-handoff') : 
+                __('Task created successfully!', 'analogwp-client-handoff')
+            );
+            
             // Reset form
             setFormData({
                 taskName: '',
@@ -58,9 +117,9 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages }) => {
                 description: ''
             });
             onClose();
-        } catch (error) {
-            console.error('Error saving task:', error);
-            alert(__('Error saving task. Please try again.', 'analogwp-client-handoff'));
+        } catch (err) {
+            console.error('Error saving task:', err);
+            showToast.error(__('Error saving task. Please try again.', 'analogwp-client-handoff'));
         }
     };
 
@@ -91,7 +150,10 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages }) => {
                         type="text"
                         value={formData.taskName}
                         onChange={(e) => handleInputChange('taskName', e.target.value)}
-                        placeholder={__('Add task Name', 'analogwp-client-handoff')}
+                        placeholder={editTask ? 
+                            __('Edit task name', 'analogwp-client-handoff') : 
+                            __('Add task Name', 'analogwp-client-handoff')
+                        }
                         className="cht-task-name-input"
                     />
                     <div className="cht-modal-header-actions">
@@ -104,14 +166,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages }) => {
                                 <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5zM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11z"/>
                             </svg>
                         </button>
-                        <button 
-                            className="cht-modal-action-btn"
-                            title={__('Edit', 'analogwp-client-handoff')}
-                        >
-                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708L4.5 15.207l-4 1a.5.5 0 0 1-.606-.606l1-4L12.146.146zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
-                            </svg>
-                        </button>
+
                     </div>
                 </div>
 
@@ -160,6 +215,21 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages }) => {
                                 <option key={page.id} value={page.id}>{page.title}</option>
                             ))}
                         </select>
+                        {formData.pageId && (
+                            <div className="cht-page-url-display">
+                                <small>
+                                    {__('URL:', 'analogwp-client-handoff')} 
+                                    <a 
+                                        href={pages.find(p => p.id == formData.pageId)?.url || '#'} 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="cht-page-link"
+                                    >
+                                        {pages.find(p => p.id == formData.pageId)?.url || ''}
+                                    </a>
+                                </small>
+                            </div>
+                        )}
                     </div>
 
                     <div className="cht-form-row">
@@ -255,7 +325,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages }) => {
                         className="cht-btn cht-btn-primary cht-btn-save"
                         onClick={handleSave}
                     >
-                        {__('Save Task', 'analogwp-client-handoff')}
+                        {editTask ? __('Update Task', 'analogwp-client-handoff') : __('Save Task', 'analogwp-client-handoff')}
                     </button>
                     <button 
                         className="cht-btn cht-btn-text"

@@ -65,7 +65,7 @@ class AGWP_CHT_Assets {
 		// Localize script with data.
 		wp_localize_script(
 			'agwp-cht-frontend',
-			'agwpChtAjax',
+			'chtAjax',
 			$this->get_frontend_localized_data()
 		);
 	}
@@ -138,7 +138,9 @@ class AGWP_CHT_Assets {
 	 */
 	private function is_plugin_admin_page( $hook ) {
 		$plugin_pages = array(
-			'toplevel_page_analogwp-client-handoff',
+			'toplevel_page_agwp-cht-dashboard',
+			'client-handoff_page_agwp-cht-dashboard',
+			'client-handoff_page_agwp-cht-settings',
 		);
 
 		return in_array( $hook, $plugin_pages, true );

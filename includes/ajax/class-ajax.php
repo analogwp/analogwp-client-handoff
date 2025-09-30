@@ -45,6 +45,7 @@ class AGWP_CHT_Ajax {
 		// AJAX actions for logged-in users.
 		add_action( 'wp_ajax_agwp_cht_save_comment', array( $this, 'save_comment' ) );
 		add_action( 'wp_ajax_agwp_cht_get_comments', array( $this, 'get_comments' ) );
+		add_action( 'wp_ajax_agwp_cht_update_comment', array( $this, 'update_comment' ) );
 		add_action( 'wp_ajax_agwp_cht_update_comment_status', array( $this, 'update_comment_status' ) );
 		add_action( 'wp_ajax_agwp_cht_add_reply', array( $this, 'add_reply' ) );
 		add_action( 'wp_ajax_agwp_cht_delete_comment', array( $this, 'delete_comment' ) );
@@ -52,6 +53,11 @@ class AGWP_CHT_Ajax {
 		add_action( 'wp_ajax_agwp_cht_get_admin_data', array( $this, 'get_admin_data' ) );
 		add_action( 'wp_ajax_agwp_cht_get_pages', array( $this, 'get_pages' ) );
 		add_action( 'wp_ajax_agwp_cht_add_new_task', array( $this, 'add_new_task' ) );
+
+		// Settings AJAX actions.
+		add_action( 'wp_ajax_agwp_cht_get_settings', array( $this, 'get_settings' ) );
+		add_action( 'wp_ajax_agwp_cht_save_settings', array( $this, 'save_settings' ) );
+		add_action( 'wp_ajax_agwp_cht_send_feedback', array( $this, 'send_feedback' ) );
 
 		// AJAX actions for non-logged-in users.
 		add_action( 'wp_ajax_nopriv_agwp_cht_save_comment', array( $this, 'save_comment' ) );
@@ -102,8 +108,12 @@ class AGWP_CHT_Ajax {
 	 * @since 1.0.0
 	 */
 	public function save_comment() {
+		// Add debugging for frontend comment saving.
+		error_log( 'AGWP CHT: save_comment called' );
+
 		// Verify nonce.
 		if ( ! $this->verify_nonce() ) {
+			error_log( 'AGWP CHT: Nonce verification failed' );
 			$this->send_error( __( 'Security check failed', 'analogwp-client-handoff' ), 403 );
 		}
 
@@ -134,9 +144,14 @@ class AGWP_CHT_Ajax {
 		);
 
 		// Save comment.
+		error_log( 'AGWP CHT: Attempting to save comment with data: ' . print_r( $comment_data, true ) );
 		$comment_id = $this->database->save_comment( $comment_data );
+		error_log( 'AGWP CHT: Save result: ' . ( $comment_id ? 'ID=' . $comment_id : 'false' ) );
 
 		if ( ! $comment_id ) {
+			global $wpdb;
+			$last_error = $wpdb->last_error;
+			error_log( 'AGWP CHT: Database error: ' . ( $last_error ? $last_error : 'No specific error' ) );
 			$this->send_error( __( 'Failed to save comment', 'analogwp-client-handoff' ) );
 		}
 
@@ -173,6 +188,34 @@ class AGWP_CHT_Ajax {
 		}
 
 		$this->send_success( $comments );
+	}
+
+	/**
+	 * Handle update comment AJAX request.
+	 *
+	 * @since 1.0.0
+	 */
+	public function update_comment() {
+		// Verify nonce.
+		if ( ! $this->verify_nonce() ) {
+			$this->send_error( __( 'Security check failed', 'analogwp-client-handoff' ), 403 );
+		}
+
+		$post_data  = wp_unslash( $_POST );
+		$comment_id = isset( $post_data['comment_id'] ) ? intval( $post_data['comment_id'] ) : 0;
+		$updates    = isset( $post_data['updates'] ) ? json_decode( $post_data['updates'], true ) : array();
+
+		if ( empty( $comment_id ) || empty( $updates ) || ! is_array( $updates ) ) {
+			$this->send_error( __( 'Comment ID and updates are required', 'analogwp-client-handoff' ) );
+		}
+
+		$result = $this->database->update_comment( $comment_id, $updates );
+
+		if ( ! $result ) {
+			$this->send_error( __( 'Failed to update comment', 'analogwp-client-handoff' ) );
+		}
+
+		$this->send_success( __( 'Comment updated successfully', 'analogwp-client-handoff' ) );
 	}
 
 	/**
@@ -308,13 +351,124 @@ class AGWP_CHT_Ajax {
 			$this->send_error( __( 'Unauthorized', 'analogwp-client-handoff' ), 403 );
 		}
 
+		// Ensure database tables exist
+		global $wpdb;
+		$table_name = $wpdb->prefix . 'agwp_cht_comments';
+		if ( $wpdb->get_var( "SHOW TABLES LIKE '{$table_name}'" ) != $table_name ) {
+			// Tables don't exist, create them
+			$this->database->create_tables();
+		}
+
+		// Get all comments/tasks for the admin dashboard.
+		$comments = $this->database->get_comments();
+		if ( ! is_array( $comments ) ) {
+			$comments = array();
+		}
+
+		// Enhance comments with complete user data including avatars
+		foreach ( $comments as &$comment ) {
+			// Creator information
+			if ( ! empty( $comment->user_id ) ) {
+				$user_data = get_userdata( $comment->user_id );
+				if ( $user_data ) {
+					$comment->creator = array(
+						'id'     => (int) $user_data->ID,
+						'name'   => $user_data->display_name,
+						'email'  => $user_data->user_email,
+						'avatar' => get_avatar_url( $user_data->ID, array( 'size' => 40 ) ),
+					);
+				} else {
+					$comment->creator = array(
+						'id'     => (int) $comment->user_id,
+						'name'   => $comment->user_name ? $comment->user_name : 'Unknown User',
+						'email'  => $comment->user_email ? $comment->user_email : '',
+						'avatar' => get_avatar_url( $comment->user_id, array( 'size' => 40 ) ),
+					);
+				}
+			} else {
+				$comment->creator = array(
+					'id'     => 0,
+					'name'   => 'Guest',
+					'email'  => '',
+					'avatar' => get_avatar_url( 0, array( 'size' => 40 ) ),
+				);
+			}
+
+			// Assigned user information
+			if ( ! empty( $comment->assigned_to ) ) {
+				$assigned_data = get_userdata( $comment->assigned_to );
+				if ( $assigned_data ) {
+					$comment->assignee = array(
+						'id'     => (int) $assigned_data->ID,
+						'name'   => $assigned_data->display_name,
+						'email'  => $assigned_data->user_email,
+						'avatar' => get_avatar_url( $assigned_data->ID, array( 'size' => 40 ) ),
+					);
+				} else {
+					$comment->assignee = array(
+						'id'     => (int) $comment->assigned_to,
+						'name'   => $comment->assigned_name ? $comment->assigned_name : 'Unknown User',
+						'email'  => $comment->assigned_email ? $comment->assigned_email : '',
+						'avatar' => get_avatar_url( $comment->assigned_to, array( 'size' => 40 ) ),
+					);
+				}
+			} else {
+				$comment->assignee = null;
+			}
+
+			// Keep backward compatibility with user field (using creator)
+			$comment->user = $comment->creator;
+		}
+
+		// Get all users who can manage comments or who have created comments
+		$users = get_users(
+			array(
+				'fields' => array( 'ID', 'display_name', 'user_email' ),
+			)
+		);
+
+		// Format users for frontend
+		$formatted_users = array();
+		foreach ( $users as $user ) {
+			$formatted_users[] = array(
+				'id'     => (int) $user->ID,
+				'name'   => $user->display_name,
+				'email'  => $user->user_email,
+				'avatar' => get_avatar_url( $user->ID, array( 'size' => 40 ) ),
+			);
+		}
+
+		// Get categories (we can use post categories or create custom ones later)
+		$categories = get_categories( array( 'hide_empty' => false ) );
+		$formatted_categories = array();
+		foreach ( $categories as $category ) {
+			$formatted_categories[] = array(
+				'id'   => $category->term_id,
+				'name' => $category->name,
+				'slug' => $category->slug,
+			);
+		}
+
 		// Return admin-specific data.
+		$stats = $this->database->get_dashboard_stats();
+		if ( ! is_array( $stats ) ) {
+			$stats = array(
+				'open_count'     => 0,
+				'resolved_count' => 0,
+				'total_count'    => 0,
+				'recent_comments' => array(),
+			);
+		}
+
 		$admin_data = array(
+			'comments'     => $comments,
+			'users'        => $formatted_users,
+			'categories'   => $formatted_categories,
 			'capabilities' => array(
 				'manage_comments' => current_user_can( 'manage_options' ),
 				'delete_comments' => current_user_can( 'manage_options' ),
 			),
-			'stats'        => $this->database->get_dashboard_stats(),
+			'stats'        => $stats,
 		);
 
 		$this->send_success( $admin_data );
@@ -331,6 +485,67 @@ class AGWP_CHT_Ajax {
 		if ( ! wp_verify_nonce( $post_data['nonce'], 'agwp_cht_nonce' ) ) {
 			$this->send_error( __( 'Security check failed', 'analogwp-client-handoff' ), 403 );
 		}
+
+		$items = array();
+
+		// Add common WordPress pages
+		$items[] = array(
+			'id'    => 'home',
+			'title' => __( 'Homepage', 'analogwp-client-handoff' ),
+			'url'   => home_url( '/' ),
+			'type'  => 'special',
+		);
+
+		$items[] = array(
+			'id'    => 'blog',
+			'title' => __( 'Blog Page', 'analogwp-client-handoff' ),
+			'url'   => get_permalink( get_option( 'page_for_posts' ) ) ?: home_url( '/blog/' ),
+			'type'  => 'special',
+		);
+
+		// Add archive pages
+		$items[] = array(
+			'id'    => 'category-archive',
+			'title' => __( 'Category Archive', 'analogwp-client-handoff' ),
+			'url'   => home_url( '/category/' ),
+			'type'  => 'archive',
+		);
+
+		$items[] = array(
+			'id'    => 'tag-archive',
+			'title' => __( 'Tag Archive', 'analogwp-client-handoff' ),
+			'url'   => home_url( '/tag/' ),
+			'type'  => 'archive',
+		);
+
+		$items[] = array(
+			'id'    => 'author-archive',
+			'title' => __( 'Author Archive', 'analogwp-client-handoff' ),
+			'url'   => home_url( '/author/' ),
+			'type'  => 'archive',
+		);
+
+		$items[] = array(
+			'id'    => 'date-archive',
+			'title' => __( 'Date Archive', 'analogwp-client-handoff' ),
+			'url'   => home_url( '/date/' ),
+			'type'  => 'archive',
+		);
+
+		// Add search and 404 pages
+		$items[] = array(
+			'id'    => 'search',
+			'title' => __( 'Search Results', 'analogwp-client-handoff' ),
+			'url'   => home_url( '/?s=test' ),
+			'type'  => 'special',
+		);
+
+		$items[] = array(
+			'id'    => '404',
+			'title' => __( '404 Error Page', 'analogwp-client-handoff' ),
+			'url'   => home_url( '/404-test-page/' ),
+			'type'  => 'special',
+		);
 
 		// Get all published pages and posts.
 		$pages = get_pages(
@@ -349,10 +564,39 @@ class AGWP_CHT_Ajax {
 			)
 		);
 
-		$all_items = array_merge( $pages, $posts );
-		$items     = array();
+		// Get custom post types
+		$post_types = get_post_types(
+			array(
+				'public' => true,
+				'_builtin' => false,
+			),
+			'objects'
+		);
+		$custom_posts = array();
+		foreach ( $post_types as $post_type ) {
+			$type_posts = get_posts(
+				array(
+					'numberposts' => 20, // Limit custom post types to avoid too many entries
+					'post_status' => 'publish',
+					'post_type'   => $post_type->name,
+				)
+			);
+			$custom_posts = array_merge( $custom_posts, $type_posts );
 
-		foreach ( $all_items as $item ) {
+			// Add post type archive if it has one
+			if ( $post_type->has_archive ) {
+				$items[] = array(
+					'id'    => $post_type->name . '-archive',
+					'title' => sprintf( __( '%s Archive', 'analogwp-client-handoff' ), $post_type->label ),
+					'url'   => get_post_type_archive_link( $post_type->name ),
+					'type'  => 'archive',
+				);
+			}
+		}
+
+		$all_posts = array_merge( $pages, $posts, $custom_posts );
+
+		foreach ( $all_posts as $item ) {
 			$items[] = array(
 				'id'    => $item->ID,
 				'title' => $item->post_title,
@@ -361,7 +605,7 @@ class AGWP_CHT_Ajax {
 			);
 		}
 
-		$this->send_success( $items );
+		$this->send_success( array( 'pages' => $items ) );
 	}
 
 	/**
@@ -450,6 +694,194 @@ class AGWP_CHT_Ajax {
 		} catch ( Exception $e ) {
 			error_log( 'AGWP CHT Screenshot save error: ' . $e->getMessage() );
 			return '';
+		}
+	}
+
+	/**
+	 * Handle get settings AJAX request.
+	 *
+	 * @since 1.0.0
+	 */
+	public function get_settings() {
+		// Verify nonce.
+		if ( ! $this->verify_nonce() ) {
+			$this->send_error( __( 'Security check failed.', 'analogwp-client-handoff' ) );
+		}
+
+		// Check user capabilities.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			$this->send_error( __( 'Insufficient permissions.', 'analogwp-client-handoff' ) );
+		}
+
+		// Get default settings.
+		$default_settings = array(
+			'general' => array(
+				'allowed_roles'       => array( 'administrator', 'editor' ),
+				'auto_screenshot'     => true,
+				'screenshot_quality'  => 0.8,
+				'comments_per_page'   => 20,
+			),
+			'users' => array(
+				'notification_emails' => false,
+				'user_assignment'     => false,
+				'guest_comments'      => false,
+			),
+		);
+
+		// Get saved settings.
+		$saved_settings = get_option( 'agwp_cht_settings', array() );
+		$settings       = wp_parse_args( $saved_settings, $default_settings );
+
+		// Get categories.
+		$categories = get_option(
+			'agwp_cht_categories',
+			array(
+				array(
+					'id' => 1,
+					'name' => 'Page Building',
+					'color' => '#3498db',
+				),
+				array(
+					'id' => 2,
+					'name' => 'SEO',
+					'color' => '#e74c3c',
+				),
+				array(
+					'id' => 3,
+					'name' => 'Content',
+					'color' => '#2ecc71',
+				),
+				array(
+					'id' => 4,
+					'name' => 'Shop Management',
+					'color' => '#f39c12',
+				),
+			)
+		);
+
+		$this->send_success(
+			array(
+				'settings'   => $settings,
+				'categories' => $categories,
+			)
+		);
+	}
+
+	/**
+	 * Handle save settings AJAX request.
+	 *
+	 * @since 1.0.0
+	 */
+	public function save_settings() {
+		// Verify nonce.
+		if ( ! $this->verify_nonce() ) {
+			$this->send_error( __( 'Security check failed.', 'analogwp-client-handoff' ) );
+		}
+
+		// Check user capabilities.
+		if ( ! current_user_can( 'manage_options' ) ) {
+			$this->send_error( __( 'Insufficient permissions.', 'analogwp-client-handoff' ) );
+		}
+
+		// Get and sanitize form data.
+		$post_data  = wp_unslash( $_POST );
+		$settings   = isset( $post_data['settings'] ) ? json_decode( sanitize_textarea_field( $post_data['settings'] ), true ) : array();
+		$categories = isset( $post_data['categories'] ) ? json_decode( sanitize_textarea_field( $post_data['categories'] ), true ) : array();
+
+		// Validate settings structure.
+		if ( ! is_array( $settings ) ) {
+			$this->send_error( __( 'Invalid settings data.', 'analogwp-client-handoff' ) );
+		}
+
+		// Sanitize settings.
+		if ( isset( $settings['general'] ) ) {
+			$settings['general']['allowed_roles']      = isset( $settings['general']['allowed_roles'] ) ? array_map( 'sanitize_text_field', (array) $settings['general']['allowed_roles'] ) : array();
+			$settings['general']['auto_screenshot']    = isset( $settings['general']['auto_screenshot'] ) ? (bool) $settings['general']['auto_screenshot'] : false;
+			$settings['general']['screenshot_quality'] = isset( $settings['general']['screenshot_quality'] ) ? floatval( $settings['general']['screenshot_quality'] ) : 0.8;
+			$settings['general']['comments_per_page']  = isset( $settings['general']['comments_per_page'] ) ? intval( $settings['general']['comments_per_page'] ) : 20;
+		}
+
+		if ( isset( $settings['users'] ) ) {
+			$settings['users']['notification_emails'] = isset( $settings['users']['notification_emails'] ) ? (bool) $settings['users']['notification_emails'] : false;
+			$settings['users']['user_assignment']     = isset( $settings['users']['user_assignment'] ) ? (bool) $settings['users']['user_assignment'] : false;
+			$settings['users']['guest_comments']      = isset( $settings['users']['guest_comments'] ) ? (bool) $settings['users']['guest_comments'] : false;
+		}
+
+		// Sanitize categories.
+		if ( is_array( $categories ) ) {
+			$sanitized_categories = array();
+			foreach ( $categories as $category ) {
+				if ( isset( $category['id'], $category['name'] ) ) {
+					$sanitized_categories[] = array(
+						'id'    => intval( $category['id'] ),
+						'name'  => sanitize_text_field( $category['name'] ),
+						'color' => isset( $category['color'] ) ? sanitize_hex_color( $category['color'] ) : '#3498db',
+					);
+				}
+			}
+			$categories = $sanitized_categories;
+		}
+
+		// Save settings.
+		update_option( 'agwp_cht_settings', $settings );
+		update_option( 'agwp_cht_categories', $categories );
+
+		$this->send_success(
+			array(
+				'message' => __( 'Settings saved successfully.', 'analogwp-client-handoff' ),
+			)
+		);
+	}
+
+	/**
+	 * Handle send feedback AJAX request.
+	 *
+	 * @since 1.0.0
+	 */
+	public function send_feedback() {
+		// Verify nonce.
+		if ( ! $this->verify_nonce() ) {
+			$this->send_error( __( 'Security check failed.', 'analogwp-client-handoff' ) );
+		}
+
+		// Get and sanitize form data.
+		$post_data = wp_unslash( $_POST );
+		$email     = isset( $post_data['email'] ) ? sanitize_email( $post_data['email'] ) : '';
+		$message   = isset( $post_data['message'] ) ? sanitize_textarea_field( $post_data['message'] ) : '';
+
+		// Validate required fields.
+		if ( empty( $email ) || empty( $message ) ) {
+			$this->send_error( __( 'Email and message are required.', 'analogwp-client-handoff' ) );
+		}
+
+		if ( ! is_email( $email ) ) {
+			$this->send_error( __( 'Please enter a valid email address.', 'analogwp-client-handoff' ) );
+		}
+
+		// Prepare email data.
+		$admin_email = get_option( 'admin_email' );
+		$site_name   = get_option( 'blogname' );
+		$subject     = sprintf( __( 'Client Handoff Feedback from %s', 'analogwp-client-handoff' ), $site_name );
+
+		$email_body = sprintf(
+			__( 'New feedback received from Client Handoff plugin:%1$s%1$sFrom: %2$s%1$sMessage:%1$s%3$s%1$s%1$sSite: %4$s', 'analogwp-client-handoff' ),
+			"\n",
+			$email,
+			$message,
+			home_url()
+		);
+
+		// Send email.
+		$sent = wp_mail( $admin_email, $subject, $email_body );
+
+		if ( $sent ) {
+			$this->send_success(
+				array(
+					'message' => __( 'Thank you for your feedback! Your message has been sent.', 'analogwp-client-handoff' ),
+				)
+			);
+		} else {
+			$this->send_error( __( 'Failed to send feedback. Please try again.', 'analogwp-client-handoff' ) );
 		}
 	}
 }

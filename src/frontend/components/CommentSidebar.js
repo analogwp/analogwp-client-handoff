@@ -4,6 +4,11 @@
 import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
+/**
+ * External dependencies
+ */
+import { ChevronRightIcon, ChevronLeftIcon, ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+
 const CommentSidebar = ({ comments, onAddReply, onUpdateStatus, canManageComments, isVisible, onClose }) => {
     const [selectedComment, setSelectedComment] = useState(null);
     const [replyTexts, setReplyTexts] = useState({});
@@ -86,28 +91,29 @@ const CommentSidebar = ({ comments, onAddReply, onUpdateStatus, canManageComment
         }));
     };
 
-    if (!isVisible) {
-        return null;
-    }
+    // Don't render anything if no comments
+    // Always show sidebar when commenting is active, even with no comments
 
     return (
         <>
-            {/* Toggle button positioned outside the sidebar */}
+            {/* Toggle button always visible when commenting is active */}
             <button 
-                className="cht-sidebar-close"
+                className={`cht-sidebar-close ${!isVisible ? 'cht-sidebar-hidden' : ''}`}
                 onClick={onClose}
                 title={__('Toggle Sidebar', 'analogwp-client-handoff')}
             >
-                {isVisible ? '‹' : '›'}
+                {isVisible ? <ChevronRightIcon className="cht-icon" /> : <ChevronLeftIcon className="cht-icon" />}
             </button>
             
-            <div className="cht-comment-sidebar">
-            <div className="cht-sidebar-header">
-                <h3>{__('Page Tasks & Comments', 'analogwp-client-handoff')}</h3>
-                <div className="cht-comments-count">
-                    {comments.length} {comments.length === 1 ? __('comment', 'analogwp-client-handoff') : __('comments', 'analogwp-client-handoff')}
+            {/* Sidebar content - only visible when isVisible is true */}
+            {isVisible && (
+                <div className="cht-comment-sidebar">
+                <div className="cht-sidebar-header">
+                    <h3>{__('Page Tasks & Comments', 'analogwp-client-handoff')}</h3>
+                    <div className="cht-comments-count">
+                        {comments.length} {comments.length === 1 ? __('comment', 'analogwp-client-handoff') : __('comments', 'analogwp-client-handoff')}
+                    </div>
                 </div>
-            </div>
 
             <div className="cht-sidebar-content">
                 {comments.length === 0 ? (
@@ -133,7 +139,7 @@ const CommentSidebar = ({ comments, onAddReply, onUpdateStatus, canManageComment
                                         ></div>
                                         <h4>{getStatusLabel(status)} ({statusComments.length})</h4>
                                         <button className="cht-toggle-arrow">
-                                            {collapsedGroups[status] ? '▼' : '▲'}
+                                            {collapsedGroups[status] ? <ChevronDownIcon className="cht-icon" /> : <ChevronUpIcon className="cht-icon" />}
                                         </button>
                                     </div>
 
@@ -257,7 +263,8 @@ const CommentSidebar = ({ comments, onAddReply, onUpdateStatus, canManageComment
                     </div>
                 )}
             </div>
-        </div>
+            </div>
+            )}
         </>
     );
 };

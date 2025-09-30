@@ -1,8 +1,13 @@
 /**
  * WordPress dependencies
  */
-import { useState } from '@wordpress/element';
+import { useState, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+
+/**
+ * Internal dependencies
+ */
+import { showConfirmation, showToast } from './ToastProvider';
 
 const TaskDetail = ({ 
     comment, 
@@ -11,11 +16,32 @@ const TaskDetail = ({
     onDelete, 
     onBack,
     onPriorityChange,
+    onUpdateComment,
     formatDate 
 }) => {
     const [status, setStatus] = useState(comment.status);
     const [priority, setPriority] = useState(comment.priority || 'medium');
     const [isUpdating, setIsUpdating] = useState(false);
+    // Initialize timesheet from comment data or empty array
+    const [timeEntries, setTimeEntries] = useState(() => {
+        try {
+            return comment.timesheet ? JSON.parse(comment.timesheet) : [];
+        } catch {
+            return [];
+        }
+    });
+    const [newTimeEntry, setNewTimeEntry] = useState({ hours: '', minutes: '', description: '' });
+
+    // Update local state when comment changes (e.g., navigating between tasks)
+    useEffect(() => {
+        setStatus(comment.status);
+        setPriority(comment.priority || 'medium');
+        try {
+            setTimeEntries(comment.timesheet ? JSON.parse(comment.timesheet) : []);
+        } catch {
+            setTimeEntries([]);
+        }
+    }, [comment.id, comment.status, comment.priority, comment.timesheet]);
 
     const getUserInitials = (name) => {
         return name ? name.split(' ').map(n => n[0]).join('').toUpperCase() : '?';
@@ -64,17 +90,85 @@ const TaskDetail = ({
     };
 
     const handleDelete = async () => {
-        if (confirm(__('Are you sure you want to delete this comment?', 'analogwp-client-handoff'))) {
-            try {
-                await onDelete(comment.id);
-                onBack(); // Go back after deletion
-            } catch (error) {
-                console.error('Failed to delete comment:', error);
-            }
+        const confirmed = await showConfirmation(
+            __('Delete Comment', 'analogwp-client-handoff'),
+            __('Are you sure you want to delete this comment? This action cannot be undone.', 'analogwp-client-handoff')
+        );
+        
+        if (confirmed) {
+            onDelete(comment.id);
         }
     };
 
-    return (
+    const addTimeEntry = async () => {
+        if (!newTimeEntry.hours && !newTimeEntry.minutes) {
+            showToast.error(__('Please enter hours or minutes', 'analogwp-client-handoff'));
+            return;
+        }
+        
+        const hours = parseInt(newTimeEntry.hours) || 0;
+        const minutes = parseInt(newTimeEntry.minutes) || 0;
+        
+        if (hours < 0 || minutes < 0 || minutes >= 60) {
+            showToast.error(__('Please enter valid time values', 'analogwp-client-handoff'));
+            return;
+        }
+        
+        const newEntry = {
+            id: Date.now(),
+            hours,
+            minutes,
+            description: newTimeEntry.description || __('Time entry', 'analogwp-client-handoff'),
+            date: new Date().toISOString().split('T')[0]
+        };
+        
+        const updatedEntries = [...timeEntries, newEntry];
+        setTimeEntries(updatedEntries);
+        
+        // Persist to database
+        try {
+            await onUpdateComment(comment.id, { 
+                timesheet: JSON.stringify(updatedEntries) 
+            });
+            setNewTimeEntry({ hours: '', minutes: '', description: '' });
+            showToast.success(__('Time entry added successfully', 'analogwp-client-handoff'));
+        } catch (error) {
+            console.error('Error saving time entry:', error);
+            // Revert the local state if saving failed
+            setTimeEntries(timeEntries);
+            showToast.error(__('Failed to save time entry', 'analogwp-client-handoff'));
+        }
+    };
+
+    const removeTimeEntry = async (entryId) => {
+        const updatedEntries = timeEntries.filter(entry => entry.id !== entryId);
+        const originalEntries = [...timeEntries];
+        setTimeEntries(updatedEntries);
+        
+        // Persist to database
+        try {
+            await onUpdateComment(comment.id, { 
+                timesheet: JSON.stringify(updatedEntries) 
+            });
+            showToast.success(__('Time entry removed', 'analogwp-client-handoff'));
+        } catch (error) {
+            console.error('Error removing time entry:', error);
+            // Revert the local state if saving failed
+            setTimeEntries(originalEntries);
+            showToast.error(__('Failed to remove time entry', 'analogwp-client-handoff'));
+        }
+    };
+
+    const getTotalTime = () => {
+        const totalMinutes = timeEntries.reduce((total, entry) => {
+            return total + (entry.hours * 60) + entry.minutes;
+        }, 0);
+        
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        
+        return { hours, minutes, totalMinutes };
+    };    return (
         <div className="cht-task-detail">
             <div className="cht-task-detail-header">
                 <button 
@@ -239,6 +333,96 @@ const TaskDetail = ({
                             <label>{__('Comment ID:', 'analogwp-client-handoff')}</label>
                             <span>#{comment.id}</span>
                         </div>
+                    </div>
+                    
+                    {/* Timesheet Section */}
+                    <div className="cht-task-timesheet">
+                        <h3>{__('Timesheet', 'analogwp-client-handoff')}</h3>
+                        
+                        {/* Add Time Entry */}
+                        <div className="cht-add-time-entry">
+                            <div className="cht-time-inputs">
+                                <div className="cht-time-input-group">
+                                    <input
+                                        type="number"
+                                        value={newTimeEntry.hours}
+                                        onChange={(e) => setNewTimeEntry(prev => ({...prev, hours: e.target.value}))}
+                                        placeholder="0"
+                                        className="cht-time-input"
+                                        min="0"
+                                        max="23"
+                                    />
+                                    <label>{__('h', 'analogwp-client-handoff')}</label>
+                                </div>
+                                <div className="cht-time-input-group">
+                                    <input
+                                        type="number"
+                                        value={newTimeEntry.minutes}
+                                        onChange={(e) => setNewTimeEntry(prev => ({...prev, minutes: e.target.value}))}
+                                        placeholder="0"
+                                        className="cht-time-input"
+                                        min="0"
+                                        max="59"
+                                    />
+                                    <label>{__('m', 'analogwp-client-handoff')}</label>
+                                </div>
+                            </div>
+                            <input
+                                type="text"
+                                value={newTimeEntry.description}
+                                onChange={(e) => setNewTimeEntry(prev => ({...prev, description: e.target.value}))}
+                                placeholder={__('Description (optional)', 'analogwp-client-handoff')}
+                                className="cht-time-description"
+                            />
+                            <button 
+                                onClick={addTimeEntry}
+                                className="cht-add-time-btn"
+                            >
+                                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                                </svg>
+                                {__('Add Time', 'analogwp-client-handoff')}
+                            </button>
+                        </div>
+                        
+                        {/* Time Entries List */}
+                        {timeEntries.length > 0 && (
+                            <div className="cht-time-entries">
+                                <div className="cht-time-total">
+                                    <strong>
+                                        {__('Total: ', 'analogwp-client-handoff')}
+                                        {getTotalTime().hours}h {getTotalTime().minutes}m
+                                    </strong>
+                                </div>
+                                
+                                <div className="cht-time-entries-list">
+                                    {timeEntries.map(entry => (
+                                        <div key={entry.id} className="cht-time-entry-item">
+                                            <div className="cht-time-entry-info">
+                                                <div className="cht-time-entry-duration">
+                                                    {entry.hours}h {entry.minutes}m
+                                                </div>
+                                                <div className="cht-time-entry-desc">
+                                                    {entry.description}
+                                                </div>
+                                                <div className="cht-time-entry-date">
+                                                    {formatDate(entry.date)}
+                                                </div>
+                                            </div>
+                                            <button 
+                                                onClick={() => removeTimeEntry(entry.id)}
+                                                className="cht-remove-time-btn"
+                                                title={__('Remove time entry', 'analogwp-client-handoff')}
+                                            >
+                                                <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+                                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

@@ -21,7 +21,7 @@ const CommentToggle = ({ isActive, onToggle, commentsCount }) => {
 
     // Handle admin bar click
     useEffect(() => {
-        const adminBarItem = document.querySelector('.cht-admin-bar-item');
+        const adminBarItem = document.querySelector('.agwp-cht-admin-bar-toggle');
         if (adminBarItem) {
             const handleClick = (e) => {
                 e.preventDefault();

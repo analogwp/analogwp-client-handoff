@@ -15,6 +15,7 @@ import CommentSidebar from './CommentSidebar';
 
 const VisualCommentsApp = () => {
     const [isActive, setIsActive] = useState(false);
+    const [sidebarVisible, setSidebarVisible] = useState(true);
     const [comments, setComments] = useState([]);
     const [selectedElement, setSelectedElement] = useState(null);
     const [showCommentForm, setShowCommentForm] = useState(false);
@@ -295,8 +296,8 @@ const VisualCommentsApp = () => {
                         onAddReply={addReply}
                         onUpdateStatus={updateCommentStatus}
                         canManageComments={chtAjax.canManageComments}
-                        isVisible={isActive}
-                        onClose={() => setIsActive(false)}
+                        isVisible={sidebarVisible}
+                        onClose={() => setSidebarVisible(!sidebarVisible)}
                     />
                     
                     {showCommentForm && selectedElement && (
