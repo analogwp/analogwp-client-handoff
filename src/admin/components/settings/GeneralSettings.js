@@ -63,7 +63,7 @@ const GeneralSettings = () => {
     }
 
     return (
-        <div className="p-6">
+        <div className="p-6 max-w-4xl">
             <SettingsSection
                 title={__('General Configuration', 'analogwp-client-handoff')}
                 description={__('Basic settings for the Client Handoff plugin functionality.', 'analogwp-client-handoff')}

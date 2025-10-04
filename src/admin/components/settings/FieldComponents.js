@@ -14,21 +14,21 @@ import {
 
 // Reusable Field Components
 export const FieldGroup = ({ children, className = '' }) => (
-    <div className={`cht-field-group ${className}`}>
+    <div className={`space-y-4 ${className}`}>
         {children}
     </div>
 );
 
 export const FieldRow = ({ children, className = '' }) => (
-    <div className={`cht-field-row ${className}`}>
+    <div className={`flex gap-4 items-start ${className}`}>
         {children}
     </div>
 );
 
 export const FieldLabel = ({ children, htmlFor, required = false, className = '' }) => (
-    <label htmlFor={htmlFor} className={`cht-field-label ${className}`}>
+    <label htmlFor={htmlFor} className={`block text-sm font-medium text-gray-700 mb-1 ${className}`}>
         {children}
-        {required && <span className="cht-required">*</span>}
+        {required && <span className="text-red-500 ml-1">*</span>}
     </label>
 );
 
@@ -39,11 +39,18 @@ export const FieldDescription = ({ children, type = 'info', className = '' }) =>
         success: CheckCircleIcon
     };
     
+    const typeStyles = {
+        info: 'bg-blue-50 border-blue-200 text-blue-800',
+        warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
+        success: 'bg-green-50 border-green-200 text-green-800'
+    };
+    
     const IconComponent = icons[type] || icons.info;
+    const styles = typeStyles[type] || typeStyles.info;
     
     return (
-        <div className={`cht-field-description cht-field-description-${type} ${className}`}>
-            <IconComponent className="cht-field-description-icon" />
+        <div className={`flex items-start gap-2 p-3 rounded-md border text-sm ${styles} ${className}`}>
+            <IconComponent className="w-5 h-5 flex-shrink-0 mt-0.5" />
             <span>{children}</span>
         </div>
     );
@@ -59,27 +66,39 @@ export const Toggle = ({
     className = '' 
 }) => (
     <FieldGroup className={className}>
-        <FieldRow>
-            <div className="cht-toggle-wrapper">
+        <div className="flex items-start gap-3">
+            <div className="flex items-center">
                 <input
                     type="checkbox"
                     id={id}
-                    className="cht-toggle"
+                    className="sr-only"
                     checked={checked}
                     onChange={(e) => onChange(e.target.checked)}
                     disabled={disabled}
                 />
-                <label htmlFor={id} className="cht-toggle-label">
-                    <span className="cht-toggle-slider"></span>
+                <label 
+                    htmlFor={id} 
+                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${
+                        checked ? 'bg-indigo-600' : 'bg-gray-200'
+                    } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                    <span
+                        aria-hidden="true"
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                            checked ? 'translate-x-5' : 'translate-x-0'
+                        }`}
+                    />
                 </label>
-                <FieldLabel htmlFor={id} className="cht-toggle-text">
-                    {label}
-                </FieldLabel>
             </div>
-        </FieldRow>
-        {description && (
-            <FieldDescription>{description}</FieldDescription>
-        )}
+            <div className="flex-1">
+                <label htmlFor={id} className="text-sm font-medium text-gray-900 cursor-pointer">
+                    {label}
+                </label>
+                {description && (
+                    <p className="mt-1 text-sm text-gray-500">{description}</p>
+                )}
+            </div>
+        </div>
     </FieldGroup>
 );
 
@@ -97,7 +116,7 @@ export const Select = ({
         {label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
         <select
             id={id}
-            className="cht-select"
+            className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-500 sm:text-sm"
             value={value}
             onChange={(e) => onChange(e.target.value)}
             disabled={disabled}
@@ -129,11 +148,11 @@ export const NumberInput = ({
 }) => (
     <FieldGroup className={className}>
         {label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
-        <div className="cht-number-input-wrapper">
+        <div className="relative">
             <input
                 type="number"
                 id={id}
-                className="cht-number-input"
+                className="block w-full rounded-md border-gray-300 py-2 pl-3 pr-12 text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
                 value={value}
                 onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
                 min={min}
@@ -141,7 +160,7 @@ export const NumberInput = ({
                 step={step}
                 disabled={disabled}
             />
-            {unit && <span className="cht-input-unit">{unit}</span>}
+            {unit && <span className="absolute right-3 top-2 text-sm text-gray-500">{unit}</span>}
         </div>
         {description && (
             <FieldDescription>{description}</FieldDescription>
@@ -165,7 +184,7 @@ export const TextInput = ({
         <input
             type={type}
             id={id}
-            className="cht-text-input"
+            className="block w-full rounded-md border-gray-300 px-3 py-2 text-sm placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
@@ -216,18 +235,18 @@ export const ColorInput = ({
 }) => (
     <FieldGroup className={className}>
         {label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
-        <div className="cht-color-input-wrapper">
+        <div className="flex gap-2">
             <input
                 type="color"
                 id={id}
-                className="cht-color-input"
+                className="h-10 w-16 rounded-md border border-gray-300 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 disabled={disabled}
             />
             <input
                 type="text"
-                className="cht-color-text"
+                className="flex-1 rounded-md border-gray-300 px-3 py-2 text-sm font-mono focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-50 disabled:text-gray-500"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 placeholder="#000000"
@@ -353,23 +372,25 @@ export const FileUpload = ({
 );
 
 export const SettingsSection = ({ title, description, children, className = '' }) => (
-    <div className={`cht-settings-section ${className}`}>
+    <div className={`mb-8 ${className}`}>
         {(title || description) && (
-            <div className="cht-settings-section-header">
-                {title && <h3 className="cht-settings-section-title">{title}</h3>}
-                {description && <p className="cht-settings-section-description">{description}</p>}
+            <div className="mb-6">
+                {title && <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>}
+                {description && <p className="text-sm text-gray-600">{description}</p>}
             </div>
         )}
-        <div className="cht-settings-section-content">
+        <div className="space-y-6">
             {children}
         </div>
     </div>
 );
 
 export const SettingsCard = ({ title, children, className = '' }) => (
-    <div className={`cht-settings-card ${className}`}>
-        {title && <h4 className="cht-settings-card-title">{title}</h4>}
-        <div className="cht-settings-card-content">
+    <div className={`bg-white rounded-lg border border-gray-200 shadow-sm ${className}`}>
+        {title && <div className="px-6 py-4 border-b border-gray-200">
+            <h4 className="text-lg font-medium text-gray-900">{title}</h4>
+        </div>}
+        <div className="px-6 py-6 space-y-6">
             {children}
         </div>
     </div>

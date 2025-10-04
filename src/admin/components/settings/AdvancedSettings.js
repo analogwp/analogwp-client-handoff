@@ -37,12 +37,13 @@ const AdvancedSettings = () => {
     };
 
     return (
-        <div className="cht-settings-tab-content">
+        <div className="p-6 max-w-4xl">
             <SettingsSection
                 title={__('Debug & Logging', 'analogwp-client-handoff')}
                 description={__('Configure debugging and logging settings for troubleshooting.', 'analogwp-client-handoff')}
             >
                 <SettingsCard title={__('Debug Settings', 'analogwp-client-handoff')}>
+                    <div className="space-y-6">
                         <Toggle
                             id="enable_debug_mode"
                             label={__('Enable Debug Mode', 'analogwp-client-handoff')}
@@ -51,11 +52,11 @@ const AdvancedSettings = () => {
                             onChange={(value) => updateSetting('advanced.enable_debug_mode', value)}
                         />
 
-                    {settings.advanced?.enable_debug_mode && (
-                        <FieldDescription type="warning">
-                            {__('Debug mode should not be enabled on production sites as it may expose sensitive information.', 'analogwp-client-handoff')}
-                        </FieldDescription>
-                    )}
+                        {settings.advanced?.enable_debug_mode && (
+                            <FieldDescription type="warning">
+                                {__('Debug mode should not be enabled on production sites as it may expose sensitive information.', 'analogwp-client-handoff')}
+                            </FieldDescription>
+                        )}
 
                         <Select
                             id="log_level"
@@ -65,6 +66,7 @@ const AdvancedSettings = () => {
                             onChange={(value) => updateSetting('advanced.log_level', value)}
                             options={logLevelOptions}
                         />
+                    </div>
                 </SettingsCard>
             </SettingsSection>
 
@@ -73,44 +75,50 @@ const AdvancedSettings = () => {
                 description={__('Import and export settings, manage plugin data.', 'analogwp-client-handoff')}
             >
                 <SettingsCard title={__('Import/Export Settings', 'analogwp-client-handoff')}>
-                    <div className="cht-data-management">
-                        <div className="cht-export-section">
-                            <h4>{__('Export Settings', 'analogwp-client-handoff')}</h4>
-                            <p>{__('Download all your settings as a JSON file for backup or transfer to another site.', 'analogwp-client-handoff')}</p>
-                            <button
-                                className="cht-btn cht-btn-secondary"
-                                onClick={exportSettings}
-                            >
-                                {__('Download Settings', 'analogwp-client-handoff')}
-                            </button>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-4">
+                            <div className="border-l-4 border-blue-500 pl-4">
+                                <h4 className="text-lg font-medium text-gray-900 mb-2">{__('Export Settings', 'analogwp-client-handoff')}</h4>
+                                <p className="text-sm text-gray-600 mb-4">{__('Download all your settings as a JSON file for backup or transfer to another site.', 'analogwp-client-handoff')}</p>
+                                <button
+                                    className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                                    onClick={exportSettings}
+                                >
+                                    {__('Download Settings', 'analogwp-client-handoff')}
+                                </button>
+                            </div>
                         </div>
 
-                        <div className="cht-import-section">
-                            <h4>{__('Import Settings', 'analogwp-client-handoff')}</h4>
-                            <p>{__('Upload a settings file to restore or transfer settings from another installation.', 'analogwp-client-handoff')}</p>
-                            <FileUpload
-                                id="import_settings"
-                                accept=".json"
-                                onChange={handleImport}
-                                description={__('Select a JSON settings file to import.', 'analogwp-client-handoff')}
-                            />
+                        <div className="space-y-4">
+                            <div className="border-l-4 border-green-500 pl-4">
+                                <h4 className="text-lg font-medium text-gray-900 mb-2">{__('Import Settings', 'analogwp-client-handoff')}</h4>
+                                <p className="text-sm text-gray-600 mb-4">{__('Upload a settings file to restore or transfer settings from another installation.', 'analogwp-client-handoff')}</p>
+                                <FileUpload
+                                    id="import_settings"
+                                    accept=".json"
+                                    onChange={handleImport}
+                                    description={__('Select a JSON settings file to import.', 'analogwp-client-handoff')}
+                                />
+                            </div>
                         </div>
                     </div>
                 </SettingsCard>
 
                 <SettingsCard title={__('System Information', 'analogwp-client-handoff')}>
-                    <div className="cht-system-info">
-                        <div className="cht-info-row">
-                            <strong>{__('Plugin Version:', 'analogwp-client-handoff')}</strong>
-                            <span>{window.agwpChtAjax?.pluginVersion || 'Unknown'}</span>
-                        </div>
-                        <div className="cht-info-row">
-                            <strong>{__('WordPress Version:', 'analogwp-client-handoff')}</strong>
-                            <span>{window.agwpChtAjax?.wpVersion || 'Unknown'}</span>
-                        </div>
-                        <div className="cht-info-row">
-                            <strong>{__('PHP Version:', 'analogwp-client-handoff')}</strong>
-                            <span>{window.agwpChtAjax?.phpVersion || 'Unknown'}</span>
+                    <div className="bg-gray-50 rounded-lg p-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="text-center p-4 bg-white rounded-lg border border-gray-200">
+                                <div className="text-lg font-semibold text-gray-900">{window.agwpChtAjax?.pluginVersion || 'Unknown'}</div>
+                                <div className="text-sm text-gray-500">{__('Plugin Version', 'analogwp-client-handoff')}</div>
+                            </div>
+                            <div className="text-center p-4 bg-white rounded-lg border border-gray-200">
+                                <div className="text-lg font-semibold text-gray-900">{window.agwpChtAjax?.wpVersion || 'Unknown'}</div>
+                                <div className="text-sm text-gray-500">{__('WordPress Version', 'analogwp-client-handoff')}</div>
+                            </div>
+                            <div className="text-center p-4 bg-white rounded-lg border border-gray-200">
+                                <div className="text-lg font-semibold text-gray-900">{window.agwpChtAjax?.phpVersion || 'Unknown'}</div>
+                                <div className="text-sm text-gray-500">{__('PHP Version', 'analogwp-client-handoff')}</div>
+                            </div>
                         </div>
                     </div>
                 </SettingsCard>

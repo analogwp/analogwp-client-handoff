@@ -110,14 +110,14 @@ const CategorySettings = () => {
     ];
 
     return (
-        <div className="cht-settings-tab-content">
+        <div className="p-6 max-w-4xl">
             <SettingsSection
                 title={__('Comment Categories', 'analogwp-client-handoff')}
                 description={__('Organize comments and tasks into categories for better project management.', 'analogwp-client-handoff')}
             >
                 <SettingsCard title={__('Add New Category', 'analogwp-client-handoff')}>
-                    <div className="cht-add-category-form">
-                        <div className="cht-form-row">
+                    <div className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <TextInput
                                 id="new_category_name"
                                 label={__('Category Name', 'analogwp-client-handoff')}
@@ -134,13 +134,17 @@ const CategorySettings = () => {
                             />
                         </div>
                         
-                        <div className="cht-predefined-colors">
-                            <label className="cht-field-label">{__('Quick Colors:', 'analogwp-client-handoff')}</label>
-                            <div className="cht-color-palette">
+                        <div className="space-y-3">
+                            <label className="block text-sm font-medium text-gray-700">{__('Quick Colors:', 'analogwp-client-handoff')}</label>
+                            <div className="flex flex-wrap gap-2">
                                 {predefinedColors.map(color => (
                                     <button
                                         key={color}
-                                        className={`cht-color-swatch ${newCategory.color === color ? 'active' : ''}`}
+                                        className={`w-8 h-8 rounded-full border-2 transition-all hover:scale-110 ${
+                                            newCategory.color === color 
+                                                ? 'border-gray-900 ring-2 ring-gray-900 ring-offset-2' 
+                                                : 'border-gray-300 hover:border-gray-400'
+                                        }`}
                                         style={{ backgroundColor: color }}
                                         onClick={() => setNewCategory({ ...newCategory, color })}
                                         title={color}
@@ -150,11 +154,11 @@ const CategorySettings = () => {
                         </div>
 
                         <button
-                            className="cht-btn cht-btn-primary"
+                            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             onClick={addCategory}
                             disabled={!newCategory.name.trim()}
                         >
-                            <PlusIcon className="cht-icon" />
+                            <PlusIcon className="w-4 h-4 mr-2" />
                             {__('Add Category', 'analogwp-client-handoff')}
                         </button>
                     </div>
@@ -166,56 +170,60 @@ const CategorySettings = () => {
                             {__('No categories created yet. Add your first category above.', 'analogwp-client-handoff')}
                         </FieldDescription>
                     ) : (
-                        <div className="cht-categories-list">
+                        <div className="space-y-3">
                             {categories.map(category => (
-                                <div key={category.id} className="cht-category-item">
+                                <div key={category.id} className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                                     {editingId === category.id ? (
-                                        <div className="cht-category-edit-form">
-                                            <TextInput
-                                                value={editForm.name}
-                                                onChange={(value) => setEditForm({ ...editForm, name: value })}
-                                                placeholder={__('Category name...', 'analogwp-client-handoff')}
-                                            />
-                                            <ColorInput
-                                                value={editForm.color}
-                                                onChange={(value) => setEditForm({ ...editForm, color: value })}
-                                            />
-                                            <div className="cht-category-edit-actions">
+                                        <div className="space-y-4">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                <TextInput
+                                                    value={editForm.name}
+                                                    onChange={(value) => setEditForm({ ...editForm, name: value })}
+                                                    placeholder={__('Category name...', 'analogwp-client-handoff')}
+                                                />
+                                                <ColorInput
+                                                    value={editForm.color}
+                                                    onChange={(value) => setEditForm({ ...editForm, color: value })}
+                                                />
+                                            </div>
+                                            <div className="flex gap-2">
                                                 <button
-                                                    className="cht-btn cht-btn-sm cht-btn-primary"
+                                                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors"
                                                     onClick={saveEdit}
                                                     title={__('Save changes', 'analogwp-client-handoff')}
                                                 >
-                                                    <CheckIcon className="cht-icon" />
+                                                    <CheckIcon className="w-4 h-4 mr-1" />
+                                                    {__('Save', 'analogwp-client-handoff')}
                                                 </button>
                                                 <button
-                                                    className="cht-btn cht-btn-sm cht-btn-secondary"
+                                                    className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
                                                     onClick={cancelEdit}
                                                     title={__('Cancel editing', 'analogwp-client-handoff')}
                                                 >
-                                                    <XMarkIcon className="cht-icon" />
+                                                    <XMarkIcon className="w-4 h-4 mr-1" />
+                                                    {__('Cancel', 'analogwp-client-handoff')}
                                                 </button>
                                             </div>
                                         </div>
                                     ) : (
-                                        <div className="cht-category-display">
-                                            <div className="cht-category-info">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-3">
                                                 <span 
-                                                    className="cht-category-color"
+                                                    className="w-4 h-4 rounded-full border border-gray-300"
                                                     style={{ backgroundColor: category.color }}
                                                 />
-                                                <span className="cht-category-name">{category.name}</span>
+                                                <span className="font-medium text-gray-900">{category.name}</span>
                                             </div>
-                                            <div className="cht-category-actions">
+                                            <div className="flex gap-2">
                                                 <button
-                                                    className="cht-btn cht-btn-sm cht-btn-outline"
+                                                    className="inline-flex items-center px-2 py-1 border border-gray-300 text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
                                                     onClick={() => startEdit(category)}
                                                     title={__('Edit category', 'analogwp-client-handoff')}
                                                 >
-                                                    <PencilIcon className="cht-icon" />
+                                                    <PencilIcon className="w-4 h-4" />
                                                 </button>
                                                 <button
-                                                    className="cht-btn cht-btn-sm cht-btn-danger"
+                                                    className="inline-flex items-center px-2 py-1 border border-red-300 text-xs font-medium rounded text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
                                                     onClick={() => {
                                                         if (confirm(__('Are you sure you want to delete this category?', 'analogwp-client-handoff'))) {
                                                             deleteCategory(category.id);
@@ -223,7 +231,7 @@ const CategorySettings = () => {
                                                     }}
                                                     title={__('Delete category', 'analogwp-client-handoff')}
                                                 >
-                                                    <TrashIcon className="cht-icon" />
+                                                    <TrashIcon className="w-4 h-4" />
                                                 </button>
                                             </div>
                                         </div>
@@ -240,22 +248,26 @@ const CategorySettings = () => {
                 description={__('Tips for effective category management.', 'analogwp-client-handoff')}
             >
                 <SettingsCard>
-                    <div className="cht-category-tips">
-                        <div className="cht-tip">
-                            <strong>{__('Project Phases:', 'analogwp-client-handoff')}</strong>
-                            <span>{__('Create categories for different project phases like "Design", "Development", "Testing".', 'analogwp-client-handoff')}</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-4">
+                            <div className="border-l-4 border-blue-500 pl-4">
+                                <h5 className="font-medium text-gray-900 mb-1">{__('Project Phases:', 'analogwp-client-handoff')}</h5>
+                                <p className="text-sm text-gray-600">{__('Create categories for different project phases like "Design", "Development", "Testing".', 'analogwp-client-handoff')}</p>
+                            </div>
+                            <div className="border-l-4 border-green-500 pl-4">
+                                <h5 className="font-medium text-gray-900 mb-1">{__('Priority Levels:', 'analogwp-client-handoff')}</h5>
+                                <p className="text-sm text-gray-600">{__('Use colors to indicate priority: red for urgent, yellow for medium, green for low priority.', 'analogwp-client-handoff')}</p>
+                            </div>
                         </div>
-                        <div className="cht-tip">
-                            <strong>{__('Priority Levels:', 'analogwp-client-handoff')}</strong>
-                            <span>{__('Use colors to indicate priority: red for urgent, yellow for medium, green for low priority.', 'analogwp-client-handoff')}</span>
-                        </div>
-                        <div className="cht-tip">
-                            <strong>{__('Content Types:', 'analogwp-client-handoff')}</strong>
-                            <span>{__('Organize by content type: "Text Changes", "Image Issues", "Layout Problems", "SEO".', 'analogwp-client-handoff')}</span>
-                        </div>
-                        <div className="cht-tip">
-                            <strong>{__('Team Departments:', 'analogwp-client-handoff')}</strong>
-                            <span>{__('Assign categories by team responsibility: "Frontend", "Backend", "Content", "QA".', 'analogwp-client-handoff')}</span>
+                        <div className="space-y-4">
+                            <div className="border-l-4 border-purple-500 pl-4">
+                                <h5 className="font-medium text-gray-900 mb-1">{__('Content Types:', 'analogwp-client-handoff')}</h5>
+                                <p className="text-sm text-gray-600">{__('Organize by content type: "Text Changes", "Image Issues", "Layout Problems", "SEO".', 'analogwp-client-handoff')}</p>
+                            </div>
+                            <div className="border-l-4 border-orange-500 pl-4">
+                                <h5 className="font-medium text-gray-900 mb-1">{__('Team Departments:', 'analogwp-client-handoff')}</h5>
+                                <p className="text-sm text-gray-600">{__('Assign categories by team responsibility: "Frontend", "Backend", "Content", "QA".', 'analogwp-client-handoff')}</p>
+                            </div>
                         </div>
                     </div>
                 </SettingsCard>
