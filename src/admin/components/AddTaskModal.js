@@ -8,8 +8,10 @@ import { __ } from '@wordpress/i18n';
  * Internal dependencies
  */
 import { showToast } from './ToastProvider';
+import { useSettings } from './settings/SettingsProvider';
 
 const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, statuses = [], isSidebar = false }) => {
+    const { categories } = useSettings();
     const [formData, setFormData] = useState({
         taskName: '',
         status: 'open',
@@ -255,10 +257,15 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                         className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
                     >
                         <option value="">{__('Select Category', 'analogwp-client-handoff')}</option>
-                        <option value="bug">{__('Bug', 'analogwp-client-handoff')}</option>
-                        <option value="feature">{__('Feature', 'analogwp-client-handoff')}</option>
-                        <option value="improvement">{__('Improvement', 'analogwp-client-handoff')}</option>
-                        <option value="content">{__('Content', 'analogwp-client-handoff')}</option>
+                        {categories && categories.length > 0 ? (
+                            categories.map(category => (
+                                <option key={category.id} value={category.name}>
+                                    {category.name}
+                                </option>
+                            ))
+                        ) : (
+                            <option disabled>{__('No categories available. Create categories in Settings.', 'analogwp-client-handoff')}</option>
+                        )}
                     </select>
                 </div>
 
@@ -436,10 +443,15 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
                         >
                             <option value="">{__('Select Category', 'analogwp-client-handoff')}</option>
-                            <option value="bug">{__('Bug', 'analogwp-client-handoff')}</option>
-                            <option value="feature">{__('Feature', 'analogwp-client-handoff')}</option>
-                            <option value="improvement">{__('Improvement', 'analogwp-client-handoff')}</option>
-                            <option value="content">{__('Content', 'analogwp-client-handoff')}</option>
+                            {categories && categories.length > 0 ? (
+                                categories.map(category => (
+                                    <option key={category.id} value={category.name}>
+                                        {category.name}
+                                    </option>
+                                ))
+                            ) : (
+                                <option disabled>{__('No categories available. Create categories in Settings.', 'analogwp-client-handoff')}</option>
+                            )}
                         </select>
                     </div>
 
@@ -639,10 +651,15 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
                         >
                             <option value="">{__('Select Category', 'analogwp-client-handoff')}</option>
-                            <option value="bug">{__('Bug', 'analogwp-client-handoff')}</option>
-                            <option value="feature">{__('Feature', 'analogwp-client-handoff')}</option>
-                            <option value="improvement">{__('Improvement', 'analogwp-client-handoff')}</option>
-                            <option value="content">{__('Content', 'analogwp-client-handoff')}</option>
+                            {categories && categories.length > 0 ? (
+                                categories.map(category => (
+                                    <option key={category.id} value={category.name}>
+                                        {category.name}
+                                    </option>
+                                ))
+                            ) : (
+                                <option disabled>{__('No categories available. Create categories in Settings.', 'analogwp-client-handoff')}</option>
+                            )}
                         </select>
                     </div>
 

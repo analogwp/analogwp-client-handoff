@@ -263,7 +263,7 @@ export const SettingsProvider = ({ children }) => {
         }
     };
 
-    const saveSettings = async (silent = false) => {
+    const saveSettings = async (silent = false, categoriesToSave = null) => {
         // Validate settings before saving
         const validationErrors = validateSettings(settings);
         if (validationErrors.length > 0) {
@@ -272,6 +272,9 @@ export const SettingsProvider = ({ children }) => {
             }
             return false;
         }
+
+        // Use provided categories or current state
+        const categoriesToUse = categoriesToSave !== null ? categoriesToSave : categories;
 
         try {
             setSaving(true);
@@ -284,7 +287,7 @@ export const SettingsProvider = ({ children }) => {
                     action: 'agwp_cht_save_settings',
                     nonce: agwpChtAjax.nonce,
                     settings: JSON.stringify(settings),
-                    categories: JSON.stringify(categories)
+                    categories: JSON.stringify(categoriesToUse)
                 })
             });
 

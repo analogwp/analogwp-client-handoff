@@ -37,10 +37,13 @@ const CategorySettings = () => {
     // Helper function to update categories and auto-save
     const updateCategories = async (newCategories) => {
         setCategories(newCategories);
-        // Auto-save categories immediately
-        setTimeout(() => {
-            saveSettings(true); // true = silent save without toast
-        }, 100);
+        // Auto-save categories immediately with the new categories
+        try {
+            await saveSettings(true, newCategories); // Pass new categories directly
+        } catch (error) {
+            console.error('Error saving categories:', error);
+            showToast.error(__('Failed to save categories', 'analogwp-client-handoff'));
+        }
     };
 
     const addCategory = async () => {

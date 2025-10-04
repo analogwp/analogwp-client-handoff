@@ -11,11 +11,14 @@ import TasksKanban from '../components/TasksKanban';
 import AdminHeader from '../components/AdminHeader';
 import Settings from '../components/Settings';
 import { ToastProvider, showToast, showConfirmation } from '../components/ToastProvider';
+import SettingsProvider from '../components/settings/SettingsProvider';
 
 const UnifiedAdminApp = ({ initialPage = 'dashboard' }) => {
     return (
         <ToastProvider>
-            <UnifiedAdminAppContent initialPage={initialPage} />
+            <SettingsProvider>
+                <UnifiedAdminAppContent initialPage={initialPage} />
+            </SettingsProvider>
         </ToastProvider>
     );
 };

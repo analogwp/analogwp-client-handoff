@@ -30,9 +30,7 @@ const ModernSettings = () => {
 
     return (
         <ExtensionsProvider>
-            <SettingsProvider>
-                <SettingsContent activeTab={activeTab} setActiveTab={setActiveTab} />
-            </SettingsProvider>
+            <SettingsContent activeTab={activeTab} setActiveTab={setActiveTab} />
         </ExtensionsProvider>
     );
 };

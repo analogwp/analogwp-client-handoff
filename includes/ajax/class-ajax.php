@@ -729,31 +729,7 @@ class AGWP_CHT_Ajax {
 		$settings       = wp_parse_args( $saved_settings, $default_settings );
 
 		// Get categories.
-		$categories = get_option(
-			'agwp_cht_categories',
-			array(
-				array(
-					'id' => 1,
-					'name' => 'Page Building',
-					'color' => '#3498db',
-				),
-				array(
-					'id' => 2,
-					'name' => 'SEO',
-					'color' => '#e74c3c',
-				),
-				array(
-					'id' => 3,
-					'name' => 'Content',
-					'color' => '#2ecc71',
-				),
-				array(
-					'id' => 4,
-					'name' => 'Shop Management',
-					'color' => '#f39c12',
-				),
-			)
-		);
+		$categories = get_option( 'agwp_cht_categories', array() );
 
 		$this->send_success(
 			array(

@@ -3,6 +3,11 @@
  */
 import { __ } from '@wordpress/i18n';
 
+/**
+ * Internal dependencies
+ */
+import { useSettings } from './settings/SettingsProvider';
+
 const AdminHeader = ({
     currentPage = 'dashboard',
     onNavigate,
@@ -13,8 +18,9 @@ const AdminHeader = ({
     sortBy,
     onSortChange,
     users,
-    categories
+    categories: legacyCategories // Keep for backwards compatibility but use settings instead
 }) => {
+    const { categories } = useSettings();
     return (
         <div className="bg-white border border-gray-200 rounded-lg mb-5 shadow-sm">
             <div className="flex items-center justify-between p-6">
@@ -54,27 +60,35 @@ const AdminHeader = ({
             
             {/* Show filters and controls only on dashboard */}
             {currentPage === 'dashboard' && (
-                <div className="cht-header-controls">
-                <div className="cht-view-toggle">
+                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                <div className="flex rounded-lg bg-gray-100 p-1">
                     <button 
-                        className={`cht-view-btn ${activeView === 'kanban' ? 'active' : ''}`}
+                        className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
+                            activeView === 'kanban' 
+                                ? 'bg-white text-gray-900 shadow-sm' 
+                                : 'text-gray-600 hover:text-gray-900'
+                        }`}
                         onClick={() => onViewChange('kanban')}
                     >
                         {__('Kanban', 'analogwp-client-handoff')}
                     </button>
                     <button 
-                        className={`cht-view-btn ${activeView === 'list' ? 'active' : ''}`}
+                        className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
+                            activeView === 'list' 
+                                ? 'bg-white text-gray-900 shadow-sm' 
+                                : 'text-gray-600 hover:text-gray-900'
+                        }`}
                         onClick={() => onViewChange('list')}
                     >
                         {__('List', 'analogwp-client-handoff')}
                     </button>
                 </div>
                 
-                <div className="cht-filters">
+                <div className="flex gap-3 items-center">
                     <select 
                         value={filters.status}
                         onChange={(e) => onFilterChange({status: e.target.value})}
-                        className="cht-filter-select"
+                        className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     >
                         <option value="">{__('Filter by Status', 'analogwp-client-handoff')}</option>
                         <option value="open">{__('Todo', 'analogwp-client-handoff')}</option>
@@ -85,7 +99,7 @@ const AdminHeader = ({
                     <select 
                         value={filters.user}
                         onChange={(e) => onFilterChange({user: e.target.value})}
-                        className="cht-filter-select"
+                        className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     >
                         <option value="">{__('Filter by User', 'analogwp-client-handoff')}</option>
                         {users.map(user => (
@@ -96,7 +110,7 @@ const AdminHeader = ({
                     <select 
                         value={sortBy}
                         onChange={(e) => onSortChange(e.target.value)}
-                        className="cht-filter-select"
+                        className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     >
                         <option value="created_at">{__('Sort by Date', 'analogwp-client-handoff')}</option>
                         <option value="updated_at">{__('Sort by Updated', 'analogwp-client-handoff')}</option>
@@ -106,14 +120,18 @@ const AdminHeader = ({
                     <select 
                         value={filters.category}
                         onChange={(e) => onFilterChange({category: e.target.value})}
-                        className="cht-filter-select"
+                        className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     >
                         <option value="">{__('Filter by Category', 'analogwp-client-handoff')}</option>
-                        {categories.map(category => (
-                            <option key={category.id || category.slug || category} value={category.slug || category}>
-                                {category.name || category}
-                            </option>
-                        ))}
+                        {categories && categories.length > 0 ? (
+                            categories.map(category => (
+                                <option key={category.id} value={category.name}>
+                                    {category.name}
+                                </option>
+                            ))
+                        ) : (
+                            <option disabled>{__('No categories available', 'analogwp-client-handoff')}</option>
+                        )}
                     </select>
                 </div>
             </div>
