@@ -284,6 +284,7 @@ class AGWP_CHT_Database {
 			'status',
 			'due_date',
 			'time_estimation',
+			'timesheet',
 		);
 
 		// Filter data to only include allowed fields.

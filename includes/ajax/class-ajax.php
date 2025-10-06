@@ -186,6 +186,19 @@ class AGWP_CHT_Ajax {
 	 * @since 1.0.0
 	 */
 	public function update_comment() {
+		// Verify nonce.
+		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'agwp_cht_nonce' ) ) {
+			wp_send_json_error( array( 'message' => 'Invalid nonce' ) );
+			return;
+		}
+
+		// Check user capability.
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			wp_send_json_error( array( 'message' => 'Insufficient permissions' ) );
+			return;
+		}
+
 		$post_data  = wp_unslash( $_POST );
 		$comment_id = isset( $post_data['comment_id'] ) ? intval( $post_data['comment_id'] ) : 0;
 
