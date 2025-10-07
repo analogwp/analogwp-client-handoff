@@ -4,16 +4,39 @@
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
+/**
+ * dnd-kit dependencies
+ */
+import { useDraggable } from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
+
 const TaskCard = ({ 
     comment, 
     user, 
     onStatusChange, 
     onDelete, 
     onEdit,
-    onDragStart, 
     onCardClick,
-    formatDate 
+    formatDate,
+    isDragging = false 
 }) => {
+
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        isDragging: isActiveDrag,
+    } = useDraggable({
+        id: comment.id,
+        data: {
+            comment: comment,
+        },
+    });
+
+    const style = {
+        transform: CSS.Translate.toString(transform),
+    };
 
     const getUserInitials = (name) => {
         return name ? name.split(' ').map(n => n[0]).join('').toUpperCase() : '?';
@@ -35,9 +58,13 @@ const TaskCard = ({
 
     return (
         <div 
-            className="cht-kanban-card relative pl-10! bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer"
-            draggable
-            onDragStart={(e) => onDragStart(e, comment)}
+            ref={setNodeRef}
+            style={style}
+            {...listeners}
+            {...attributes}
+            className={`cht-kanban-card relative pl-10! bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer ${
+                isActiveDrag ? 'opacity-50' : ''
+            }`}
             onClick={() => onCardClick && onCardClick(comment)}
         >
             <div className="flex items-center justify-between mb-3">

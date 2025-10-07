@@ -5,6 +5,12 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 /**
+ * dnd-kit dependencies
+ */
+import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { useDroppable } from '@dnd-kit/core';
+
+/**
  * Internal dependencies
  */
 import TaskCard from './TaskCard';
@@ -29,6 +35,36 @@ const TasksKanban = ({
     onSortChange
 }) => {
     const [draggedItem, setDraggedItem] = useState(null);
+    const [activeId, setActiveId] = useState(null);
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8, // Minimum distance before drag starts
+            },
+        })
+    );
+
+    // Droppable column component
+    const DroppableColumn = ({ id, children, status }) => {
+        const { isOver, setNodeRef } = useDroppable({
+            id: id,
+            data: {
+                status: status,
+            },
+        });
+
+        return (
+            <div 
+                ref={setNodeRef}
+                className={`bg-gray-50 rounded-lg p-4 min-h-96 transition-all duration-200 ${
+                    isOver ? 'bg-blue-50 border-2 border-blue-300 border-dashed shadow-lg' : ''
+                }`}
+            >
+                {children}
+            </div>
+        );
+    };
     const [selectedTask, setSelectedTask] = useState(null);
     const [showAddModal, setShowAddModal] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
@@ -100,22 +136,26 @@ const TasksKanban = ({
         return users.find(user => user.id === parseInt(userId));
     };
 
-    const handleDragStart = (e, comment) => {
-        setDraggedItem(comment);
-        e.dataTransfer.effectAllowed = 'move';
+    const handleDragStart = (event) => {
+        const { active } = event;
+        setActiveId(active.id);
+        setDraggedItem(active.data.current?.comment);
     };
 
-    const handleDragOver = (e) => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-    };
-
-    const handleDrop = (e, newStatus) => {
-        e.preventDefault();
-        if (draggedItem && draggedItem.status !== newStatus) {
-            onUpdateComment(draggedItem.id, { status: newStatus });
-        }
+    const handleDragEnd = (event) => {
+        const { active, over } = event;
+        
+        setActiveId(null);
         setDraggedItem(null);
+
+        if (!over) return;
+
+        const comment = active.data.current?.comment;
+        const newStatus = over.data.current?.status;
+
+        if (comment && newStatus && comment.status !== newStatus) {
+            onUpdateComment(comment.id, { status: newStatus });
+        }
     };
 
     const formatDate = (dateString) => {
@@ -145,7 +185,11 @@ const TasksKanban = ({
 
     if (activeView === 'list') {
         return (
-            <>
+            <DndContext 
+                sensors={sensors}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+            >
                 {/* Task Detail View - Full Page for List View */}
                 {selectedTask && (
                     <TaskDetail
@@ -279,7 +323,29 @@ const TasksKanban = ({
                         </div>
                     </>
                 )}
-            </>
+
+                {/* DragOverlay for visual feedback */}
+                <DragOverlay>
+                    {activeId ? (
+                        <div 
+                            className="transform rotate-3 shadow-lg"
+                            style={{ pointerEvents: 'none' }}
+                        >
+                            <TaskCard 
+                                comment={draggedItem} 
+                                onCardClick={() => {}}
+                                onStatusChange={() => {}}
+                                onEdit={() => {}}
+                                onDelete={() => {}}
+                                statuses={statuses}
+                                getUserById={getUserById}
+                                formatDate={formatDate}
+                                isDragging={false}
+                            />
+                        </div>
+                    ) : null}
+                </DragOverlay>
+            </DndContext>
         );
     }
 
@@ -302,7 +368,11 @@ const TasksKanban = ({
 
             {/* Main Kanban Board */}
             {!selectedTask && (
-                <>
+                <DndContext 
+                    sensors={sensors}
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
+                >
                     <TasksControls 
                         activeView={activeView}
                         onViewChange={onViewChange}
@@ -314,12 +384,7 @@ const TasksKanban = ({
                     />
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {statuses.map(status => (
-                        <div 
-                            key={status.key}
-                            className="bg-gray-50 rounded-lg p-4 min-h-96"
-                            onDragOver={handleDragOver}
-                            onDrop={(e) => handleDrop(e, status.key)}
-                        >
+                        <DroppableColumn key={status.key} id={status.key} status={status.key}>
                             <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200">
                                 <div className="flex items-center space-x-2">
                                     <span className="text-lg" style={{ color: status.color }}>
@@ -341,7 +406,6 @@ const TasksKanban = ({
                                         onStatusChange={handleStatusChange}
                                         onDelete={handleDelete}
                                         onEdit={handleEditTask}
-                                        onDragStart={handleDragStart}
                                         onCardClick={handleCardClick}
                                         formatDate={formatDate}
                                     />
@@ -359,13 +423,28 @@ const TasksKanban = ({
                                     </button>
                                 )}
                             </div>
-                        </div>
+                        </DroppableColumn>
                     ))}
-                </div>
-                </>
-            )}
-
-            {/* Add/Edit Task Sidebar */}
+                    </div>
+                    
+                    {/* Drag Overlay - shows the card being dragged */}
+                    <DragOverlay>
+                        {activeId && draggedItem ? (
+                            <div className="transform rotate-6 opacity-90">
+                                <TaskCard
+                                    comment={draggedItem}
+                                    user={draggedItem.user || getUserById(draggedItem.user_id)}
+                                    onStatusChange={() => {}}
+                                    onDelete={() => {}}
+                                    onEdit={() => {}}
+                                    onCardClick={() => {}}
+                                    formatDate={formatDate}
+                                />
+                            </div>
+                        ) : null}
+                    </DragOverlay>
+                </DndContext>
+            )}            {/* Add/Edit Task Sidebar */}
             {showAddModal && (
                 <>
                     {/* Backdrop */}
