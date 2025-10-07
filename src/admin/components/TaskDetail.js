@@ -278,18 +278,25 @@ const TaskDetail = ({
             <div className="max-w-6xl mx-auto p-6">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2 space-y-6">
-                        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-                            <div className="flex items-center space-x-3 mb-4">
-                                <div 
-                                    className="w-3 h-3 rounded-full"
-                                    style={{ backgroundColor: getPriorityColor(priority) }}
-                                />
-                                <span 
-																className="text-sm font-medium"
-																style={{ color: getPriorityColor(priority) }}
-																>
-                                    {priority ? priority.charAt(0).toUpperCase() + priority.slice(1) : __('Normal', 'analogwp-client-handoff')}
-                                </span>
+                        <div className="bg-white border border-gray-200 rounded-lg py-2! px-6! shadow-sm">
+                            <div className="flex items-center space-x-4 mb-4">
+																<div>
+																	<h2 className="text-lg font-semibold text-gray-900 flex-1">
+                                            #{comment.id}
+                                        </h2>
+																</div>
+                                <div className="flex items-center space-x-2">
+																		<div 
+																			className="w-3 h-3 rounded-full"
+																			style={{ backgroundColor: getPriorityColor(priority) }}
+																	/>
+																	<span 
+																	className="text-sm font-medium"
+																	style={{ color: getPriorityColor(priority) }}
+																	>
+																			{priority ? priority.charAt(0).toUpperCase() + priority.slice(1) : __('Normal', 'analogwp-client-handoff')}
+																	</span>
+																</div>
                             </div>
                             
                             <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mb-4">
@@ -299,7 +306,7 @@ const TaskDetail = ({
                             {/* Title Section */}
                             <div className="mb-4">
                                 {editingTitle ? (
-                                    <div className="space-y-2">
+                                    <div className="space-y-2!">
                                         <input
                                             type="text"
                                             value={tempTitle}
@@ -307,7 +314,7 @@ const TaskDetail = ({
                                             className="w-full text-lg font-semibold border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                             placeholder={__('Enter task title', 'analogwp-client-handoff')}
                                         />
-                                        <div className="flex space-x-2">
+                                        <div className="flex space-x-2!">
                                             <Button 
                                                 onClick={handleSaveTitle}
                                                 variant="primary"
@@ -493,10 +500,7 @@ const TaskDetail = ({
                                             <span className="text-sm text-gray-900 font-medium">{formatDate(comment.created_at)}</span>
                                         </div>
                                         
-                                        <div className="bg-white border border-gray-100 rounded-lg p-3">
-                                            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">{__('Task ID', 'analogwp-client-handoff')}</label>
-                                            <span className="text-sm text-gray-900 font-medium">#{comment.id}</span>
-                                        </div>
+                                      
                                     </div>
                                 </div>
                             </div>
@@ -587,8 +591,8 @@ const TaskDetail = ({
                                 {/* Time Entries List */}
                                 {timeEntries.length > 0 ? (
                                     <div className="space-y-4">
-                                        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                                            <h4 className="text-sm font-medium text-gray-900 flex items-center">
+                                        <div className="flex items-center justify-between p-4 border-t border-gray-100">
+                                            <h4 className="text-sm font-medium text-gray-900 flex! items-center">
                                                 <svg className="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                                 </svg>
@@ -600,9 +604,9 @@ const TaskDetail = ({
                                             </div>
                                         </div>
                                         
-                                        <div className="space-y-3">
+                                        <div className="p-4 space-y-3">
                                             {timeEntries.map((entry, index) => (
-                                                <div key={entry.id} className="group bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-all duration-200 hover:border-gray-300">
+                                                <div key={entry.id} className="group bg-white border border-gray-200 rounded-md p-4 hover:shadow-md transition-all duration-200 hover:border-gray-300">
                                                     <div className="flex items-start justify-between">
                                                         <div className="flex-1 space-y-2">
                                                             <div className="flex items-center space-x-3">
