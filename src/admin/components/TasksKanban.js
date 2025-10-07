@@ -323,9 +323,9 @@ const TasksKanban = ({
                                     <span className="text-lg" style={{ color: status.color }}>
                                         {status.icon}
                                     </span>
-                                    <span className="font-semibold text-gray-900">{status.title}</span>
+                                    <span className="text-lg font-semibold text-gray-900">{status.title}</span>
                                 </div>
-                                <div className="bg-white text-gray-600 text-xs font-medium px-2 py-1 rounded-full">
+                                <div className="bg-white text-gray-600 text-base font-medium px-2 py-1 rounded-full">
                                     {getCommentsByStatus(status.key).length}
                                 </div>
                             </div>

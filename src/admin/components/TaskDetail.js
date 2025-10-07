@@ -244,23 +244,22 @@ const TaskDetail = ({
                                     className="w-3 h-3 rounded-full"
                                     style={{ backgroundColor: getPriorityColor(priority) }}
                                 />
-                                <span className="text-sm font-medium text-gray-700">
+                                <span 
+																className="text-sm font-medium"
+																style={{ color: getPriorityColor(priority) }}
+																>
                                     {priority ? priority.charAt(0).toUpperCase() + priority.slice(1) : __('Normal', 'analogwp-client-handoff')}
                                 </span>
                             </div>
                             
-                            <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mb-4 ${
-                                status === 'open' ? 'bg-amber-100 text-amber-800' :
-                                status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
-                                'bg-green-100 text-green-800'
-                            }`}>
+                            <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mb-4">
                                 {getStatusLabel(status)}
                             </div>
-                        </div>
-                        
-                        <div className="space-y-4">
-                            <h2 className="text-lg font-semibold text-gray-900 mb-2">{__('Comment', 'analogwp-client-handoff')}</h2>
-                            <p className="text-gray-700 leading-relaxed">{comment.comment_text}</p>
+
+														<div>
+															<h2 className="text-lg font-semibold text-gray-900 mb-2">{comment.comment_text}</h2>
+															<div className="text-gray-700 leading-relaxed">{/* Here goes details.  */}</div>
+														</div>
                         </div>
                         
                         {comment.page_url && (

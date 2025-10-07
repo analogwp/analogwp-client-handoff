@@ -33,7 +33,7 @@
 		select {
 			padding: 0.3rem 1.75rem 0.3rem 0.7rem !important;
       height: auto !important;
-
+			@apply text-[14px]!;
 		}
 
 		select,
