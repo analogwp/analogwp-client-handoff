@@ -1235,3 +1235,40 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     }
   }
 }
+
+// Title elements styles
+.cht-task-title,
+.cht-comment-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1d2327;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.cht-comment-title {
+  color: #2271b1;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+// Comment input styles for title field
+.cht-comment-title {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 1px $primary-color;
+  }
+  
+  &::placeholder {
+    color: #9ca3af;
+  }
+}

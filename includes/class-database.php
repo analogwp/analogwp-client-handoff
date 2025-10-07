@@ -44,6 +44,7 @@ class AGWP_CHT_Database {
 			post_id int(11) NOT NULL,
 			user_id int(11) NOT NULL DEFAULT 0,
 			assigned_to int(11) DEFAULT 0,
+			comment_title varchar(255) DEFAULT '',
 			comment_text text NOT NULL,
 			element_selector varchar(500) DEFAULT '',
 			screenshot_url varchar(500) DEFAULT '',
@@ -116,6 +117,21 @@ class AGWP_CHT_Database {
 		if ( empty( $column_exists ) ) {
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$wpdb->query( "ALTER TABLE {$comments_table} ADD COLUMN timesheet longtext DEFAULT NULL" );
+		}
+
+		// Check if comment_title column exists, if not add it.
+		$title_column_exists = $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = %s AND TABLE_NAME = %s AND COLUMN_NAME = %s',
+				DB_NAME,
+				$comments_table,
+				'comment_title'
+			)
+		);
+
+		if ( empty( $title_column_exists ) ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$wpdb->query( "ALTER TABLE {$comments_table} ADD COLUMN comment_title varchar(255) DEFAULT '' AFTER assigned_to" );
 		}
 	}
 
@@ -204,6 +220,7 @@ class AGWP_CHT_Database {
 			'post_id'          => isset( $data['post_id'] ) ? intval( $data['post_id'] ) : 0,
 			'user_id'          => get_current_user_id(), // Always set to current user (creator)
 			'assigned_to'      => isset( $data['assigned_to'] ) ? intval( $data['assigned_to'] ) : 0,
+			'comment_title'    => isset( $data['comment_title'] ) ? sanitize_text_field( wp_unslash( $data['comment_title'] ) ) : '',
 			'comment_text'     => sanitize_textarea_field( wp_unslash( $data['comment_text'] ) ),
 			'element_selector' => isset( $data['element_selector'] ) ? sanitize_text_field( wp_unslash( $data['element_selector'] ) ) : '',
 			'screenshot_url'   => isset( $data['screenshot_url'] ) ? sanitize_url( wp_unslash( $data['screenshot_url'] ) ) : '',
@@ -212,6 +229,9 @@ class AGWP_CHT_Database {
 			'page_url'         => sanitize_url( wp_unslash( $data['page_url'] ) ),
 			'status'           => isset( $data['status'] ) ? sanitize_text_field( wp_unslash( $data['status'] ) ) : 'open',
 			'priority'         => isset( $data['priority'] ) ? sanitize_text_field( wp_unslash( $data['priority'] ) ) : 'medium',
+			'category'         => isset( $data['category'] ) ? sanitize_text_field( wp_unslash( $data['category'] ) ) : '',
+			'due_date'         => isset( $data['due_date'] ) && ! empty( $data['due_date'] ) ? sanitize_text_field( wp_unslash( $data['due_date'] ) ) : null,
+			'time_estimation'  => isset( $data['time_estimation'] ) ? sanitize_text_field( wp_unslash( $data['time_estimation'] ) ) : '',
 		);
 
 		$result = $wpdb->insert( $table_name, $insert_data );
@@ -275,6 +295,7 @@ class AGWP_CHT_Database {
 		}
 
 		$allowed_fields = array(
+			'comment_title',
 			'comment_text',
 			'post_id',
 			'page_url',

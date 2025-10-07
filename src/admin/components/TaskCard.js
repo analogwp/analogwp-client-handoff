@@ -14,7 +14,6 @@ const TaskCard = ({
     onCardClick,
     formatDate 
 }) => {
-    const [isExpanded, setIsExpanded] = useState(false);
 
     const getUserInitials = (name) => {
         return name ? name.split(' ').map(n => n[0]).join('').toUpperCase() : '?';
@@ -36,7 +35,7 @@ const TaskCard = ({
 
     return (
         <div 
-            className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer"
+            className="cht-kanban-card relative pl-10! bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer"
             draggable
             onDragStart={(e) => onDragStart(e, comment)}
             onClick={() => onCardClick && onCardClick(comment)}
@@ -47,6 +46,12 @@ const TaskCard = ({
                         className="w-3 h-3 rounded-full mr-2"
                         style={{ backgroundColor: getPriorityColor(comment.priority) }}
                     />
+										{/* Title - prominently displayed */}
+										{comment.comment_title && (
+												<h4 className="text-gray-900 text-base font-medium my-0!">
+														{comment.comment_title}
+												</h4>
+										)}
                 </div>
                 <div className="flex gap-1">
                     <button 
@@ -77,20 +82,6 @@ const TaskCard = ({
             </div>
             
             <div className="mb-4">
-                <div className="text-gray-900 text-sm leading-relaxed">
-                    {isExpanded ? comment.comment_text : truncateText(comment.comment_text)}
-                    {comment.comment_text.length > 100 && (
-                        <button 
-                            className="ml-2 text-indigo-600 hover:text-indigo-500 text-xs font-medium"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setIsExpanded(!isExpanded);
-                            }}
-                        >
-                            {isExpanded ? __('Show less', 'analogwp-client-handoff') : __('Show more', 'analogwp-client-handoff')}
-                        </button>
-                    )}
-                </div>
                 
                 {/* Hiding selector details as requested */}
                 {/* {comment.element_selector && (

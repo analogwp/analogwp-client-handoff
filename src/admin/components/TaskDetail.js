@@ -23,6 +23,10 @@ const TaskDetail = ({
     const [status, setStatus] = useState(comment.status);
     const [priority, setPriority] = useState(comment.priority || 'medium');
     const [isUpdating, setIsUpdating] = useState(false);
+    const [editingTitle, setEditingTitle] = useState(false);
+    const [editingText, setEditingText] = useState(false);
+    const [tempTitle, setTempTitle] = useState(comment.comment_title || '');
+    const [tempText, setTempText] = useState(comment.comment_text || '');
     // Initialize timesheet from comment data or empty array
     const [timeEntries, setTimeEntries] = useState(() => {
         try {
@@ -37,12 +41,16 @@ const TaskDetail = ({
     useEffect(() => {
         setStatus(comment.status);
         setPriority(comment.priority || 'medium');
+        setTempTitle(comment.comment_title || '');
+        setTempText(comment.comment_text || '');
+        setEditingTitle(false);
+        setEditingText(false);
         try {
             setTimeEntries(comment.timesheet ? JSON.parse(comment.timesheet) : []);
         } catch {
             setTimeEntries([]);
         }
-    }, [comment.id, comment.status, comment.priority, comment.timesheet]);
+    }, [comment.id, comment.status, comment.priority, comment.timesheet, comment.comment_title, comment.comment_text]);
 
     const getUserInitials = (name) => {
         return name ? name.split(' ').map(n => n[0]).join('').toUpperCase() : '?';
@@ -168,6 +176,38 @@ const TaskDetail = ({
         }
     };
 
+    const handleSaveTitle = async () => {
+        try {
+            await onUpdateComment(comment.id, { comment_title: tempTitle });
+            setEditingTitle(false);
+            showToast.success(__('Title updated successfully', 'analogwp-client-handoff'));
+        } catch (error) {
+            console.error('Error updating title:', error);
+            showToast.error(__('Failed to update title', 'analogwp-client-handoff'));
+        }
+    };
+
+    const handleSaveText = async () => {
+        try {
+            await onUpdateComment(comment.id, { comment_text: tempText });
+            setEditingText(false);
+            showToast.success(__('Content updated successfully', 'analogwp-client-handoff'));
+        } catch (error) {
+            console.error('Error updating content:', error);
+            showToast.error(__('Failed to update content', 'analogwp-client-handoff'));
+        }
+    };
+
+    const handleCancelTitleEdit = () => {
+        setTempTitle(comment.comment_title || '');
+        setEditingTitle(false);
+    };
+
+    const handleCancelTextEdit = () => {
+        setTempText(comment.comment_text || '');
+        setEditingText(false);
+    };
+
     const getTotalTime = () => {
         const totalMinutes = timeEntries.reduce((total, entry) => {
             return total + (entry.hours * 60) + entry.minutes;
@@ -256,10 +296,97 @@ const TaskDetail = ({
                                 {getStatusLabel(status)}
                             </div>
 
-														<div>
-															<h2 className="text-lg font-semibold text-gray-900 mb-2">{comment.comment_text}</h2>
-															<div className="text-gray-700 leading-relaxed">{/* Here goes details.  */}</div>
-														</div>
+                            {/* Title Section */}
+                            <div className="mb-4">
+                                {editingTitle ? (
+                                    <div className="space-y-2">
+                                        <input
+                                            type="text"
+                                            value={tempTitle}
+                                            onChange={(e) => setTempTitle(e.target.value)}
+                                            className="w-full text-lg font-semibold border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                            placeholder={__('Enter task title', 'analogwp-client-handoff')}
+                                        />
+                                        <div className="flex space-x-2">
+                                            <Button 
+                                                onClick={handleSaveTitle}
+                                                variant="primary"
+                                                size="small"
+                                            >
+                                                {__('Save', 'analogwp-client-handoff')}
+                                            </Button>
+                                            <Button 
+                                                onClick={handleCancelTitleEdit}
+                                                variant="secondary"
+                                                size="small"
+                                            >
+                                                {__('Cancel', 'analogwp-client-handoff')}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="group flex items-start space-x-2">
+                                        <h2 className="text-lg font-semibold text-gray-900 flex-1">
+                                            {comment.comment_title || __('No title', 'analogwp-client-handoff')}
+                                        </h2>
+                                        <Button
+                                            onClick={() => setEditingTitle(true)}
+                                            variant="tertiary"
+                                            size="small"
+                                            className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                        >
+                                            {__('Edit', 'analogwp-client-handoff')}
+                                        </Button>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Content Section */}
+                            <div className="mb-4">
+                                {editingText ? (
+                                    <div className="space-y-2">
+                                        <textarea
+                                            value={tempText}
+                                            onChange={(e) => setTempText(e.target.value)}
+                                            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-vertical"
+                                            rows="4"
+                                            placeholder={__('Enter task description', 'analogwp-client-handoff')}
+                                        />
+                                        <div className="flex space-x-2">
+                                            <Button 
+                                                onClick={handleSaveText}
+                                                variant="primary"
+                                                size="small"
+                                            >
+                                                {__('Save', 'analogwp-client-handoff')}
+                                            </Button>
+                                            <Button 
+                                                onClick={handleCancelTextEdit}
+                                                variant="secondary"
+                                                size="small"
+                                            >
+                                                {__('Cancel', 'analogwp-client-handoff')}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="group">
+                                        <div className="flex items-start space-x-2">
+                                            <div className="text-gray-700 leading-relaxed flex-1">
+                                                {comment.comment_text || __('No description', 'analogwp-client-handoff')}
+                                            </div>
+                                            <Button
+                                                onClick={() => setEditingText(true)}
+                                                variant="tertiary"
+                                                size="small"
+                                                className="opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                {__('Edit', 'analogwp-client-handoff')}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                         
                         {comment.page_url && (

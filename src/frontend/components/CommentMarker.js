@@ -179,6 +179,9 @@ const CommentMarker = ({
                                         {new Date(comment.created_at).toLocaleString()}
                                     </span>
                                 </div>
+                                {comment.comment_title && (
+                                    <h5 className="cht-comment-title">{comment.comment_title}</h5>
+                                )}
                                 <p className="cht-comment-text">{comment.comment_text}</p>
                                 
                                 {comment.element_selector && (

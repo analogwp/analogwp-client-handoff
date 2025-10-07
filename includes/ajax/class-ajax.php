@@ -128,6 +128,7 @@ class AGWP_CHT_Ajax {
 		// Prepare comment data.
 		$comment_data = array(
 			'post_id'          => isset( $post_data['post_id'] ) ? intval( $post_data['post_id'] ) : 0,
+			'comment_title'    => isset( $post_data['comment_title'] ) ? $post_data['comment_title'] : '',
 			'comment_text'     => isset( $post_data['comment_text'] ) ? $post_data['comment_text'] : '',
 			'element_selector' => isset( $post_data['element_selector'] ) ? $post_data['element_selector'] : '',
 			'screenshot_url'   => $screenshot_url,
@@ -628,11 +629,16 @@ class AGWP_CHT_Ajax {
 
 		// Prepare task data.
 		$task_data = array(
-			'post_id'      => isset( $post_data['post_id'] ) ? intval( $post_data['post_id'] ) : 0,
-			'comment_text' => isset( $post_data['comment_text'] ) ? $post_data['comment_text'] : '',
-			'page_url'     => isset( $post_data['page_url'] ) ? $post_data['page_url'] : get_permalink( intval( $post_data['post_id'] ) ),
-			'status'       => isset( $post_data['status'] ) ? $post_data['status'] : 'open',
-			'priority'     => isset( $post_data['priority'] ) ? $post_data['priority'] : 'medium',
+			'post_id'         => isset( $post_data['post_id'] ) ? intval( $post_data['post_id'] ) : 0,
+			'comment_title'   => isset( $post_data['comment_title'] ) ? $post_data['comment_title'] : '',
+			'comment_text'    => isset( $post_data['comment_text'] ) ? $post_data['comment_text'] : '',
+			'page_url'        => isset( $post_data['page_url'] ) ? $post_data['page_url'] : get_permalink( intval( $post_data['post_id'] ) ),
+			'status'          => isset( $post_data['status'] ) ? $post_data['status'] : 'open',
+			'priority'        => isset( $post_data['priority'] ) ? $post_data['priority'] : 'medium',
+			'assigned_to'     => isset( $post_data['assigned_to'] ) ? intval( $post_data['assigned_to'] ) : 0,
+			'category'        => isset( $post_data['category'] ) ? $post_data['category'] : '',
+			'due_date'        => isset( $post_data['due_date'] ) ? $post_data['due_date'] : '',
+			'time_estimation' => isset( $post_data['time_estimation'] ) ? $post_data['time_estimation'] : '',
 		);
 
 		$task_id = $this->database->save_comment( $task_data );

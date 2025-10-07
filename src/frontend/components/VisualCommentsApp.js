@@ -154,7 +154,7 @@ const VisualCommentsApp = () => {
     };
 
     // Save new comment
-    const saveComment = async (commentText, screenshotUrl = '', priority = 'medium') => {
+    const saveComment = async (commentText, screenshotUrl = '', priority = 'medium', commentTitle = '') => {
         if (!selectedElement) return;
 
         try {
@@ -167,6 +167,7 @@ const VisualCommentsApp = () => {
                     action: 'agwp_cht_save_comment',
                     nonce: chtAjax.nonce,
                     post_id: chtAjax.postId || 0,
+                    comment_title: commentTitle,
                     comment_text: commentText,
                     element_selector: selectedElement.selector,
                     screenshot_url: screenshotUrl,

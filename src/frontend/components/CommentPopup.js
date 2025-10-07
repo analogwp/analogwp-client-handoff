@@ -7,6 +7,7 @@ import html2canvas from 'html2canvas';
 import Draggable from 'react-draggable';
 
 const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
+    const [title, setTitle] = useState('');
     const [comment, setComment] = useState('');
     const [priority, setPriority] = useState('medium');
     const [isLoading, setIsLoading] = useState(false);
@@ -419,8 +420,8 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
             // Capture screenshot
             const screenshotUrl = await captureScreenshot();
             
-            // Save comment
-            await onSave(comment.trim(), screenshotUrl, priority);
+            // Save comment with title
+            await onSave(comment.trim(), screenshotUrl, priority, title.trim());
             
         } catch (error) {
             console.error('Error saving comment:', error);
@@ -456,6 +457,15 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
                 
                 <form onSubmit={handleSubmit}>
                     <div className="cht-popup-body">
+                        <input
+                            type="text"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            placeholder={__('Comment title (optional)', 'analogwp-client-handoff')}
+                            className="cht-comment-title"
+                            disabled={isLoading}
+                        />
+                        
                         <textarea
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}

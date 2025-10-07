@@ -24,6 +24,20 @@
   }
 }
 
+.cht-kanban-card::before {
+	content: "";
+	position: absolute;
+	top: 30px;
+	left: 15px;
+	transform: translateY(-50%);
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background-color: #ccc;
+	box-shadow: 0 -8px 0 #ccc, 0 8px 0 #ccc, 8px -8px 0 #ccc, 8px 0 0 #ccc, 8px 8px 0 #ccc;
+	opacity: .5;
+}
+
 /* ====================================
    Component Styles Only
    ==================================== */

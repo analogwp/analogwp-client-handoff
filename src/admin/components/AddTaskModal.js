@@ -13,7 +13,7 @@ import { useSettings } from './settings/SettingsProvider';
 const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, statuses = [], isSidebar = false }) => {
     const { categories } = useSettings();
     const [formData, setFormData] = useState({
-        taskName: '',
+        taskTitle: '',
         status: 'open',
         assignedUser: '',
         category: '',
@@ -60,7 +60,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
             }
 
             setFormData({
-                taskName: editTask.comment_text || '',
+                taskTitle: editTask.comment_title || '',
                 status: editTask.status || 'open',
                 assignedUser: assignedUserId,
                 category: editTask.category || '',
@@ -74,7 +74,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
         } else {
             // Reset form for new task
             setFormData({
-                taskName: '',
+                taskTitle: '',
                 status: 'open',
                 assignedUser: '',
                 category: '',
@@ -97,8 +97,8 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
 
     const handleSave = async () => {
         // Validation
-        if (!formData.taskName.trim()) {
-            showToast.error(__('Please enter a task name', 'analogwp-client-handoff'));
+        if (!formData.taskTitle.trim() && !formData.description.trim()) {
+            showToast.error(__('Please enter a task title or description', 'analogwp-client-handoff'));
             return;
         }
 
@@ -123,7 +123,8 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
         }
 
         const taskData = {
-            comment_text: formData.description || formData.taskName,
+            comment_title: formData.taskTitle || formData.description,
+            comment_text: formData.description,
             post_id: postId,
             page_url: pageUrl,
             assigned_to: formData.assignedUser || 0,
@@ -143,7 +144,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
             
             // Reset form
             setFormData({
-                taskName: '',
+                taskTitle: '',
                 status: 'open',
                 assignedUser: '',
                 category: '',
@@ -164,7 +165,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
     const handleCancel = () => {
         // Reset form
         setFormData({
-            taskName: '',
+            taskTitle: '',
             status: 'open',
             assignedUser: '',
             category: '',
@@ -178,159 +179,6 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
         onClose();
     };
 
-    const renderFormContent = (isSidebarMode = false) => {
-        const spacing = isSidebarMode ? 'space-y-4' : 'space-y-6';
-        const padding = isSidebarMode ? '' : 'p-6';
-        
-        return (
-            <div className={`${padding} ${spacing}`}>
-                <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">{__('Status', 'analogwp-client-handoff')}</label>
-                    <div className="flex">
-                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${formData.status === 'open' ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-800'}`}>
-                            {__('Todo', 'analogwp-client-handoff')}
-                        </span>
-                    </div>
-                </div>
-
-                <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">{__('Assign', 'analogwp-client-handoff')}</label>
-                    <select
-                        value={formData.assignedUser}
-                        onChange={(e) => handleInputChange('assignedUser', e.target.value)}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
-                    >
-                        <option value="">{__('Select User', 'analogwp-client-handoff')}</option>
-                        {users.map(user => (
-                            <option key={user.id} value={user.id}>{user.name}</option>
-                        ))}
-                    </select>
-                </div>
-
-                <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">{__('Page', 'analogwp-client-handoff')}</label>
-                    <select
-                        value={formData.pageId}
-                        onChange={(e) => handleInputChange('pageId', e.target.value)}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
-                    >
-                        <option value="">{__('Select Page', 'analogwp-client-handoff')}</option>
-                        {pages.map(page => (
-                            <option key={page.id} value={page.id}>{page.title}</option>
-                        ))}
-                    </select>
-                    {formData.pageId && (
-                        <div className="mt-2 p-3 bg-gray-50 rounded-lg">
-                            <small className="text-sm text-gray-600">
-                                {__('URL:', 'analogwp-client-handoff')} 
-                                <a 
-                                    href={pages.find(p => String(p.id) === String(formData.pageId))?.url || '#'} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="ml-1 text-indigo-600 hover:text-indigo-500 underline"
-                                >
-                                    {pages.find(p => String(p.id) === String(formData.pageId))?.url || ''}
-                                </a>
-                            </small>
-                        </div>
-                    )}
-                </div>
-
-                <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">{__('Priority', 'analogwp-client-handoff')}</label>
-                    <select
-                        value={formData.priority}
-                        onChange={(e) => handleInputChange('priority', e.target.value)}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
-                    >
-                        <option value="low">{__('Low', 'analogwp-client-handoff')}</option>
-                        <option value="medium">{__('Medium', 'analogwp-client-handoff')}</option>
-                        <option value="high">{__('High', 'analogwp-client-handoff')}</option>
-                    </select>
-                </div>
-
-                <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">{__('Category', 'analogwp-client-handoff')}</label>
-                    <select
-                        value={formData.category}
-                        onChange={(e) => handleInputChange('category', e.target.value)}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
-                    >
-                        <option value="">{__('Select Category', 'analogwp-client-handoff')}</option>
-                        {categories && categories.length > 0 ? (
-                            categories.map(category => (
-                                <option key={category.id} value={category.name}>
-                                    {category.name}
-                                </option>
-                            ))
-                        ) : (
-                            <option disabled>{__('No categories available. Create categories in Settings.', 'analogwp-client-handoff')}</option>
-                        )}
-                    </select>
-                </div>
-
-                <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">{__('Due Date', 'analogwp-client-handoff')}</label>
-                    <div className="relative">
-                        <input
-                            type="date"
-                            value={formData.dueDate}
-                            onChange={(e) => handleInputChange('dueDate', e.target.value)}
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 pr-10 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
-                            placeholder={__('Select Due Date', 'analogwp-client-handoff')}
-                        />
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="absolute right-3 top-3 text-gray-400 pointer-events-none">
-                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
-                        </svg>
-                    </div>
-                </div>
-
-                <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">{__('Add time', 'analogwp-client-handoff')}</label>
-                    <div className="flex items-center space-x-2">
-                        <input
-                            type="number"
-                            value={formData.timeHours}
-                            onChange={(e) => handleInputChange('timeHours', e.target.value)}
-                            placeholder="HH"
-                            className="w-20! border border-gray-300 rounded-lg px-3 py-2 text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
-                            min="0"
-                            max="23"
-                        />
-                        <span className="text-gray-500">/</span>
-                        <input
-                            type="number"
-                            value={formData.timeMinutes}
-                            onChange={(e) => handleInputChange('timeMinutes', e.target.value)}
-                            placeholder="MM"
-                            className="w-20! border border-gray-300 rounded-lg px-3 py-2 text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
-                            min="0"
-                            max="59"
-                        />
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="text-gray-400 ml-2">
-                            <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-                        </svg>
-                        <button type="button" className="ml-3 px-3 py-1 text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors duration-200">
-                            {__('Add', 'analogwp-client-handoff')}
-                        </button>
-                    </div>
-                </div>
-
-                <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">{__('Description', 'analogwp-client-handoff')}</label>
-                    <textarea
-                        value={formData.description}
-                        onChange={(e) => handleInputChange('description', e.target.value)}
-                        placeholder={__('Add a task description here (optional)', 'analogwp-client-handoff')}
-                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white resize-vertical text-sm"
-                        rows={isSidebarMode ? "4" : "6"}
-                    />
-                </div>
-            </div>
-        );
-    };
-
     if (!isOpen) return null;
 
     // If used as sidebar, return just the content without modal wrapper
@@ -342,11 +190,11 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                     <div className="flex items-center justify-between">
                         <input
                             type="text"
-                            value={formData.taskName}
-                            onChange={(e) => handleInputChange('taskName', e.target.value)}
+                            value={formData.taskTitle}
+                            onChange={(e) => handleInputChange('taskTitle', e.target.value)}
                             placeholder={editTask ? 
-                                __('Edit task name', 'analogwp-client-handoff') : 
-                                __('Add task Name', 'analogwp-client-handoff')
+                                __('Edit task title', 'analogwp-client-handoff') : 
+                                __('Add task title', 'analogwp-client-handoff')
                             }
                             className="flex-1 text-lg font-semibold border-none outline-none bg-transparent placeholder-gray-400 text-gray-900"
                         />
@@ -541,11 +389,11 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                 <div className="sticky top-0 bg-white border-b border-gray-200 p-6 rounded-t-lg">
                     <input
                         type="text"
-                        value={formData.taskName}
-                        onChange={(e) => handleInputChange('taskName', e.target.value)}
+                        value={formData.taskTitle}
+                        onChange={(e) => handleInputChange('taskTitle', e.target.value)}
                         placeholder={editTask ? 
-                            __('Edit task name', 'analogwp-client-handoff') : 
-                            __('Add task Name', 'analogwp-client-handoff')
+                            __('Edit task title', 'analogwp-client-handoff') : 
+                            __('Add task title', 'analogwp-client-handoff')
                         }
                         className="w-full text-xl font-semibold border-none outline-none bg-transparent placeholder-gray-400 text-gray-900"
                     />

@@ -347,7 +347,7 @@ const TasksKanban = ({
                                 
                                 {status.key !== 'resolved' && (
                                     <button 
-                                        className="w-full flex items-center justify-center space-x-2 p-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors duration-200"
+                                        className="w-full flex items-center justify-center space-x-2 p-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-gray-400 hover:text-gray-600 hover:cursor-pointer transition-colors duration-200"
                                         onClick={handleAddNew}
                                     >
                                         <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">

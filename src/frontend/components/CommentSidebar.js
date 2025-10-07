@@ -164,6 +164,9 @@ const CommentSidebar = ({ comments, onAddReply, onUpdateStatus, canManageComment
                                             </div>
 
                                             <div className="cht-task-content">
+                                                {comment.comment_title && (
+                                                    <h5 className="cht-task-title">{comment.comment_title}</h5>
+                                                )}
                                                 <p className="cht-task-text">{comment.comment_text}</p>
                                                 
                                                 <div className="cht-task-meta">
