@@ -83,7 +83,7 @@ const SettingsHeader = ({ activeTab, onTabChange }) => {
     };
 
     return (
-        <div className="bg-white border border-gray-200 rounded-lg mb-6 shadow-sm">
+        <div className="bg-white rounded-t-lg mb-6 shadow-sm">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
                 <div className="flex flex-col">
                     <h1 className="text-2xl font-bold text-gray-900 m-0">{__('Settings', 'analogwp-client-handoff')}</h1>
@@ -95,7 +95,7 @@ const SettingsHeader = ({ activeTab, onTabChange }) => {
                             </span>
                         )}
                         {lastSaved && !hasUnsavedChanges && (
-                            <span className="inline-flex items-center text-sm text-green-600">
+                            <span className="inline-flex items-center text-sm text-blue-600">
                                 <CheckCircleIcon className="w-4 h-4 mr-1" />
                                 {sprintf(__('Last saved: %s', 'analogwp-client-handoff'), formatLastSaved(lastSaved))}
                             </span>
@@ -118,7 +118,7 @@ const SettingsHeader = ({ activeTab, onTabChange }) => {
             </div>
 
             <nav className="p-0">
-                <div className="flex border-b border-gray-200">
+                <div className="flex">
                     {tabs.map(tab => {
                         const IconComponent = tab.icon;
                         
@@ -127,7 +127,7 @@ const SettingsHeader = ({ activeTab, onTabChange }) => {
                                 key={tab.id}
                                 className={`flex items-center px-6 py-4 text-sm font-medium border-b-2 transition-all duration-200 cursor-pointer ${
                                     activeTab === tab.id 
-                                        ? 'text-indigo-600 border-indigo-500 bg-indigo-50' 
+                                        ? 'text-blue-700 border-blue-700 bg-blue-50' 
                                         : 'text-gray-500 border-transparent hover:text-gray-700 hover:border-gray-300'
                                 }`}
                                 onClick={() => onTabChange(tab.id)}

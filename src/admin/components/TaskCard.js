@@ -118,7 +118,10 @@ const TaskCard = ({
                                 className="w-6 h-6 rounded-full mr-2 flex items-center justify-center text-xs font-medium text-white"
                                 style={{ 
                                     backgroundImage: user?.avatar ? `url(${user.avatar})` : 'none',
-                                    backgroundColor: user?.avatar ? 'transparent' : '#6b7280'
+                                    backgroundColor: user?.avatar ? 'transparent' : '#6b7280',
+																		backgroundSize: 'contain',
+																		backgroundPosition: 'center',
+																		backgroundRepeat: 'no-repeat'
                                 }}
                             >
                                 {!user?.avatar && getUserInitials(user?.name || 'Unknown')}

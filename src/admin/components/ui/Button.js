@@ -9,7 +9,7 @@ import { __ } from '@wordpress/i18n';
 const Button = ({ 
     children,
     variant = 'primary',
-    size = 'medium',
+    size = 'large',
     disabled = false,
     loading = false,
     icon = null,
@@ -24,8 +24,8 @@ const Button = ({
     
     // Variant classes
     const variantClasses = {
-        primary: 'text-white bg-indigo-600 border border-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500',
-        secondary: 'text-indigo-600 bg-white border border-indigo-600 hover:bg-indigo-50 focus:ring-indigo-500',
+        primary: 'text-white bg-blue-700 border border-blue-600 shadow-sm hover:bg-blue-700 focus:ring-blue-500',
+        secondary: 'bg-white border border-transparent shadow-sm hover:bg-white focus:ring-blue-500',
         success: 'text-white bg-green-600 border border-green-600 hover:bg-green-700 focus:ring-green-500',
         danger: 'text-white bg-red-600 border border-red-600 hover:bg-red-700 focus:ring-red-500',
         warning: 'text-white bg-yellow-600 border border-yellow-600 hover:bg-yellow-700 focus:ring-yellow-500',
@@ -35,9 +35,9 @@ const Button = ({
     
     // Size classes
     const sizeClasses = {
-        small: 'px-3 py-1.5 text-sm rounded-md',
-        medium: 'px-4 py-2 text-sm rounded-md',
-        large: 'px-6 py-3 text-base rounded-lg'
+        small: 'px-3 py-1.5 text-sm rounded-full',
+        medium: 'px-4 py-2 text-sm rounded-full',
+        large: 'px-6 py-3 text-base font-medium! rounded-full'
     };
     
     // Disabled classes

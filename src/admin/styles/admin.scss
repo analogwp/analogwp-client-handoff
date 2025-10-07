@@ -1,9 +1,13 @@
-/* Tailwind CSS v4 - Simple import */
+/* Tailwind CSS v4 - Standard import */
 @import "tailwindcss";
 
 /* ====================================
    MINIMAL ESSENTIAL STYLES ONLY
    ==================================== */
+
+.cht-admin-app-wp {
+	padding: 0 20px;
+}
 
 /* React Hot Toast container positioning - Required for ToastProvider */
 .cht-toast-container {

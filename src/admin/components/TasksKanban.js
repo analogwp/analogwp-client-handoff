@@ -10,8 +10,24 @@ import { __ } from '@wordpress/i18n';
 import TaskCard from './TaskCard';
 import TaskDetail from './TaskDetail';
 import AddTaskModal from './AddTaskModal';
+import TasksControls from './TasksControls';
 
-const TasksKanban = ({ comments, onUpdateComment, onDelete, onAddTask, users, categories, pages, onAddComment, activeView = 'kanban' }) => {
+const TasksKanban = ({ 
+    comments, 
+    onUpdateComment, 
+    onDelete, 
+    onAddTask, 
+    users, 
+    categories, 
+    pages, 
+    onAddComment, 
+    activeView = 'kanban',
+    onViewChange,
+    filters,
+    onFilterChange,
+    sortBy,
+    onSortChange
+}) => {
     const [draggedItem, setDraggedItem] = useState(null);
     const [selectedTask, setSelectedTask] = useState(null);
     const [showAddModal, setShowAddModal] = useState(false);
@@ -146,7 +162,17 @@ const TasksKanban = ({ comments, onUpdateComment, onDelete, onAddTask, users, ca
 
                 {/* List View - only show when no task is selected */}
                 {!selectedTask && (
-                    <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+                    <>
+                        <TasksControls 
+                            activeView={activeView}
+                            onViewChange={onViewChange}
+                            filters={filters}
+                            onFilterChange={onFilterChange}
+                            sortBy={sortBy}
+                            onSortChange={onSortChange}
+                            users={users}
+                        />
+                        <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
                         <div className="flex items-center justify-between p-4 border-b border-gray-200">
                             <div className="text-lg font-semibold text-gray-900">{__('All Tasks', 'analogwp-client-handoff')}</div>
                             <div className="text-sm text-gray-500">{comments.length} {__('tasks', 'analogwp-client-handoff')}</div>
@@ -218,7 +244,8 @@ const TasksKanban = ({ comments, onUpdateComment, onDelete, onAddTask, users, ca
                                 </div>
                             ))}
                         </div>
-                    </div>
+                        </div>
+                    </>
                 )}
 
                 {/* Add/Edit Task Sidebar for List View */}
@@ -273,7 +300,17 @@ const TasksKanban = ({ comments, onUpdateComment, onDelete, onAddTask, users, ca
 
             {/* Main Kanban Board */}
             {!selectedTask && (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <>
+                    <TasksControls 
+                        activeView={activeView}
+                        onViewChange={onViewChange}
+                        filters={filters}
+                        onFilterChange={onFilterChange}
+                        sortBy={sortBy}
+                        onSortChange={onSortChange}
+                        users={users}
+                    />
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {statuses.map(status => (
                         <div 
                             key={status.key}
@@ -323,6 +360,7 @@ const TasksKanban = ({ comments, onUpdateComment, onDelete, onAddTask, users, ca
                         </div>
                     ))}
                 </div>
+                </>
             )}
 
             {/* Add/Edit Task Sidebar */}

@@ -180,8 +180,8 @@ const TaskDetail = ({
     };
 
     return (
-        <div className="bg-white min-h-screen">
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-sm z-10">
+        <div className="bg-white min-h-screen rounded-lg">
+            <div className="sticky top-0 bg-white border-b border-gray-200 rounded-t-lg px-6 py-4 flex items-center justify-between shadow-sm z-10">
                 <Button 
                     onClick={onBack}
                     variant="ghost"
@@ -337,7 +337,10 @@ const TaskDetail = ({
                                             className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium text-white bg-gray-500"
                                             style={{ 
                                                 backgroundImage: user?.avatar ? `url(${user.avatar})` : 'none',
-                                                backgroundColor: user?.avatar ? 'transparent' : '#6b7280'
+                                                backgroundColor: user?.avatar ? 'transparent' : '#6b7280',
+																								backgroundSize: 'contain',
+																								backgroundPosition: 'center',
+																								backgroundRepeat: 'no-repeat'
                                             }}
                                         >
                                             {!user?.avatar && getUserInitials(user?.name || 'Unknown')}

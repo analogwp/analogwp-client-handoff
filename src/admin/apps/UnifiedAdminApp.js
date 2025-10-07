@@ -325,6 +325,11 @@ const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
                         pages={pages}
                         onAddComment={handleAddComment}
                         activeView={activeView}
+                        onViewChange={handleViewChange}
+                        filters={filters}
+                        onFilterChange={handleFilterChange}
+                        sortBy={sortBy}
+                        onSortChange={handleSortChange}
                     />
                 );
         }
@@ -336,16 +341,6 @@ const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
             <AdminHeader 
                 currentPage={currentPage}
                 onNavigate={handleNavigation}
-                activeView={activeView}
-                onViewChange={handleViewChange}
-                filters={filters}
-                onFilterChange={handleFilterChange}
-                sortBy={sortBy}
-                onSortChange={handleSortChange}
-                users={users}
-                categories={categories}
-                pages={pages}
-                onAddComment={handleAddComment}
             />
 
             {/* Page Content */}
