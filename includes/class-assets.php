@@ -98,10 +98,18 @@ class AGWP_CHT_Assets {
 			true
 		);
 
+		// Enqueue WordPress Components and related styles.
+		wp_enqueue_style(
+			'wp-components',
+			includes_url( 'css/dist/components/style.min.css' ),
+			array(),
+			get_bloginfo( 'version' )
+		);
+
 		wp_enqueue_style(
 			'agwp-cht-admin',
 			AGWP_CHT_PLUGIN_URL . 'build/admin.css',
-			array(),
+			array( 'wp-components' ),
 			$asset['version']
 		);
 
