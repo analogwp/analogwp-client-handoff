@@ -2,14 +2,18 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
+
+/**
+ * Internal dependencies
+ */
 import { 
-    TextControl, 
-    TextareaControl, 
-    SelectControl, 
-    RangeControl, 
+    TextInput, 
+    Textarea, 
+    Select, 
+    Range, 
     ColorPicker,
-    ToggleControl
-} from '@wordpress/components';
+    Toggle
+} from '../ui';
 
 /**
  * External dependencies
@@ -64,7 +68,7 @@ export const FieldDescription = ({ children, type = 'info', className = '' }) =>
     );
 };
 
-export const Toggle = ({ 
+export const ToggleField = ({ 
     id, 
     checked, 
     onChange, 
@@ -74,7 +78,7 @@ export const Toggle = ({
     className = '' 
 }) => (
     <FieldGroup className={className}>
-        <ToggleControl
+        <Toggle
             label={label}
             help={description}
             checked={checked}
@@ -84,7 +88,7 @@ export const Toggle = ({
     </FieldGroup>
 );
 
-export const Select = ({ 
+export const SelectField = ({ 
     id, 
     value, 
     onChange, 
@@ -95,7 +99,7 @@ export const Select = ({
     className = '' 
 }) => (
     <FieldGroup className={className}>
-        <SelectControl
+        <Select
             label={label}
             help={description}
             value={value}
@@ -141,7 +145,7 @@ export const NumberInput = ({
     </FieldGroup>
 );
 
-export const TextInput = ({ 
+export const TextInputField = ({ 
     id, 
     value, 
     onChange, 
@@ -153,7 +157,7 @@ export const TextInput = ({
     className = '' 
 }) => (
     <FieldGroup className={className}>
-        <TextControl
+        <TextInput
             label={label}
             help={description}
             value={value}
@@ -165,7 +169,7 @@ export const TextInput = ({
     </FieldGroup>
 );
 
-export const TextAreaInput = ({ 
+export const TextAreaField = ({ 
     id, 
     value, 
     onChange, 
@@ -177,7 +181,7 @@ export const TextAreaInput = ({
     className = '' 
 }) => (
     <FieldGroup className={className}>
-        <TextareaControl
+        <Textarea
             label={label}
             help={description}
             value={value}
@@ -240,7 +244,7 @@ export const RangeInput = ({
     className = '' 
 }) => (
     <FieldGroup className={className}>
-        <RangeControl
+        <Range
             label={label}
             help={description}
             value={value}

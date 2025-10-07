@@ -2,11 +2,11 @@
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { SelectControl } from '@wordpress/components';
 
 /**
  * Internal dependencies
  */
+import { Select } from './ui';
 import { useSettings } from './settings/SettingsProvider';
 
 const TaskFilters = ({ filters, onFilterChange, sortBy, onSortChange, users }) => {
@@ -14,7 +14,7 @@ const TaskFilters = ({ filters, onFilterChange, sortBy, onSortChange, users }) =
 
     return (
         <div className="flex gap-3 items-center">
-            <SelectControl
+            <Select
                 value={filters.status}
                 onChange={(value) => onFilterChange({status: value})}
                 options={[
@@ -25,7 +25,7 @@ const TaskFilters = ({ filters, onFilterChange, sortBy, onSortChange, users }) =
                 ]}
             />
             
-            <SelectControl
+            <Select
                 value={filters.user}
                 onChange={(value) => onFilterChange({user: value})}
                 options={[
@@ -37,7 +37,7 @@ const TaskFilters = ({ filters, onFilterChange, sortBy, onSortChange, users }) =
                 ]}
             />
             
-            <SelectControl
+            <Select
                 value={sortBy}
                 onChange={(value) => onSortChange(value)}
                 options={[
@@ -47,7 +47,7 @@ const TaskFilters = ({ filters, onFilterChange, sortBy, onSortChange, users }) =
                 ]}
             />
             
-            <SelectControl
+            <Select
                 value={filters.category}
                 onChange={(value) => onFilterChange({category: value})}
                 options={[

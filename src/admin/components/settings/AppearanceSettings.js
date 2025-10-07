@@ -10,8 +10,8 @@ import { useSettings } from './SettingsProvider';
 import { 
     SettingsSection, 
     SettingsCard, 
-    Toggle, 
-    Select, 
+    ToggleField, 
+    SelectField, 
     ColorInput, 
     NumberInput,
     FieldDescription 
@@ -39,7 +39,7 @@ const AppearanceSettings = () => {
                 description={__('Customize the visual appearance of the comment system and admin interface.', 'analogwp-client-handoff')}
             >
                 <SettingsCard title={__('Theme & Style', 'analogwp-client-handoff')}>
-                    <Select
+                    <SelectField
                         id="theme_style"
                         label={__('Theme Style', 'analogwp-client-handoff')}
                         description={__('Choose the overall visual style for the comment interface.', 'analogwp-client-handoff')}
@@ -48,7 +48,7 @@ const AppearanceSettings = () => {
                         options={themeStyleOptions}
                     />
 
-                    <Select
+                    <SelectField
                         id="font_size"
                         label={__('Font Size', 'analogwp-client-handoff')}
                         description={__('Adjust the default font size for better readability.', 'analogwp-client-handoff')}
@@ -57,7 +57,7 @@ const AppearanceSettings = () => {
                         options={fontSizeOptions}
                     />
 
-                    <Toggle
+                    <ToggleField
                         id="compact_mode"
                         label={__('Compact Mode', 'analogwp-client-handoff')}
                         description={__('Use smaller spacing and compact layout to fit more content on screen.', 'analogwp-client-handoff')}
@@ -105,7 +105,7 @@ const AppearanceSettings = () => {
                         unit="px"
                     />
 
-                    <Toggle
+                    <ToggleField
                         id="show_avatars"
                         label={__('Show User Avatars', 'analogwp-client-handoff')}
                         description={__('Display user profile pictures in comments and task assignments.', 'analogwp-client-handoff')}

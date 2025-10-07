@@ -12,9 +12,9 @@ import { useExtensions } from '../extensions/ExtensionsProvider';
 import { 
     SettingsSection, 
     SettingsCard, 
-    Toggle, 
-    Select, 
-    TextAreaInput,
+    ToggleField, 
+    SelectField, 
+    TextAreaField,
     FileUpload,
     FieldDescription 
 } from './FieldComponents';
@@ -45,7 +45,7 @@ const AdvancedSettings = () => {
             >
                 <SettingsCard title={__('Debug Settings', 'analogwp-client-handoff')}>
                     <div className="space-y-6">
-                        <Toggle
+                        <ToggleField
                             id="enable_debug_mode"
                             label={__('Enable Debug Mode', 'analogwp-client-handoff')}
                             description={__('Show detailed error messages and debug information. Disable in production.', 'analogwp-client-handoff')}
@@ -59,7 +59,7 @@ const AdvancedSettings = () => {
                             </FieldDescription>
                         )}
 
-                        <Select
+                        <SelectField
                             id="log_level"
                             label={__('Log Level', 'analogwp-client-handoff')}
                             description={__('Minimum level of messages to log. Debug logs the most, Error logs the least.', 'analogwp-client-handoff')}

@@ -10,8 +10,8 @@ import { useSettings } from './SettingsProvider';
 import { 
     SettingsSection, 
     SettingsCard, 
-    Toggle, 
-    Select, 
+    ToggleField, 
+    SelectField, 
     NumberInput, 
     MultiSelect,
     FieldDescription 
@@ -95,7 +95,7 @@ const GeneralSettings = () => {
                         </div>
                     </div>
 
-                    <Toggle
+                    <ToggleField
                         id="enable_frontend_comments"
                         label={__('Enable Frontend Comments', 'analogwp-client-handoff')}
                         description={__('Allow users to add comments directly on the frontend of your website.', 'analogwp-client-handoff')}
@@ -103,7 +103,7 @@ const GeneralSettings = () => {
                         onChange={(value) => updateSetting('general.enable_frontend_comments', value)}
                     />
 
-                    <Toggle
+                    <ToggleField
                         id="require_approval"
                         label={__('Require Comment Approval', 'analogwp-client-handoff')}
                         description={__('New comments will need to be approved before being visible to others.', 'analogwp-client-handoff')}
@@ -113,7 +113,7 @@ const GeneralSettings = () => {
                 </SettingsCard>
 
                 <SettingsCard title={__('Screenshot Settings', 'analogwp-client-handoff')}>
-                    <Toggle
+                    <ToggleField
                         id="auto_screenshot"
                         label={__('Enable Automatic Screenshots', 'analogwp-client-handoff')}
                         description={__('Automatically capture screenshots when comments are created to provide visual context.', 'analogwp-client-handoff')}
@@ -146,7 +146,7 @@ const GeneralSettings = () => {
                         step={5}
                     />
 
-                    <Select
+                    <SelectField
                         id="theme_mode"
                         label={__('Theme Mode', 'analogwp-client-handoff')}
                         description={__('Choose the color scheme for the admin interface.', 'analogwp-client-handoff')}
@@ -157,7 +157,7 @@ const GeneralSettings = () => {
                 </SettingsCard>
 
                 <SettingsCard title={__('Auto-save Settings', 'analogwp-client-handoff')}>
-                    <Toggle
+                    <ToggleField
                         id="auto_save_drafts"
                         label={__('Enable Auto-save', 'analogwp-client-handoff')}
                         description={__('Automatically save settings changes every 5 seconds to prevent data loss.', 'analogwp-client-handoff')}

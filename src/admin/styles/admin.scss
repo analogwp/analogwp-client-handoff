@@ -2,7 +2,7 @@
 @import "tailwindcss";
 
 /* ====================================
-   MINIMAL ESSENTIAL STYLES ONLY
+   Minimal Styles Only.
    ==================================== */
 
 .cht-admin-app-wp {
@@ -22,4 +22,27 @@
   @media (max-width: 782px) {
     top: 66px !important; /* WP admin bar is taller on mobile (46px) + margin (20px) */
   }
+}
+
+/* ====================================
+   Component Styles Only
+   ==================================== */
+
+/* Form Control Styles */
+.cht-select {
+
+		select {
+			padding: 0.3rem 1.75rem 0.3rem 0.7rem !important;
+      height: auto !important;
+
+		}
+
+		select,
+		.components-input-control__backdrop {
+			@apply border border-gray-300!;
+		}
+
+		.components-input-control__container {
+			@apply rounded-md!; 
+		}
 }

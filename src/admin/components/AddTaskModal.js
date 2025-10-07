@@ -293,7 +293,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                             value={formData.timeHours}
                             onChange={(e) => handleInputChange('timeHours', e.target.value)}
                             placeholder="HH"
-                            className="w-16 border border-gray-300 rounded-lg px-3 py-2 text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
+                            className="w-20! border border-gray-300 rounded-lg px-3 py-2 text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
                             min="0"
                             max="23"
                         />
@@ -303,7 +303,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                             value={formData.timeMinutes}
                             onChange={(e) => handleInputChange('timeMinutes', e.target.value)}
                             placeholder="MM"
-                            className="w-16 border border-gray-300 rounded-lg px-3 py-2 text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
+                            className="w-20! border border-gray-300 rounded-lg px-3 py-2 text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
                             min="0"
                             max="59"
                         />
@@ -473,30 +473,32 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
 
                     <div className="space-y-2">
                         <label className="block text-sm font-medium text-gray-700">{__('Add time', 'analogwp-client-handoff')}</label>
-                        <div className="flex items-center space-x-2">
-                            <input
-                                type="number"
-                                value={formData.timeHours}
-                                onChange={(e) => handleInputChange('timeHours', e.target.value)}
-                                placeholder="HH"
-                                className="w-12 border border-gray-300 rounded-lg px-2 py-2 text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
-                                min="0"
-                                max="23"
-                            />
+                        <div className="flex items-center gap-3">
+														<span className="flex items-center space-x-2">
+															<svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" className="text-gray-400 ml-1">
+																	<path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
+																	<path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
+															</svg>
+															<input
+																	type="number"
+																	value={formData.timeHours}
+																	onChange={(e) => handleInputChange('timeHours', e.target.value)}
+																	placeholder="HH"
+																	className="w-16! border border-gray-300 rounded-lg px-2 py-2 text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
+																	min="0"
+																	max="23"
+															/>
+														</span>
                             <span className="text-gray-500 text-sm">/</span>
                             <input
                                 type="number"
                                 value={formData.timeMinutes}
                                 onChange={(e) => handleInputChange('timeMinutes', e.target.value)}
                                 placeholder="MM"
-                                className="w-12 border border-gray-300 rounded-lg px-2 py-2 text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
+                                className="w-16! border border-gray-300 rounded-lg px-2 py-2 text-center focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
                                 min="0"
                                 max="59"
                             />
-                            <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" className="text-gray-400 ml-1">
-                                <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-                                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-                            </svg>
                         </div>
                     </div>
 

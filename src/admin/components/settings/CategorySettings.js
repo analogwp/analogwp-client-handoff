@@ -23,7 +23,7 @@ import { useSettings } from './SettingsProvider';
 import { 
     SettingsSection, 
     SettingsCard, 
-    TextInput, 
+    TextInputField, 
     ColorInput,
     FieldDescription 
 } from './FieldComponents';
@@ -122,7 +122,7 @@ const CategorySettings = () => {
                 <SettingsCard title={__('Add New Category', 'analogwp-client-handoff')}>
                     <div className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <TextInput
+                            <TextInputField
                                 id="new_category_name"
                                 label={__('Category Name', 'analogwp-client-handoff')}
                                 value={newCategory.name}
@@ -181,7 +181,7 @@ const CategorySettings = () => {
                                     {editingId === category.id ? (
                                         <div className="space-y-4">
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <TextInput
+                                                <TextInputField
                                                     value={editForm.name}
                                                     onChange={(value) => setEditForm({ ...editForm, name: value })}
                                                     placeholder={__('Category name...', 'analogwp-client-handoff')}
