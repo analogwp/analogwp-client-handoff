@@ -5,6 +5,11 @@ import { useState, useRef, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import Draggable from 'react-draggable';
 
+/**
+ * Internal dependencies
+ */
+import { getStatusByKey } from '../constants/taskStatuses';
+
 const CommentMarker = ({ 
     comment, 
     isSelected, 
@@ -85,22 +90,14 @@ const CommentMarker = ({
         }
     };
 
-    const getStatusColor = (status) => {
-        switch (status) {
-            case 'open': return '#d63638';
-            case 'in_progress': return '#dba617';
-            case 'resolved': return '#00a32a';
-            default: return '#646970';
-        }
+    const getStatusIcon = (status) => {
+        const statusObj = getStatusByKey(status);
+        return statusObj ? statusObj.icon : '📋';
     };
 
     const getStatusLabel = (status) => {
-        switch (status) {
-            case 'open': return __('Open', 'analogwp-client-handoff');
-            case 'in_progress': return __('In Progress', 'analogwp-client-handoff');
-            case 'resolved': return __('Resolved', 'analogwp-client-handoff');
-            default: return status;
-        }
+        const statusObj = getStatusByKey(status);
+        return statusObj ? statusObj.title : status;
     };
 
     return (
@@ -118,10 +115,8 @@ const CommentMarker = ({
                 onClick={onSelect}
                 title={comment.comment_text}
             >
-                <div 
-                    className="cht-marker-dot"
-                    style={{ backgroundColor: getStatusColor(comment.status) }}
-                >
+                <div className="cht-marker-dot">
+                    <span className="cht-marker-icon">{getStatusIcon(comment.status)}</span>
                     <span className="cht-marker-number">{comment.id}</span>
                 </div>
                 
@@ -149,10 +144,8 @@ const CommentMarker = ({
                         <div className="cht-popup-header">
                             <div className="cht-popup-title">
                                 <strong>{__('Comment', 'analogwp-client-handoff')} #{comment.id}</strong>
-                                <span 
-                                    className="cht-status-badge"
-                                    style={{ backgroundColor: getStatusColor(comment.status) }}
-                                >
+                                <span className="cht-status-badge">
+                                    <span className="cht-status-icon">{getStatusIcon(comment.status)}</span>
                                     {getStatusLabel(comment.status)}
                                 </span>
                             </div>

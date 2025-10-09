@@ -9,6 +9,11 @@ import { __ } from '@wordpress/i18n';
  */
 import { ChevronRightIcon, ChevronLeftIcon, ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 
+/**
+ * Internal dependencies
+ */
+import { TASK_STATUSES, getStatusByKey } from '../constants/taskStatuses';
+
 const CommentSidebar = ({ comments, onAddReply, onUpdateStatus, canManageComments, isVisible, onClose }) => {
     const [selectedComment, setSelectedComment] = useState(null);
     const [replyTexts, setReplyTexts] = useState({});
@@ -23,22 +28,14 @@ const CommentSidebar = ({ comments, onAddReply, onUpdateStatus, canManageComment
         resolved: comments.filter(comment => comment.status === 'resolved')
     };
 
-    const getStatusColor = (status) => {
-        switch (status) {
-            case 'open': return '#d63638';
-            case 'in_progress': return '#dba617';
-            case 'resolved': return '#00a32a';
-            default: return '#646970';
-        }
+    const getStatusIcon = (status) => {
+        const statusObj = getStatusByKey(status);
+        return statusObj ? statusObj.icon : '📋';
     };
 
     const getStatusLabel = (status) => {
-        switch (status) {
-            case 'open': return __('Open', 'analogwp-client-handoff');
-            case 'in_progress': return __('In Progress', 'analogwp-client-handoff');
-            case 'resolved': return __('Resolved', 'analogwp-client-handoff');
-            default: return status;
-        }
+        const statusObj = getStatusByKey(status);
+        return statusObj ? statusObj.title : status;
     };
 
     const handleReplySubmit = async (commentId, e) => {
@@ -129,21 +126,18 @@ const CommentSidebar = ({ comments, onAddReply, onUpdateStatus, canManageComment
 
                             return (
                                 <div key={status} className="cht-status-group">
-                                    <div 
-                                        className="cht-status-header"
-                                        onClick={() => toggleStatusGroup(status)}
-                                    >
-                                        <div 
-                                            className="cht-status-indicator"
-                                            style={{ backgroundColor: getStatusColor(status) }}
-                                        ></div>
-                                        <h4>{getStatusLabel(status)} ({statusComments.length})</h4>
-                                        <button className="cht-toggle-arrow">
-                                            {collapsedGroups[status] ? <ChevronDownIcon className="cht-icon" /> : <ChevronUpIcon className="cht-icon" />}
-                                        </button>
-                                    </div>
-
-                                    {!collapsedGroups[status] && (
+                                <div 
+                                    className="cht-status-header"
+                                    onClick={() => toggleStatusGroup(status)}
+                                >
+                                    <span className="cht-status-icon">
+                                        {getStatusIcon(status)}
+                                    </span>
+                                    <h4>{getStatusLabel(status)} ({statusComments.length})</h4>
+                                    <button className="cht-toggle-arrow">
+                                        {collapsedGroups[status] ? <ChevronDownIcon className="cht-icon" /> : <ChevronUpIcon className="cht-icon" />}
+                                    </button>
+                                </div>                                    {!collapsedGroups[status] && (
                                         <div className="cht-status-content">
 
                                     {statusComments.map(comment => (

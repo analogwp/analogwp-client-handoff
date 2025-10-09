@@ -8,6 +8,7 @@ import { __ } from '@wordpress/i18n';
  */
 import { Select } from './ui';
 import { useSettings } from './settings/SettingsProvider';
+import { TASK_STATUSES } from '../constants/taskStatuses';
 
 const TaskFilters = ({ filters, onFilterChange, sortBy, onSortChange, users }) => {
     const { categories } = useSettings();
@@ -19,9 +20,10 @@ const TaskFilters = ({ filters, onFilterChange, sortBy, onSortChange, users }) =
                 onChange={(value) => onFilterChange({status: value})}
                 options={[
                     { value: '', label: __('Filter by Status', 'analogwp-client-handoff') },
-                    { value: 'open', label: __('Open', 'analogwp-client-handoff') },
-                    { value: 'in_progress', label: __('In Progress', 'analogwp-client-handoff') },
-                    { value: 'resolved', label: __('Resolved', 'analogwp-client-handoff') }
+                    ...TASK_STATUSES.map(status => ({
+                        value: status.key,
+                        label: status.title
+                    }))
                 ]}
             />
             

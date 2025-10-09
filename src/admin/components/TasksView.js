@@ -14,6 +14,7 @@ import { PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
  */
 import TasksListView from './tasks/TasksListView';
 import TasksKanbanView from './tasks/TasksKanbanView';
+import { TASK_STATUSES } from '../constants/taskStatuses';
 
 const TasksView = ({ 
     comments, 
@@ -82,27 +83,6 @@ const TasksView = ({
             onDelete(id);
         }
     };
-
-    const statuses = [
-        { 
-            key: 'open', 
-            title: __('Open', 'analogwp-client-handoff'),
-            color: '#f59e0b',
-            icon: '📋'
-        },
-        { 
-            key: 'in_progress', 
-            title: __('In Progress', 'analogwp-client-handoff'),
-            color: '#3b82f6',
-            icon: '⏳'
-        },
-        { 
-            key: 'resolved', 
-            title: __('Resolved', 'analogwp-client-handoff'),
-            color: '#10b981',
-            icon: '✅'
-        }
-    ];
 
     const getCommentsByStatus = (status) => {
         return comments.filter(comment => comment.status === status);
@@ -191,7 +171,7 @@ const TasksView = ({
         sortBy,
         onSortChange,
         users,
-        statuses,
+        statuses: TASK_STATUSES,
         getCommentsByStatus,
         getUserById,
         handleStatusChange,

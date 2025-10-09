@@ -9,6 +9,7 @@ import { __ } from '@wordpress/i18n';
  */
 import { Button } from '../ui';
 import { showConfirmation, showToast } from '../ToastProvider';
+import { TASK_STATUSES, getStatusByKey } from '../../constants/taskStatuses';
 
 const TaskDetail = ({ 
     comment, 
@@ -67,12 +68,8 @@ const TaskDetail = ({
     };
 
     const getStatusLabel = (status) => {
-        switch (status) {
-            case 'open': return __('Open', 'analogwp-client-handoff');
-            case 'in_progress': return __('In Progress', 'analogwp-client-handoff');
-            case 'resolved': return __('Resolved', 'analogwp-client-handoff');
-            default: return status;
-        }
+        const statusObj = getStatusByKey(status);
+        return statusObj ? statusObj.title : status;
     };
 
     const handleStatusChange = async (newStatus) => {
@@ -243,9 +240,11 @@ const TaskDetail = ({
                         disabled={isUpdating}
                         className="px-3! py-1.5! border border-gray-200! rounded-md! text-sm focus:ring-2 focus:ring-gray-500! focus:border-gray-500! min-w-40!"
                     >
-                        <option value="open">{__('Open', 'analogwp-client-handoff')}</option>
-                        <option value="in_progress">{__('In Progress', 'analogwp-client-handoff')}</option>
-                        <option value="resolved">{__('Resolved', 'analogwp-client-handoff')}</option>
+                        {TASK_STATUSES.map(statusOption => (
+                            <option key={statusOption.key} value={statusOption.key}>
+                                {statusOption.title}
+                            </option>
+                        ))}
                     </select>
                     
                     <select 
