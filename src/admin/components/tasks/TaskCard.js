@@ -56,6 +56,13 @@ const TaskCard = ({
         return text.substring(0, maxLength) + '...';
     };
 
+    const truncateWords = (text, maxWords = 40) => {
+        if (!text) return '';
+        const words = text.trim().split(/\s+/);
+        if (words.length <= maxWords) return text;
+        return words.slice(0, maxWords).join(' ') + '...';
+    };
+
     return (
         <div 
             ref={setNodeRef}
@@ -68,23 +75,23 @@ const TaskCard = ({
             onClick={() => onCardClick && onCardClick(comment)}
         >
             <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-1">
+                <div className="flex items-start gap-1">
                     <div 
-                        className="w-3 h-3 rounded-full mr-2"
+                        className="w-3! h-3! rounded-full mt-1 mr-2"
                         style={{ backgroundColor: getPriorityColor(comment.priority) }}
                     />
-					{/* ID - prominently displayed */}
-					{comment.id && (
-						<h4 className="text-gray-900 text-base font-medium my-0!">
-							#{comment.id}
-						</h4>
-					)}
-					{/* Title - prominently displayed */}
-					{comment.comment_title && (
-						<h4 className="text-gray-900 text-base font-medium my-0!">
-							{comment.comment_title}
-						</h4>
-					)}
+									{/* ID - prominently displayed */}
+									{comment.id && (
+										<h4 className="text-gray-900 text-base font-medium my-0! mr-2!">
+											#{comment.id}
+										</h4>
+									)}
+									{/* Title - prominently displayed */}
+									{comment.comment_title && (
+										<h4 className="text-gray-900 text-base font-medium my-0! flex-1" title={comment.comment_title}>
+											{truncateWords(comment.comment_title, 30)}
+										</h4>
+									)}
                 </div>
                 <div className="flex gap-1">
                     <button 
@@ -115,22 +122,6 @@ const TaskCard = ({
             </div>
             
             <div className="mb-4">
-				{/* Comment Text - secondary display */}
-				{comment.comment_text && (
-					<div className="text-gray-600 text-sm my-2">
-						{comment.comment_text.length > 100 
-							? comment.comment_text.substring(0, 100) + '...' 
-							: comment.comment_text}
-					</div>
-				)}
-                
-                {/* Hiding selector details as requested */}
-                {/* {comment.element_selector && (
-                    <div className="mt-2 p-2 bg-gray-50 rounded text-xs font-mono text-gray-600">
-                        <code>{comment.element_selector}</code>
-                    </div>
-                )} */}
-                
                 {comment.page_url && (
                     <div className="flex items-center mt-2 text-xs text-gray-500">
                         <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16" className="mr-1">

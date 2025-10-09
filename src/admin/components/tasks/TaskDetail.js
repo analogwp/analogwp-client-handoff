@@ -72,6 +72,11 @@ const TaskDetail = ({
         return statusObj ? statusObj.title : status;
     };
 
+    const getStatusIcon = (status) => {
+        const statusObj = getStatusByKey(status);
+        return statusObj ? statusObj.icon : '📋';
+    };
+
     const handleStatusChange = async (newStatus) => {
         setIsUpdating(true);
         try {
@@ -242,7 +247,7 @@ const TaskDetail = ({
                     >
                         {TASK_STATUSES.map(statusOption => (
                             <option key={statusOption.key} value={statusOption.key}>
-                                {statusOption.title}
+                                {statusOption.icon} {statusOption.title}
                             </option>
                         ))}
                     </select>
@@ -278,13 +283,8 @@ const TaskDetail = ({
             <div className="max-w-6xl mx-auto p-6">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div className="lg:col-span-2 space-y-6">
-                        <div className="bg-white border border-gray-200 rounded-lg py-2! px-6! shadow-sm">
+                        <div className="bg-white border border-gray-200 rounded-lg py-4! px-6! shadow-sm">
                             <div className="flex items-center space-x-4 mb-4">
-																<div>
-																	<h2 className="text-lg font-semibold text-gray-900 flex-1">
-                                            #{comment.id}
-                                        </h2>
-																</div>
                                 <div className="flex items-center space-x-2">
 																		<div 
 																			className="w-3 h-3 rounded-full"
@@ -297,16 +297,16 @@ const TaskDetail = ({
 																			{priority ? priority.charAt(0).toUpperCase() + priority.slice(1) : __('Normal', 'analogwp-client-handoff')}
 																	</span>
 																</div>
-                            </div>
-                            
-                            <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mb-4">
+																<div>
+																	<span className="mr-2">{getStatusIcon(status)}</span>
                                 {getStatusLabel(status)}
+																</div>
                             </div>
 
                             {/* Title Section */}
-                            <div className="mb-4">
+                            <div className="mb-1 flex gap-4 w-full">
                                 {editingTitle ? (
-                                    <div className="space-y-2!">
+                                    <div className="space-y-2! w-full">
                                         <input
                                             type="text"
                                             value={tempTitle}
@@ -332,10 +332,13 @@ const TaskDetail = ({
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="group flex items-start space-x-2">
-                                        <h2 className="text-lg font-semibold text-gray-900 flex-1">
-                                            {comment.comment_title || __('No title', 'analogwp-client-handoff')}
-                                        </h2>
+                                    <div className="group flex w-full items-start justify-between">
+																				<div className="flex w-full items-start gap-4">
+																					<h2 className="text-lg font-semibold text-gray-900">#{comment.id}</h2>
+																					<h2 className="text-lg font-semibold text-gray-900 flex-1">
+																							{comment.comment_title || __('No title', 'analogwp-client-handoff')}
+																					</h2>
+																				</div>
                                         <Button
                                             onClick={() => setEditingTitle(true)}
                                             variant="tertiary"

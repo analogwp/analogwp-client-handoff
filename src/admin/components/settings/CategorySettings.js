@@ -31,7 +31,7 @@ import { showToast } from '../ToastProvider';
 
 const CategorySettings = () => {
     const { categories, setCategories, saveSettings } = useSettings();
-    const [newCategory, setNewCategory] = useState({ name: '', color: '#3498db' });
+    const [newCategory, setNewCategory] = useState({ name: '', color: '#3858e9' });
     const [editingId, setEditingId] = useState(null);
     const [editForm, setEditForm] = useState({ name: '', color: '' });
 
@@ -66,7 +66,7 @@ const CategorySettings = () => {
         };
 
         await updateCategories([...categories, category]);
-        setNewCategory({ name: '', color: '#3498db' });
+        setNewCategory({ name: '', color: '#3858e9' });
         showToast.success(__('Category added successfully', 'analogwp-client-handoff'));
     };
 
@@ -109,7 +109,7 @@ const CategorySettings = () => {
     };
 
     const predefinedColors = [
-        '#3498db', '#e74c3c', '#2ecc71', '#f39c12', 
+        '#3858e9', '#e74c3c', '#2ecc71', '#f39c12', 
         '#9b59b6', '#1abc9c', '#34495e', '#95a5a6'
     ];
 

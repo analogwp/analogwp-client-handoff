@@ -44,6 +44,15 @@ const TasksListView = ({
     handleDelete,
     activeView
 }) => {
+    const getPriorityColor = (priority) => {
+        switch (priority) {
+            case 'high': return '#ef4444';
+            case 'medium': return '#f59e0b';
+            case 'low': return '#10b981';
+            default: return '#6b7280';
+        }
+    };
+
     return (
         <>
             {/* Task Detail View - Full Page for List View */}
@@ -87,11 +96,12 @@ const TasksListView = ({
                             >
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center space-x-3 flex-1">
-                                        <span className="text-lg">
-                                            {statuses.find(s => s.key === comment.status)?.icon}
-                                        </span>
+                                        <div 
+                                            className="w-3 h-3 rounded-full flex-shrink-0"
+                                            style={{ backgroundColor: getPriorityColor(comment.priority) }}
+                                        />
                                         <div className="flex-1 min-w-0">
-                                            <div className="text-sm font-medium text-gray-900 truncate">{comment.comment_text}</div>
+                                            <div className="text-sm font-medium text-gray-900 truncate">{comment.comment_title}</div>
                                             <div className="flex items-center space-x-4 mt-1 text-xs text-gray-500">
                                                 <span>
                                                     {(comment.user && comment.user.name) || getUserById(comment.user_id)?.name || __('Unknown User', 'analogwp-client-handoff')}
@@ -103,7 +113,7 @@ const TasksListView = ({
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex items-center space-x-2 ml-4">
+                                    <div className="flex items-center gap-3 ml-4">
                                         <select 
                                             value={comment.status}
                                             onChange={(e) => handleStatusChange(comment.id, e.target.value)}
