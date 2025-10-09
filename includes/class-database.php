@@ -105,6 +105,7 @@ class AGWP_CHT_Database {
 		$comments_table = $wpdb->prefix . 'agwp_cht_comments';
 
 		// Check if timesheet column exists, if not add it.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Schema check query.
 		$column_exists = $wpdb->get_results(
 			$wpdb->prepare(
 				'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = %s AND TABLE_NAME = %s AND COLUMN_NAME = %s',
@@ -115,11 +116,12 @@ class AGWP_CHT_Database {
 		);
 
 		if ( empty( $column_exists ) ) {
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Required schema update.
 			$wpdb->query( "ALTER TABLE {$comments_table} ADD COLUMN timesheet longtext DEFAULT NULL" );
 		}
 
 		// Check if comment_title column exists, if not add it.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Schema check query.
 		$title_column_exists = $wpdb->get_results(
 			$wpdb->prepare(
 				'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = %s AND TABLE_NAME = %s AND COLUMN_NAME = %s',
@@ -130,7 +132,7 @@ class AGWP_CHT_Database {
 		);
 
 		if ( empty( $title_column_exists ) ) {
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Required schema update.
 			$wpdb->query( "ALTER TABLE {$comments_table} ADD COLUMN comment_title varchar(255) DEFAULT '' AFTER assigned_to" );
 		}
 	}
@@ -151,6 +153,7 @@ class AGWP_CHT_Database {
 		// Prepare query based on whether page_url is provided
 		if ( empty( $page_url ) ) {
 			// Get all comments for admin dashboard.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Complex query with joins, caching handled at application level.
 			$comments = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT c.*, u.display_name as user_name, u.user_email,
@@ -164,6 +167,7 @@ class AGWP_CHT_Database {
 			);
 		} else {
 			// Get comments for specific page.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Complex query with joins, caching handled at application level.
 			$comments = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT c.*, u.display_name as user_name, u.user_email,
@@ -185,6 +189,7 @@ class AGWP_CHT_Database {
 
 		// Get replies for each comment.
 		foreach ( $comments as $comment ) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Replies fetched per comment, part of parent query result.
 			$comment->replies = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT r.*, u.display_name, u.user_email
@@ -261,6 +266,7 @@ class AGWP_CHT_Database {
 			'timesheet'        => isset( $data['timesheet'] ) ? wp_unslash( $data['timesheet'] ) : '',
 		);
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Insert operation, no caching needed.
 		$result = $wpdb->insert( $table_name, $insert_data );
 
 		if ( false === $result ) {
@@ -287,6 +293,7 @@ class AGWP_CHT_Database {
 
 		$table_name = $wpdb->prefix . 'agwp_cht_comments';
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Update operation, no caching needed.
 		$result = $wpdb->update(
 			$table_name,
 			array( 'status' => sanitize_text_field( $status ) ),
@@ -310,6 +317,7 @@ class AGWP_CHT_Database {
 		global $wpdb;
 
 		// Check if comment exists
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Existence check before update.
 		$exists = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT id FROM {$wpdb->prefix}agwp_cht_comments WHERE id = %d",
@@ -361,6 +369,7 @@ class AGWP_CHT_Database {
 			$filtered_data[ $key ] = sanitize_text_field( $value );
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Update operation, no caching needed.
 		$result = $wpdb->update(
 			$wpdb->prefix . 'agwp_cht_comments',
 			$filtered_data,
@@ -395,6 +404,7 @@ class AGWP_CHT_Database {
 			'reply_text' => sanitize_textarea_field( wp_unslash( $data['reply_text'] ) ),
 		);
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Insert operation, no caching needed.
 		$result = $wpdb->insert( $table_name, $insert_data );
 
 		if ( false === $result ) {
@@ -422,9 +432,11 @@ class AGWP_CHT_Database {
 		$replies_table  = $wpdb->prefix . 'agwp_cht_comment_replies';
 
 		// Delete replies first.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Delete operation, no caching needed.
 		$wpdb->delete( $replies_table, array( 'comment_id' => intval( $comment_id ) ), array( '%d' ) );
 
 		// Delete comment.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Delete operation, no caching needed.
 		$result = $wpdb->delete( $comments_table, array( 'id' => intval( $comment_id ) ), array( '%d' ) );
 
 		return false !== $result;
@@ -442,11 +454,15 @@ class AGWP_CHT_Database {
 		$table_name = $wpdb->prefix . 'agwp_cht_comments';
 
 		// Get counts by status.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Dashboard stats, frequently changing data.
 		$open_count     = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i WHERE status = %s', $table_name, 'open' ) );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Dashboard stats, frequently changing data.
 		$resolved_count = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i WHERE status = %s', $table_name, 'resolved' ) );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Dashboard stats, frequently changing data.
 		$total_count    = $wpdb->get_var( $wpdb->prepare( 'SELECT COUNT(*) FROM %i', $table_name ) );
 
 		// Get recent comments.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Dashboard recent items, frequently changing data.
 		$recent_comments = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT c.*, u.display_name as user_name
