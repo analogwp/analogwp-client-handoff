@@ -12,7 +12,7 @@
  * Requires at least: 5.0
  * Tested up to: 6.4
  * Requires PHP: 7.4
- * Network: false
+ * Network: true
  *
  * @package AnalogWP_Client_Handoff
  */
@@ -143,6 +143,12 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 		add_action( 'init', array( $this, 'init_plugin' ) );
 		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 
+		// Multisite: Create tables when a new site is created
+		if ( is_multisite() ) {
+			add_action( 'wpmu_new_blog', array( $this, 'create_tables_on_new_blog' ), 10, 1 );
+			add_filter( 'wpmu_drop_tables', array( $this, 'drop_tables_on_blog_delete' ) );
+		}
+
 		// Register activation and deactivation hooks
 		register_activation_hook( __FILE__, array( $this, 'activate' ) );
 		register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
@@ -175,19 +181,33 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 	 * Plugin activation.
 	 *
 	 * @since 1.0.0
+	 * @param bool $network_wide Whether the plugin is being activated network-wide.
 	 */
-	public function activate() {
+	public function activate( $network_wide = false ) {
 		// Create database tables
 		if ( ! $this->database ) {
 			$this->database = new AGWP_CHT_Database();
 		}
-		$this->database->create_tables();
+
+		// Handle multisite activation
+		if ( is_multisite() && $network_wide ) {
+			// Get all blogs
+			$blog_ids = get_sites( array( 'fields' => 'ids' ) );
+
+			foreach ( $blog_ids as $blog_id ) {
+				switch_to_blog( $blog_id );
+				$this->database->create_tables();
+				update_option( 'agwp_cht_version', AGWP_CHT_VERSION );
+				restore_current_blog();
+			}
+		} else {
+			// Single site or single blog activation
+			$this->database->create_tables();
+			update_option( 'agwp_cht_version', AGWP_CHT_VERSION );
+		}
 
 		// Flush rewrite rules
 		flush_rewrite_rules();
-
-		// Set plugin version
-		update_option( 'agwp_cht_version', AGWP_CHT_VERSION );
 
 		do_action( 'agwp_cht_activated' );
 	}
@@ -202,6 +222,39 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 		flush_rewrite_rules();
 
 		do_action( 'agwp_cht_deactivated' );
+	}
+
+	/**
+	 * Create tables when a new blog is created in multisite.
+	 *
+	 * @since 1.0.0
+	 * @param int $blog_id Blog ID of the created blog.
+	 */
+	public function create_tables_on_new_blog( $blog_id ) {
+		if ( ! is_multisite() ) {
+			return;
+		}
+
+		switch_to_blog( $blog_id );
+		$this->database->create_tables();
+		update_option( 'agwp_cht_version', AGWP_CHT_VERSION );
+		restore_current_blog();
+	}
+
+	/**
+	 * Drop plugin tables when a blog is deleted in multisite.
+	 *
+	 * @since 1.0.0
+	 * @param array $tables Tables to drop.
+	 * @return array Modified tables array.
+	 */
+	public function drop_tables_on_blog_delete( $tables ) {
+		global $wpdb;
+
+		$tables[] = $wpdb->prefix . 'agwp_cht_comments';
+		$tables[] = $wpdb->prefix . 'agwp_cht_comment_replies';
+
+		return $tables;
 	}
 
 	/**
