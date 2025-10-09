@@ -11,7 +11,7 @@ import TasksView from '../components/TasksView';
 import AdminHeader from '../components/AdminHeader';
 import Settings from '../components/Settings';
 import { ToastProvider, showToast, showConfirmation } from '../components/ToastProvider';
-import SettingsProvider from '../components/settings/SettingsProvider';
+import SettingsProvider, { useSettings } from '../components/settings/SettingsProvider';
 
 const UnifiedAdminApp = ({ initialPage = 'dashboard' }) => {
     return (
@@ -24,6 +24,7 @@ const UnifiedAdminApp = ({ initialPage = 'dashboard' }) => {
 };
 
 const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
+    const { priorities } = useSettings();
     const [currentPage, setCurrentPage] = useState(initialPage);
     const [comments, setComments] = useState([]);
     const [users, setUsers] = useState([]);
@@ -335,6 +336,7 @@ const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
                         onAddTask={handleAddTask}
                         users={users}
                         categories={categories}
+                        priorities={priorities}
                         pages={pages}
                         onAddComment={handleAddComment}
                         activeView={activeView}

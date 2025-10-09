@@ -10,6 +10,7 @@ import { __ } from '@wordpress/i18n';
 import { Button } from '../ui';
 import { showConfirmation, showToast } from '../ToastProvider';
 import { TASK_STATUSES, getStatusByKey } from '../../constants/taskStatuses';
+import { useSettings } from '../settings/SettingsProvider';
 
 const TaskDetail = ({ 
     comment, 
@@ -22,6 +23,7 @@ const TaskDetail = ({
     onUpdateComment,
     formatDate
 }) => {
+    const { priorities } = useSettings();
     const [status, setStatus] = useState(comment.status);
     const [priority, setPriority] = useState(comment.priority || 'medium');
     const [isUpdating, setIsUpdating] = useState(false);
@@ -59,6 +61,13 @@ const TaskDetail = ({
     };
 
     const getPriorityColor = (priority) => {
+        // Find priority in the priorities array from settings
+        const priorityObj = priorities.find(p => p.key === priority);
+        if (priorityObj && priorityObj.color) {
+            return priorityObj.color;
+        }
+        
+        // Fallback to hardcoded colors if not found in settings
         switch (priority) {
             case 'high': return '#ef4444';
             case 'medium': return '#f59e0b';
@@ -258,9 +267,19 @@ const TaskDetail = ({
                         disabled={isUpdating}
                         className="px-3! py-1.5! border border-gray-200! rounded-md! text-sm focus:ring-2 focus:ring-gray-500! focus:border-gray-500! min-w-40!"
                     >
-                        <option value="low">{__('Low Priority', 'analogwp-client-handoff')}</option>
-                        <option value="medium">{__('Medium Priority', 'analogwp-client-handoff')}</option>
-                        <option value="high">{__('High Priority', 'analogwp-client-handoff')}</option>
+                        {priorities && priorities.length > 0 ? (
+                            priorities.map(priorityOption => (
+                                <option key={priorityOption.id} value={priorityOption.key}>
+                                    {priorityOption.name}
+                                </option>
+                            ))
+                        ) : (
+                            <>
+                                <option value="low">{__('Low Priority', 'analogwp-client-handoff')}</option>
+                                <option value="medium">{__('Medium Priority', 'analogwp-client-handoff')}</option>
+                                <option value="high">{__('High Priority', 'analogwp-client-handoff')}</option>
+                            </>
+                        )}
                     </select>
                     
                     <Button 
@@ -352,7 +371,7 @@ const TaskDetail = ({
                             </div>
 
                             {/* Content Section */}
-                            <div className="mb-4">
+                            <div className="mb-3">
                                 {editingText ? (
                                     <div className="space-y-2">
                                         <textarea
@@ -362,7 +381,7 @@ const TaskDetail = ({
                                             rows="4"
                                             placeholder={__('Enter task description', 'analogwp-client-handoff')}
                                         />
-                                        <div className="flex space-x-2">
+                                        <div className="flex space-x-2!">
                                             <Button 
                                                 onClick={handleSaveText}
                                                 variant="primary"
@@ -397,6 +416,17 @@ const TaskDetail = ({
                                     </div>
                                 )}
                             </div>
+
+
+														{comment.categories && comment.categories.length > 0 && (
+															<div className="flex flex-wrap gap-1 mb-4">
+																{comment.categories.map((category, index) => (
+																	<span key={index} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+																		{category}
+																	</span>
+																))}
+															</div>
+														)}
 
                             {/* Task Details Section - moved from Details card */}
                             <div className="border-t border-gray-100 pt-4 space-y-4">
@@ -531,7 +561,7 @@ const TaskDetail = ({
                         <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
                             <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
                                 <h3 className="text-lg font-semibold text-gray-900 flex! items-center">
-                                    <svg className="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                     {__('Timesheet', 'analogwp-client-handoff')}
@@ -547,10 +577,7 @@ const TaskDetail = ({
                                 <div className="space-y-4">
                                     <div className="rounded-lg p-4">
                                         <h4 className="text-sm font-medium text-gray-900 mb-3 flex! items-center">
-                                            <svg className="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                            </svg>
-                                            {__('Add Time Entry', 'analogwp-client-handoff')}
+                                            {__('Time Entry', 'analogwp-client-handoff')}
                                         </h4>
                                         
                                         <div className="space-y-3!">

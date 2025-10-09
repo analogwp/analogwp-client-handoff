@@ -38,7 +38,8 @@ const VisualCommentsApp = () => {
                 e.target.closest('.cht-comment-popup') ||
                 e.target.closest('.cht-comment-sidebar') ||
                 e.target.closest('.cht-toggle-button') ||
-                e.target.closest('#wp-admin-bar-cht-toggle') ||
+                e.target.closest('#wp-admin-bar-agwp-cht-menu') ||
+                e.target.closest('#wp-admin-bar-agwp-cht-toggle') ||
                 e.target.closest('.cht-admin-bar-item') ||
                 e.target.closest('.cht-overlay') ||
                 e.target.closest('#wpadminbar') ||

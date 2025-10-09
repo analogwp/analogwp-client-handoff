@@ -191,6 +191,14 @@ class AGWP_CHT_Database {
 					$comment->id
 				)
 			);
+
+			// Decode categories from JSON
+			if ( ! empty( $comment->category ) ) {
+				$decoded_categories = json_decode( $comment->category, true );
+				$comment->categories = is_array( $decoded_categories ) ? $decoded_categories : array();
+			} else {
+				$comment->categories = array();
+			}
 		}
 
 		return $comments;
@@ -229,7 +237,7 @@ class AGWP_CHT_Database {
 			'page_url'         => sanitize_url( wp_unslash( $data['page_url'] ) ),
 			'status'           => isset( $data['status'] ) ? sanitize_text_field( wp_unslash( $data['status'] ) ) : 'open',
 			'priority'         => isset( $data['priority'] ) ? sanitize_text_field( wp_unslash( $data['priority'] ) ) : 'medium',
-			'category'         => isset( $data['category'] ) ? sanitize_text_field( wp_unslash( $data['category'] ) ) : '',
+			'category'         => isset( $data['categories'] ) && is_array( $data['categories'] ) ? wp_json_encode( array_map( 'sanitize_text_field', $data['categories'] ) ) : '',
 			'due_date'         => isset( $data['due_date'] ) && ! empty( $data['due_date'] ) ? sanitize_text_field( wp_unslash( $data['due_date'] ) ) : null,
 			'time_estimation'  => isset( $data['time_estimation'] ) ? sanitize_text_field( wp_unslash( $data['time_estimation'] ) ) : '',
 			'timesheet'        => isset( $data['timesheet'] ) ? wp_unslash( $data['timesheet'] ) : '',
@@ -312,6 +320,12 @@ class AGWP_CHT_Database {
 		// Filter data to only include allowed fields.
 		$filtered_data = array_intersect_key( $data, array_flip( $allowed_fields ) );
 
+		// Handle categories array - convert to JSON for storage.
+		if ( isset( $data['categories'] ) && is_array( $data['categories'] ) ) {
+			$filtered_data['category'] = wp_json_encode( array_map( 'sanitize_text_field', $data['categories'] ) );
+			unset( $filtered_data['categories'] );
+		}
+
 		// Handle NULL values for date fields.
 		if ( isset( $filtered_data['due_date'] ) && empty( $filtered_data['due_date'] ) ) {
 			$filtered_data['due_date'] = null;
@@ -321,6 +335,10 @@ class AGWP_CHT_Database {
 		foreach ( $filtered_data as $key => $value ) {
 			if ( $value === null ) {
 				continue; // Keep NULL values as NULL.
+			}
+			// Skip sanitization for category as it's already JSON-encoded.
+			if ( $key === 'category' && is_string( $value ) && strpos( $value, '[' ) === 0 ) {
+				continue;
 			}
 			$filtered_data[ $key ] = sanitize_text_field( $value );
 		}

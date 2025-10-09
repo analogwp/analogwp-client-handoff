@@ -48,10 +48,10 @@ const SettingsHeader = ({ activeTab, onTabChange }) => {
             isPro: false
         },
         { 
-            id: 'categories', 
-            label: __('Categories', 'analogwp-client-handoff'),
+            id: 'labels-filters', 
+            label: __('Labels & Filters', 'analogwp-client-handoff'),
             icon: TagIcon,
-            description: __('Manage comment categories', 'analogwp-client-handoff'),
+            description: __('Manage categories and priorities', 'analogwp-client-handoff'),
             isPro: false
         },
         { 

@@ -675,7 +675,7 @@ class AGWP_CHT_Ajax {
 			'status'          => isset( $post_data['status'] ) ? $post_data['status'] : 'open',
 			'priority'        => isset( $post_data['priority'] ) ? $post_data['priority'] : 'medium',
 			'assigned_to'     => isset( $post_data['assigned_to'] ) ? intval( $post_data['assigned_to'] ) : 0,
-			'category'        => isset( $post_data['category'] ) ? $post_data['category'] : '',
+			'categories'      => isset( $post_data['categories'] ) ? $post_data['categories'] : array(),
 			'due_date'        => isset( $post_data['due_date'] ) ? $post_data['due_date'] : '',
 			'time_estimation' => isset( $post_data['time_estimation'] ) ? $post_data['time_estimation'] : '',
 			'timesheet'       => isset( $post_data['timesheet'] ) ? $post_data['timesheet'] : '',
@@ -789,10 +789,34 @@ class AGWP_CHT_Ajax {
 		// Get categories.
 		$categories = get_option( 'agwp_cht_categories', array() );
 
+		// Get priorities with defaults.
+		$default_priorities = array(
+			array(
+				'id'    => 1,
+				'key'   => 'high',
+				'name'  => 'High',
+				'color' => '#ef4444',
+			),
+			array(
+				'id'    => 2,
+				'key'   => 'medium',
+				'name'  => 'Medium',
+				'color' => '#f59e0b',
+			),
+			array(
+				'id'    => 3,
+				'key'   => 'low',
+				'name'  => 'Low',
+				'color' => '#10b981',
+			),
+		);
+		$priorities = get_option( 'agwp_cht_priorities', $default_priorities );
+
 		$this->send_success(
 			array(
 				'settings'   => $settings,
 				'categories' => $categories,
+				'priorities' => $priorities,
 			)
 		);
 	}
@@ -814,9 +838,10 @@ class AGWP_CHT_Ajax {
 		}
 
 		// Get and sanitize form data.
-		$post_data  = wp_unslash( $_POST );
+		$post_data  = wp_unslash( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 		$settings   = isset( $post_data['settings'] ) ? json_decode( sanitize_textarea_field( $post_data['settings'] ), true ) : array();
 		$categories = isset( $post_data['categories'] ) ? json_decode( sanitize_textarea_field( $post_data['categories'] ), true ) : array();
+		$priorities = isset( $post_data['priorities'] ) ? json_decode( sanitize_textarea_field( $post_data['priorities'] ), true ) : array();
 
 		// Validate settings structure.
 		if ( ! is_array( $settings ) ) {
@@ -846,20 +871,36 @@ class AGWP_CHT_Ajax {
 				if ( isset( $category['name'] ) ) {
 					$categories[ $key ]['name'] = sanitize_text_field( $category['name'] );
 				}
-				if ( isset( $category['color'] ) ) {
-					$categories[ $key ]['color'] = sanitize_hex_color( $category['color'] );
-				}
 				if ( isset( $category['id'] ) ) {
 					$categories[ $key ]['id'] = intval( $category['id'] );
 				}
 			}
 		}
 
-		// Save settings and categories.
+		// Sanitize priorities.
+		if ( is_array( $priorities ) ) {
+			foreach ( $priorities as $key => $priority ) {
+				if ( isset( $priority['name'] ) ) {
+					$priorities[ $key ]['name'] = sanitize_text_field( $priority['name'] );
+				}
+				if ( isset( $priority['key'] ) ) {
+					$priorities[ $key ]['key'] = sanitize_key( $priority['key'] );
+				}
+				if ( isset( $priority['color'] ) ) {
+					$priorities[ $key ]['color'] = sanitize_hex_color( $priority['color'] );
+				}
+				if ( isset( $priority['id'] ) ) {
+					$priorities[ $key ]['id'] = intval( $priority['id'] );
+				}
+			}
+		}
+
+		// Save settings, categories, and priorities.
 		$settings_saved   = update_option( 'agwp_cht_settings', $settings );
 		$categories_saved = update_option( 'agwp_cht_categories', $categories );
+		$priorities_saved = update_option( 'agwp_cht_priorities', $priorities );
 
-		if ( $settings_saved || $categories_saved ) {
+		if ( $settings_saved || $categories_saved || $priorities_saved ) {
 			$this->send_success(
 				array(
 					'message' => __( 'Settings saved successfully.', 'analogwp-client-handoff' ),

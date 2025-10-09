@@ -11,12 +11,12 @@ import { showToast } from '../ToastProvider';
 import { useSettings } from '../settings/SettingsProvider';
 
 const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, statuses = [], isSidebar = false }) => {
-    const { categories } = useSettings();
+    const { categories, priorities } = useSettings();
     const [formData, setFormData] = useState({
         taskTitle: '',
         status: 'open',
         assignedUser: '',
-        category: '',
+        categories: [],
         pageId: '',
         dueDate: '',
         timeHours: '',
@@ -75,7 +75,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                 taskTitle: editTask.comment_title || '',
                 status: editTask.status || 'open',
                 assignedUser: assignedUserId,
-                category: editTask.category || '',
+                categories: editTask.categories || [],
                 pageId: pageId,
                 dueDate: editTask.due_date || '',
                 timeHours: '', // Always reset time fields for new entries
@@ -89,7 +89,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                 taskTitle: '',
                 status: 'open',
                 assignedUser: '',
-                category: '',
+                categories: [],
                 pageId: '',
                 dueDate: '',
                 timeHours: '',
@@ -105,6 +105,20 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
             ...prev,
             [field]: value
         }));
+    };
+
+    const handleCategoryToggle = (categoryName) => {
+        setFormData(prev => {
+            const currentCategories = prev.categories || [];
+            const isSelected = currentCategories.includes(categoryName);
+            
+            return {
+                ...prev,
+                categories: isSelected 
+                    ? currentCategories.filter(cat => cat !== categoryName)
+                    : [...currentCategories, categoryName]
+            };
+        });
     };
 
     const handleSave = async () => {
@@ -177,7 +191,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
             assigned_to: formData.assignedUser || 0,
             priority: formData.priority,
             status: formData.status,
-            category: formData.category,
+            categories: formData.categories,
             due_date: formData.dueDate,
             time_estimation: formData.timeHours && formData.timeMinutes ? 
                 `${formData.timeHours}:${String(formData.timeMinutes).padStart(2, '0')}` : ''
@@ -199,7 +213,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                 taskTitle: '',
                 status: 'open',
                 assignedUser: '',
-                category: '',
+                categories: [],
                 pageId: '',
                 dueDate: '',
                 timeHours: '',
@@ -233,7 +247,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
             taskTitle: '',
             status: 'open',
             assignedUser: '',
-            category: '',
+            categories: [],
             pageId: '',
             dueDate: '',
             timeHours: '',
@@ -252,7 +266,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
             <div className="h-full flex flex-col bg-white">
                 {/* Header */}
                 <div className="flex-none border-b border-gray-200 p-4">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mb-3">
                         <input
                             type="text"
                             value={formData.taskTitle}
@@ -273,6 +287,13 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                             </svg>
                         </button>
                     </div>
+                    <textarea
+                        value={formData.description}
+                        onChange={(e) => handleInputChange('description', e.target.value)}
+                        placeholder={__('Add a task description here (optional)', 'analogwp-client-handoff')}
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white resize-vertical text-sm"
+                        rows="3"
+                    />
                 </div>
 
                 {/* Simple form content for sidebar */}
@@ -342,30 +363,66 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                             onChange={(e) => handleInputChange('priority', e.target.value)}
                             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
                         >
-                            <option value="low">{__('Low', 'analogwp-client-handoff')}</option>
-                            <option value="medium">{__('Medium', 'analogwp-client-handoff')}</option>
-                            <option value="high">{__('High', 'analogwp-client-handoff')}</option>
+                            {priorities && priorities.length > 0 ? (
+                                priorities.map(priority => (
+                                    <option key={priority.id} value={priority.key}>
+                                        {priority.name}
+                                    </option>
+                                ))
+                            ) : (
+                                <>
+                                    <option value="low">{__('Low', 'analogwp-client-handoff')}</option>
+                                    <option value="medium">{__('Medium', 'analogwp-client-handoff')}</option>
+                                    <option value="high">{__('High', 'analogwp-client-handoff')}</option>
+                                </>
+                            )}
                         </select>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Category', 'analogwp-client-handoff')}</label>
-                        <select
-                            value={formData.category}
-                            onChange={(e) => handleInputChange('category', e.target.value)}
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
-                        >
-                            <option value="">{__('Select Category', 'analogwp-client-handoff')}</option>
-                            {categories && categories.length > 0 ? (
-                                categories.map(category => (
-                                    <option key={category.id} value={category.name}>
-                                        {category.name}
-                                    </option>
-                                ))
-                            ) : (
-                                <option disabled>{__('No categories available. Create categories in Settings.', 'analogwp-client-handoff')}</option>
-                            )}
-                        </select>
+                        <label className="block text-sm font-medium text-gray-700">{__('Categories', 'analogwp-client-handoff')}</label>
+                        {categories && categories.length > 0 ? (
+                            <div className="border border-gray-300 rounded-lg p-3 max-h-40 overflow-y-auto bg-white">
+                                <div className="space-y-2">
+                                    {categories.map(category => (
+                                        <label key={category.id} className="flex items-center cursor-pointer hover:bg-gray-50 p-1 rounded">
+                                            <input
+                                                type="checkbox"
+                                                checked={formData.categories.includes(category.name)}
+                                                onChange={() => handleCategoryToggle(category.name)}
+                                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                                            />
+                                            <span className="ml-2 text-sm text-gray-700">{category.name}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                            <p className="text-sm text-gray-500 border border-gray-300 rounded-lg p-3 bg-gray-50">
+                                {__('No categories available. Create categories in Settings.', 'analogwp-client-handoff')}
+                            </p>
+                        )}
+                        {formData.categories.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-2">
+                                {formData.categories.map((categoryName, index) => (
+                                    <span
+                                        key={index}
+                                        className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"
+                                    >
+                                        {categoryName}
+                                        <button
+                                            type="button"
+                                            onClick={() => handleCategoryToggle(categoryName)}
+                                            className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full hover:bg-indigo-200 focus:outline-none"
+                                        >
+                                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </span>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <div className="space-y-2">
@@ -415,17 +472,6 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                             />
                         </div>
                     </div>
-
-                    <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Description', 'analogwp-client-handoff')}</label>
-                        <textarea
-                            value={formData.description}
-                            onChange={(e) => handleInputChange('description', e.target.value)}
-                            placeholder={__('Add a task description here (optional)', 'analogwp-client-handoff')}
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white resize-vertical text-sm"
-                            rows="3"
-                        />
-                    </div>
                 </div>
 
                 {/* Footer */}
@@ -461,7 +507,14 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                             __('Edit task title', 'analogwp-client-handoff') : 
                             __('Add task title', 'analogwp-client-handoff')
                         }
-                        className="w-full text-xl font-semibold border-none outline-none bg-transparent placeholder-gray-400 text-gray-900"
+                        className="w-full text-xl font-semibold border-none outline-none bg-transparent placeholder-gray-400 text-gray-900 mb-3"
+                    />
+                    <textarea
+                        value={formData.description}
+                        onChange={(e) => handleInputChange('description', e.target.value)}
+                        placeholder={__('Add a task description here (optional)', 'analogwp-client-handoff')}
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white resize-vertical text-sm"
+                        rows="3"
                     />
                     <div className="absolute top-4 right-4">
                         <button 
@@ -553,30 +606,66 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                             onChange={(e) => handleInputChange('priority', e.target.value)}
                             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
                         >
-                            <option value="low">{__('Low', 'analogwp-client-handoff')}</option>
-                            <option value="medium">{__('Medium', 'analogwp-client-handoff')}</option>
-                            <option value="high">{__('High', 'analogwp-client-handoff')}</option>
+                            {priorities && priorities.length > 0 ? (
+                                priorities.map(priority => (
+                                    <option key={priority.id} value={priority.key}>
+                                        {priority.name}
+                                    </option>
+                                ))
+                            ) : (
+                                <>
+                                    <option value="low">{__('Low', 'analogwp-client-handoff')}</option>
+                                    <option value="medium">{__('Medium', 'analogwp-client-handoff')}</option>
+                                    <option value="high">{__('High', 'analogwp-client-handoff')}</option>
+                                </>
+                            )}
                         </select>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Category', 'analogwp-client-handoff')}</label>
-                        <select
-                            value={formData.category}
-                            onChange={(e) => handleInputChange('category', e.target.value)}
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
-                        >
-                            <option value="">{__('Select Category', 'analogwp-client-handoff')}</option>
-                            {categories && categories.length > 0 ? (
-                                categories.map(category => (
-                                    <option key={category.id} value={category.name}>
-                                        {category.name}
-                                    </option>
-                                ))
-                            ) : (
-                                <option disabled>{__('No categories available. Create categories in Settings.', 'analogwp-client-handoff')}</option>
-                            )}
-                        </select>
+                        <label className="block text-sm font-medium text-gray-700">{__('Categories', 'analogwp-client-handoff')}</label>
+                        {categories && categories.length > 0 ? (
+                            <div className="border border-gray-300 rounded-lg p-3 max-h-40 overflow-y-auto bg-white">
+                                <div className="space-y-2">
+                                    {categories.map(category => (
+                                        <label key={category.id} className="flex items-center cursor-pointer hover:bg-gray-50 p-1 rounded">
+                                            <input
+                                                type="checkbox"
+                                                checked={formData.categories.includes(category.name)}
+                                                onChange={() => handleCategoryToggle(category.name)}
+                                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                                            />
+                                            <span className="ml-2 text-sm text-gray-700">{category.name}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                            <p className="text-sm text-gray-500 border border-gray-300 rounded-lg p-3 bg-gray-50">
+                                {__('No categories available. Create categories in Settings.', 'analogwp-client-handoff')}
+                            </p>
+                        )}
+                        {formData.categories.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-2">
+                                {formData.categories.map((categoryName, index) => (
+                                    <span
+                                        key={index}
+                                        className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800"
+                                    >
+                                        {categoryName}
+                                        <button
+                                            type="button"
+                                            onClick={() => handleCategoryToggle(categoryName)}
+                                            className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full hover:bg-indigo-200 focus:outline-none"
+                                        >
+                                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </span>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <div className="space-y-2">
@@ -626,17 +715,6 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                                 {__('Add', 'analogwp-client-handoff')}
                             </button>
                         </div>
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Description', 'analogwp-client-handoff')}</label>
-                        <textarea
-                            value={formData.description}
-                            onChange={(e) => handleInputChange('description', e.target.value)}
-                            placeholder={__('Add a task description here (optional)', 'analogwp-client-handoff')}
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white resize-vertical"
-                            rows="6"
-                        />
                     </div>
                 </div>
 

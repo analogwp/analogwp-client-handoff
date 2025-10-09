@@ -31,6 +31,7 @@ const TasksListView = ({
     onSortChange,
     users,
     statuses,
+    priorities = [],
     getUserById,
     formatDate,
     onUpdateComment,
@@ -45,6 +46,13 @@ const TasksListView = ({
     activeView
 }) => {
     const getPriorityColor = (priority) => {
+        // Find priority in the priorities array from settings
+        const priorityObj = priorities.find(p => p.key === priority);
+        if (priorityObj && priorityObj.color) {
+            return priorityObj.color;
+        }
+        
+        // Fallback to hardcoded colors if not found in settings
         switch (priority) {
             case 'high': return '#ef4444';
             case 'medium': return '#f59e0b';
@@ -107,6 +115,15 @@ const TasksListView = ({
                                                     {(comment.user && comment.user.name) || getUserById(comment.user_id)?.name || __('Unknown User', 'analogwp-client-handoff')}
                                                 </span>
                                                 <span>{formatDate(comment.created_at)}</span>
+                                                {comment.categories && comment.categories.length > 0 && (
+                                                    <div className="flex flex-wrap gap-1">
+                                                        {comment.categories.map((category, index) => (
+                                                            <span key={index} className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                                                                {category}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                )}
                                                 {comment.page_url && (
                                                     <span className="truncate max-w-48">{comment.page_url}</span>
                                                 )}
@@ -198,6 +215,7 @@ const TasksListView = ({
                             onEdit={() => {}}
                             onDelete={() => {}}
                             statuses={statuses}
+                            priorities={priorities}
                             getUserById={getUserById}
                             formatDate={formatDate}
                             isDragging={false}

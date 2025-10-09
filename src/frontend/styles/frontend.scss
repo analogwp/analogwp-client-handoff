@@ -28,14 +28,26 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
 }
 
 // Admin Bar Toggle Status
+#wp-admin-bar-agwp-cht-toggle,
 #wp-admin-bar-cht-toggle {
-  .cht-toggle-status {
-    color: #a7aaad;
-    font-weight: normal;
+  #cht-admin-bar-toggle {
+    // Default state: Green when comments are OFF (showing "Turn Comments ON")
+    color: $success-color;
+    font-weight: 600;
     
-    &.active {
-      color: $success-color;
-      font-weight: bold;
+    // When comments are active (showing "Turn Comments OFF"), use normal color
+    &.cht-comments-active {
+      color: inherit;
+      font-weight: normal;
+    }
+  }
+}
+
+// Admin Bar Menu Styling
+#wp-admin-bar-agwp-cht-menu {
+  .ab-submenu {
+    li {
+      min-width: 180px;
     }
   }
 }

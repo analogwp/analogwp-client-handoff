@@ -86,14 +86,48 @@ class AGWP_CHT_Admin {
 			return;
 		}
 
+		// Add parent menu item.
 		$wp_admin_bar->add_node(
 			array(
-				'id'    => 'agwp-cht-toggle',
+				'id'    => 'agwp-cht-menu',
 				'title' => __( 'Tasks & Comments', 'analogwp-client-handoff' ),
 				'href'  => '#',
 				'meta'  => array(
+					'class' => 'agwp-cht-admin-bar-menu',
+				),
+			)
+		);
+
+		// Add "Turn Comments ON/OFF" submenu item.
+		$wp_admin_bar->add_node(
+			array(
+				'parent' => 'agwp-cht-menu',
+				'id'     => 'agwp-cht-toggle',
+				'title'  => '<span id="cht-admin-bar-toggle">' . __( 'Turn Comments ON', 'analogwp-client-handoff' ) . '</span>',
+				'href'   => '#',
+				'meta'   => array(
 					'class' => 'agwp-cht-admin-bar-toggle',
 				),
+			)
+		);
+
+		// Add "Tasks Board" submenu item.
+		$wp_admin_bar->add_node(
+			array(
+				'parent' => 'agwp-cht-menu',
+				'id'     => 'agwp-cht-tasks-board',
+				'title'  => __( 'Tasks Board', 'analogwp-client-handoff' ),
+				'href'   => admin_url( 'admin.php?page=agwp-cht-dashboard' ),
+			)
+		);
+
+		// Add "Settings" submenu item.
+		$wp_admin_bar->add_node(
+			array(
+				'parent' => 'agwp-cht-menu',
+				'id'     => 'agwp-cht-settings-link',
+				'title'  => __( 'Settings', 'analogwp-client-handoff' ),
+				'href'   => admin_url( 'admin.php?page=agwp-cht-settings' ),
 			)
 		);
 	}

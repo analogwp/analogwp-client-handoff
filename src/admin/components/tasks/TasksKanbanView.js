@@ -21,6 +21,7 @@ const TasksKanbanView = ({
     onSortChange,
     users,
     statuses,
+    priorities = [],
     getCommentsByStatus,
     getUserById,
     handleStatusChange,
@@ -87,6 +88,7 @@ const TasksKanbanView = ({
                                         onDelete={handleDelete}
                                         onEdit={handleEditTask}
                                         onCardClick={handleCardClick}
+                                        priorities={priorities}
                                         formatDate={formatDate}
                                     />
                                 ))}
@@ -118,6 +120,7 @@ const TasksKanbanView = ({
                                     onDelete={() => {}}
                                     onEdit={() => {}}
                                     onCardClick={() => {}}
+                                    priorities={priorities}
                                     formatDate={formatDate}
                                 />
                             </div>

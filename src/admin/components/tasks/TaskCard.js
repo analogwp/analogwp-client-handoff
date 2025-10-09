@@ -18,6 +18,7 @@ const TaskCard = ({
     onEdit,
     onCardClick,
     formatDate,
+    priorities = [],
     isDragging = false 
 }) => {
 
@@ -43,6 +44,13 @@ const TaskCard = ({
     };
 
     const getPriorityColor = (priority) => {
+        // Find priority in the priorities array from settings
+        const priorityObj = priorities.find(p => p.key === priority);
+        if (priorityObj && priorityObj.color) {
+            return priorityObj.color;
+        }
+        
+        // Fallback to hardcoded colors if not found in settings
         switch (priority) {
             case 'high': return '#ef4444';
             case 'medium': return '#f59e0b';
@@ -74,7 +82,7 @@ const TaskCard = ({
             }`}
             onClick={() => onCardClick && onCardClick(comment)}
         >
-            <div className="flex items-center justify-between mb-3">
+            <div className="flex items-start justify-between mb-3">
                 <div className="flex items-start gap-1">
                     <div 
                         className="w-3! h-3! rounded-full mt-1 mr-2"
@@ -122,6 +130,15 @@ const TaskCard = ({
             </div>
             
             <div className="mb-4">
+                {comment.categories && comment.categories.length > 0 && (
+                    <div className="mb-2 flex flex-wrap gap-1">
+                        {comment.categories.map((category, index) => (
+                            <span key={index} className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                {category}
+                            </span>
+                        ))}
+                    </div>
+                )}
                 {comment.page_url && (
                     <div className="flex items-center mt-2 text-xs text-gray-500">
                         <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16" className="mr-1">

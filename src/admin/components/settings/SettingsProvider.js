@@ -137,6 +137,11 @@ const validateSettings = (settings) => {
 export const SettingsProvider = ({ children }) => {
     const [settings, setSettings] = useState(defaultSettings);
     const [categories, setCategories] = useState([]);
+    const [priorities, setPriorities] = useState([
+        { id: 1, key: 'high', name: 'High', color: '#ef4444' },
+        { id: 2, key: 'medium', name: 'Medium', color: '#f59e0b' },
+        { id: 3, key: 'low', name: 'Low', color: '#10b981' }
+    ]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -177,6 +182,11 @@ export const SettingsProvider = ({ children }) => {
                 const loadedSettings = { ...defaultSettings, ...data.data.settings };
                 setSettings(loadedSettings);
                 setCategories(data.data.categories || []);
+                setPriorities(data.data.priorities || [
+                    { id: 1, key: 'high', name: 'High', color: '#ef4444' },
+                    { id: 2, key: 'medium', name: 'Medium', color: '#f59e0b' },
+                    { id: 3, key: 'low', name: 'Low', color: '#10b981' }
+                ]);
                 setLastSaved(new Date());
             } else {
                 showToast.error(__('Failed to load settings', 'analogwp-client-handoff'));
@@ -189,7 +199,7 @@ export const SettingsProvider = ({ children }) => {
         }
     };
 
-    const saveSettings = async (silent = false, categoriesToSave = null) => {
+    const saveSettings = async (silent = false, categoriesToSave = null, prioritiesToSave = null) => {
         // Validate settings before saving
         const validationErrors = validateSettings(settings);
         if (validationErrors.length > 0) {
@@ -199,11 +209,13 @@ export const SettingsProvider = ({ children }) => {
             return false;
         }
 
-        // Use provided categories or current state
-        const categoriesToUse = categoriesToSave !== null ? categoriesToSave : categories;
-
         try {
             setSaving(true);
+        
+            // Use provided categories or current state
+            const categoriesToUse = categoriesToSave !== null ? categoriesToSave : categories;
+            const prioritiesToUse = prioritiesToSave !== null ? prioritiesToSave : priorities;
+            
             const response = await fetch(agwpChtAjax.ajaxUrl, {
                 method: 'POST',
                 headers: {
@@ -213,7 +225,8 @@ export const SettingsProvider = ({ children }) => {
                     action: 'agwp_cht_save_settings',
                     nonce: agwpChtAjax.nonce,
                     settings: JSON.stringify(settings),
-                    categories: JSON.stringify(categoriesToUse)
+                    categories: JSON.stringify(categoriesToUse),
+                    priorities: JSON.stringify(prioritiesToUse)
                 })
             });
 
@@ -292,6 +305,7 @@ export const SettingsProvider = ({ children }) => {
         const exportData = {
             settings: filteredSettings,
             categories,
+            priorities,
             version: '1.1.0',
             exported_at: new Date().toISOString()
         };
@@ -323,6 +337,9 @@ export const SettingsProvider = ({ children }) => {
                 if (importedData.categories) {
                     setCategories(importedData.categories);
                 }
+                if (importedData.priorities) {
+                    setPriorities(importedData.priorities);
+                }
                 setHasUnsavedChanges(true);
                 showToast.success(__('Settings imported successfully!', 'analogwp-client-handoff'));
                 return true;
@@ -340,6 +357,7 @@ export const SettingsProvider = ({ children }) => {
     const value = {
         settings,
         categories,
+        priorities,
         loading,
         saving,
         hasUnsavedChanges,
@@ -350,6 +368,7 @@ export const SettingsProvider = ({ children }) => {
         resetSettings,
         resetSection,
         setCategories,
+        setPriorities,
         exportSettings,
         importSettings,
         validateSettings: (settingsToValidate) => validateSettings(settingsToValidate || settings)

@@ -12,7 +12,7 @@ import ExtensionsProvider, { useExtensions } from './extensions/ExtensionsProvid
 import SettingsHeader from './settings/SettingsHeader';
 import GeneralSettings from './settings/GeneralSettings';
 import AccessControlSettings from './settings/AccessControlSettings';
-import CategorySettings from './settings/CategorySettings';
+import LabelsAndFiltersSettings from './settings/LabelsAndFiltersSettings';
 import AdvancedSettings from './settings/AdvancedSettings';
 
 const ModernSettings = () => {
@@ -44,8 +44,8 @@ const SettingsContent = ({ activeTab, setActiveTab }) => {
                 return <GeneralSettings />;
             case 'access-control':
                 return <AccessControlSettings />;
-            case 'categories':
-                return <CategorySettings />;
+            case 'labels-filters':
+                return <LabelsAndFiltersSettings />;
             case 'advanced':
                 return <AdvancedSettings />;
             default:

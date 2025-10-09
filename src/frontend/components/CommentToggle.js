@@ -11,10 +11,18 @@ const CommentToggle = ({ isActive, onToggle, commentsCount }) => {
     useEffect(() => {
         const adminBarToggle = document.getElementById('cht-admin-bar-toggle');
         if (adminBarToggle) {
-            const statusSpan = adminBarToggle.querySelector('.cht-toggle-status');
-            if (statusSpan) {
-                statusSpan.textContent = isActive ? 'ON' : 'OFF';
-                statusSpan.className = `cht-toggle-status ${isActive ? 'active' : ''}`;
+            // Update the entire text content to show the action (not the current state)
+            const actionText = isActive 
+                ? __('Turn Comments OFF', 'analogwp-client-handoff')
+                : __('Turn Comments ON', 'analogwp-client-handoff');
+            
+            adminBarToggle.textContent = actionText;
+            
+            // Add/remove active class for styling
+            if (isActive) {
+                adminBarToggle.classList.add('cht-comments-active');
+            } else {
+                adminBarToggle.classList.remove('cht-comments-active');
             }
         }
     }, [isActive]);
