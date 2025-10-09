@@ -12,19 +12,19 @@ import './frontend/styles/frontend.scss';
 // Debug logging
 console.log('CHT: Frontend script loaded!');
 console.log('CHT: Document ready state:', document.readyState);
-console.log('CHT: chtAjax available:', typeof chtAjax !== 'undefined');
+console.log('CHT: agwpChtAjax available:', typeof agwpChtAjax !== 'undefined');
 
 // Simple initialization function
 function initVisualComments() {
     console.log('CHT: Initializing Visual Comments');
     
-    // Ensure chtAjax is available
-    if (typeof chtAjax === 'undefined') {
-        console.error('CHT: chtAjax object not found');
+    // Ensure agwpChtAjax is available
+    if (typeof agwpChtAjax === 'undefined') {
+        console.error('CHT: agwpChtAjax object not found');
         return;
     }
     
-    console.log('CHT: chtAjax found:', chtAjax);
+    console.log('CHT: agwpChtAjax found:', agwpChtAjax);
     
     // Check if React is available
     if (typeof createRoot === 'undefined') {
@@ -80,7 +80,7 @@ function createSimpleInterface() {
         <h3>CHT Visual Comments (Fallback)</h3>
         <p>✅ JavaScript is working!</p>
         <p>⚠️ React fallback mode</p>
-        <p><strong>Post ID:</strong> ${chtAjax.postId}</p>
+        <p><strong>Post ID:</strong> ${agwpChtAjax.postId}</p>
         <button onclick="this.parentNode.style.display='none'" style="float: right;">Close</button>
         <hr>
         <div>Basic visual commenting interface would appear here.</div>

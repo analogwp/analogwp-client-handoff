@@ -774,7 +774,6 @@ class AGWP_CHT_Ajax {
 				'auto_screenshot'           => true,
 				'screenshot_quality'        => 0.8,
 				'comments_per_page'         => 20,
-				'theme_mode'                => 'auto',
 				'auto_save_drafts'          => true,
 			),
 			'advanced' => array(
@@ -832,7 +831,6 @@ class AGWP_CHT_Ajax {
 			$settings['general']['auto_screenshot']            = isset( $settings['general']['auto_screenshot'] ) ? (bool) $settings['general']['auto_screenshot'] : false;
 			$settings['general']['screenshot_quality']         = isset( $settings['general']['screenshot_quality'] ) ? floatval( $settings['general']['screenshot_quality'] ) : 0.8;
 			$settings['general']['comments_per_page']          = isset( $settings['general']['comments_per_page'] ) ? intval( $settings['general']['comments_per_page'] ) : 20;
-			$settings['general']['theme_mode']                 = isset( $settings['general']['theme_mode'] ) ? sanitize_text_field( $settings['general']['theme_mode'] ) : 'auto';
 			$settings['general']['auto_save_drafts']           = isset( $settings['general']['auto_save_drafts'] ) ? (bool) $settings['general']['auto_save_drafts'] : true;
 		}
 

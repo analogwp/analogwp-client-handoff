@@ -11,10 +11,7 @@ import {
     SettingsSection, 
     SettingsCard, 
     ToggleField, 
-    SelectField, 
-    NumberInput, 
-    MultiSelect,
-    FieldDescription 
+    NumberInput
 } from './FieldComponents';
 
 const GeneralSettings = () => {
@@ -58,15 +55,6 @@ const GeneralSettings = () => {
                         min={5}
                         max={100}
                         step={5}
-                    />
-
-                    <SelectField
-                        id="theme_mode"
-                        label={__('Theme Mode', 'analogwp-client-handoff')}
-                        description={__('Choose the color scheme for the admin interface.', 'analogwp-client-handoff')}
-                        value={settings.general?.theme_mode ?? 'auto'}
-                        onChange={(value) => updateSetting('general.theme_mode', value)}
-                        options={themeModeOptions}
                     />
                 </SettingsCard>
 

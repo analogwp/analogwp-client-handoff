@@ -279,8 +279,12 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
 
             // Don't add border to screenshots anymore
             
+            // Get screenshot quality from settings
+            const settings = window.agwpChtAjax?.settings || {};
+            const screenshotQuality = settings.general?.screenshot_quality ?? 0.8;
+            
             // Convert to data URL
-            const dataURL = croppedCanvas.toDataURL('image/png', 1.0);
+            const dataURL = croppedCanvas.toDataURL('image/png', screenshotQuality);
             console.log('Screenshot captured successfully, size:', dataURL.length);
             
             return dataURL;
@@ -390,7 +394,11 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
                     0, 0, captureSize, captureSize
                 );
 
-                const fallbackDataURL = croppedCanvas.toDataURL('image/png', 0.8);
+                // Get screenshot quality from settings
+                const settings = window.agwpChtAjax?.settings || {};
+                const screenshotQuality = settings.general?.screenshot_quality ?? 0.8;
+
+                const fallbackDataURL = croppedCanvas.toDataURL('image/png', screenshotQuality);
                 console.log('Fallback screenshot captured successfully');
                 return fallbackDataURL;
                 
@@ -417,8 +425,20 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
         setIsLoading(true);
         
         try {
-            // Capture screenshot
-            const screenshotUrl = await captureScreenshot();
+            // Get settings from localized data
+            const settings = window.agwpChtAjax?.settings || {};
+            const autoScreenshot = settings.general?.auto_screenshot ?? true;
+            
+            console.log('Screenshot settings:', {
+                settings: window.agwpChtAjax?.settings,
+                autoScreenshot,
+                generalSettings: settings.general
+            });
+            
+            // Capture screenshot only if auto_screenshot is enabled
+            const screenshotUrl = autoScreenshot ? await captureScreenshot() : '';
+            
+            console.log('Screenshot captured:', screenshotUrl ? 'Yes' : 'No (disabled or failed)');
             
             // Save comment with title
             await onSave(comment.trim(), screenshotUrl, priority, title.trim());

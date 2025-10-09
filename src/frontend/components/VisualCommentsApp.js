@@ -132,14 +132,14 @@ const VisualCommentsApp = () => {
     // Load comments from server
     const loadComments = async () => {
         try {
-            const response = await fetch(chtAjax.ajaxUrl, {
+            const response = await fetch(agwpChtAjax.ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
                     action: 'agwp_cht_get_comments',
-                    nonce: chtAjax.nonce,
+                    nonce: agwpChtAjax.nonce,
                     page_url: window.location.href
                 })
             });
@@ -158,15 +158,15 @@ const VisualCommentsApp = () => {
         if (!selectedElement) return;
 
         try {
-            const response = await fetch(chtAjax.ajaxUrl, {
+            const response = await fetch(agwpChtAjax.ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
                     action: 'agwp_cht_save_comment',
-                    nonce: chtAjax.nonce,
-                    post_id: chtAjax.postId || 0,
+                    nonce: agwpChtAjax.nonce,
+                    post_id: agwpChtAjax.postId || 0,
                     comment_title: commentTitle,
                     comment_text: commentText,
                     element_selector: selectedElement.selector,
@@ -198,14 +198,14 @@ const VisualCommentsApp = () => {
     // Add reply to comment
     const addReply = async (commentId, replyText) => {
         try {
-            const response = await fetch(chtAjax.ajaxUrl, {
+            const response = await fetch(agwpChtAjax.ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
                     action: 'agwp_cht_add_reply',
-                    nonce: chtAjax.nonce,
+                    nonce: agwpChtAjax.nonce,
                     comment_id: commentId,
                     reply_text: replyText
                 })
@@ -226,17 +226,17 @@ const VisualCommentsApp = () => {
 
     // Update comment status
     const updateCommentStatus = async (commentId, status) => {
-        if (!chtAjax.canManageComments) return;
+        if (!agwpChtAjax.canManageComments) return;
 
         try {
-            const response = await fetch(chtAjax.ajaxUrl, {
+            const response = await fetch(agwpChtAjax.ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
                     action: 'agwp_cht_update_comment_status',
-                    nonce: chtAjax.nonce,
+                    nonce: agwpChtAjax.nonce,
                     comment_id: commentId,
                     status: status
                 })
@@ -296,7 +296,7 @@ const VisualCommentsApp = () => {
                         comments={comments}
                         onAddReply={addReply}
                         onUpdateStatus={updateCommentStatus}
-                        canManageComments={chtAjax.canManageComments}
+                        canManageComments={agwpChtAjax.canManageComments}
                         isVisible={sidebarVisible}
                         onClose={() => setSidebarVisible(!sidebarVisible)}
                     />

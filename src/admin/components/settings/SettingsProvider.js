@@ -30,8 +30,7 @@ const defaultSettings = {
         comments_per_page: 20,
         enable_frontend_comments: true,
         require_approval: false,
-        auto_save_drafts: true,
-        theme_mode: 'auto' // light, dark, auto
+        auto_save_drafts: true
     },
     advanced: {
         enable_debug_mode: false,
@@ -48,8 +47,7 @@ const settingsSchema = {
         comments_per_page: { type: 'number', min: 5, max: 100, required: true },
         enable_frontend_comments: { type: 'boolean', required: true },
         require_approval: { type: 'boolean', required: true },
-        auto_save_drafts: { type: 'boolean', required: true },
-        theme_mode: { type: 'string', enum: ['light', 'dark', 'auto'], required: true }
+        auto_save_drafts: { type: 'boolean', required: true }
     },
     advanced: {
         enable_debug_mode: { type: 'boolean', required: true },

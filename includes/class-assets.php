@@ -65,7 +65,7 @@ class AGWP_CHT_Assets {
 		// Localize script with data.
 		wp_localize_script(
 			'agwp-cht-frontend',
-			'chtAjax',
+			'agwpChtAjax',
 			$this->get_frontend_localized_data()
 		);
 	}
@@ -161,6 +161,16 @@ class AGWP_CHT_Assets {
 	 * @return array Localized data.
 	 */
 	private function get_frontend_localized_data() {
+		// Get plugin settings
+		$default_settings = array(
+			'general' => array(
+				'auto_screenshot'    => true,
+				'screenshot_quality' => 0.8,
+			),
+		);
+		$saved_settings   = get_option( 'agwp_cht_settings', array() );
+		$settings         = wp_parse_args( $saved_settings, $default_settings );
+
 		return array(
 			'ajaxUrl'           => admin_url( 'admin-ajax.php' ),
 			'nonce'             => wp_create_nonce( 'agwp_cht_nonce' ),
@@ -168,6 +178,7 @@ class AGWP_CHT_Assets {
 			'pageUrl'           => get_permalink(),
 			'currentUser'       => $this->get_current_user_data(),
 			'canManageComments' => current_user_can( 'manage_options' ),
+			'settings'          => $settings,
 			'strings'           => $this->get_frontend_strings(),
 		);
 	}
