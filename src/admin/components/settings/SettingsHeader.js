@@ -41,6 +41,13 @@ const SettingsHeader = ({ activeTab, onTabChange }) => {
             isPro: false
         },
         { 
+            id: 'access-control', 
+            label: __('Access Control', 'analogwp-client-handoff'),
+            icon: ShieldCheckIcon,
+            description: __('Manage user permissions and access', 'analogwp-client-handoff'),
+            isPro: false
+        },
+        { 
             id: 'categories', 
             label: __('Categories', 'analogwp-client-handoff'),
             icon: TagIcon,

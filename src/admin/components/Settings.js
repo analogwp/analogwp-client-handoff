@@ -11,6 +11,7 @@ import SettingsProvider from './settings/SettingsProvider';
 import ExtensionsProvider, { useExtensions } from './extensions/ExtensionsProvider';
 import SettingsHeader from './settings/SettingsHeader';
 import GeneralSettings from './settings/GeneralSettings';
+import AccessControlSettings from './settings/AccessControlSettings';
 import CategorySettings from './settings/CategorySettings';
 import AdvancedSettings from './settings/AdvancedSettings';
 
@@ -41,6 +42,8 @@ const SettingsContent = ({ activeTab, setActiveTab }) => {
         switch (activeTab) {
             case 'general':
                 return <GeneralSettings />;
+            case 'access-control':
+                return <AccessControlSettings />;
             case 'categories':
                 return <CategorySettings />;
             case 'advanced':
