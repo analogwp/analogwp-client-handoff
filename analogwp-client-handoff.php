@@ -10,7 +10,7 @@
  * Text Domain: analogwp-client-handoff
  * Domain Path: /languages
  * Requires at least: 5.0
- * Tested up to: 6.7
+ * Tested up to: 6.8.3
  * Requires PHP: 7.4
  * Network: true
  *
