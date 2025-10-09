@@ -1,6 +1,5 @@
 === Client Handoff Toolkit ===
-Contributors: analogwp
-Donate link: https://analogwp.com/
+Contributors: analogwp, lushkant, johnpixle
 Tags: comments, feedback, collaboration, handoff, visual-comments, task-management
 Requires at least: 5.0
 Tested up to: 6.4
