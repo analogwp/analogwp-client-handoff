@@ -501,21 +501,6 @@ class AGWP_CHT_Ajax {
 
 		$items = array();
 
-		// Add common WordPress pages
-		$items[] = array(
-			'id'    => 'home',
-			'title' => __( 'Homepage', 'analogwp-client-handoff' ),
-			'url'   => home_url( '/' ),
-			'type'  => 'special',
-		);
-
-		$items[] = array(
-			'id'    => 'blog',
-			'title' => __( 'Blog Page', 'analogwp-client-handoff' ),
-			'url'   => get_permalink( get_option( 'page_for_posts' ) ) ?: home_url( '/blog/' ),
-			'type'  => 'special',
-		);
-
 		// Add taxonomy archives.
 		// Get all public taxonomies.
 		$taxonomies = get_taxonomies(
