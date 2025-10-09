@@ -7,8 +7,8 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
-import { showToast } from './ToastProvider';
-import { useSettings } from './settings/SettingsProvider';
+import { showToast } from '../ToastProvider';
+import { useSettings } from '../settings/SettingsProvider';
 
 const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, statuses = [], isSidebar = false }) => {
     const { categories } = useSettings();

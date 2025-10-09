@@ -7,7 +7,7 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
-import TasksKanban from '../components/TasksKanban';
+import TasksView from '../components/TasksView';
 import AdminHeader from '../components/AdminHeader';
 import Settings from '../components/Settings';
 import { ToastProvider, showToast, showConfirmation } from '../components/ToastProvider';
@@ -328,7 +328,7 @@ const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
             case 'dashboard':
             default:
                 return (
-                    <TasksKanban 
+                    <TasksView 
                         comments={filteredComments}
                         onUpdateComment={handleUpdateComment}
                         onDelete={handleDelete}

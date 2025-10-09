@@ -7,8 +7,8 @@ import { __ } from '@wordpress/i18n';
 /**
  * Internal dependencies
  */
-import { Button } from './ui';
-import { showConfirmation, showToast } from './ToastProvider';
+import { Button } from '../ui';
+import { showConfirmation, showToast } from '../ToastProvider';
 
 const TaskDetail = ({ 
     comment, 
