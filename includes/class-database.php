@@ -238,11 +238,17 @@ class AGWP_CHT_Database {
 		global $wpdb;
 
 		// Validate required fields.
-		$required_fields = array( 'comment_text', 'page_url' );
-		foreach ( $required_fields as $field ) {
-			if ( empty( $data[ $field ] ) ) {
-				return false;
-			}
+		// For comments we require comment_text and page_url, but for tasks
+		// we allow a title-only task (comment_title) with an empty comment_text.
+		// So require that page_url is present and at least one of comment_text or comment_title is non-empty.
+		if ( empty( $data['page_url'] ) ) {
+			return false;
+		}
+
+		$has_text = ! empty( $data['comment_text'] );
+		$has_title = ! empty( $data['comment_title'] );
+		if ( ! $has_text && ! $has_title ) {
+			return false;
 		}
 
 		$table_name = $wpdb->prefix . 'agwp_cht_comments';
