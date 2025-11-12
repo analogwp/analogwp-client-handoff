@@ -1,8 +1,8 @@
 <?php
 /**
- * Uninstall script for Client Handoff Toolkit.
+ * Uninstall script for AnalogWP Site Notes.
  *
- * @package AnalogWP_Client_Handoff
+ * @package AnalogWP_Site_Notes
  * @since 1.0.0
  */
 
@@ -12,21 +12,21 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 // Delete plugin options.
-delete_option( 'agwp_cht_version' );
-delete_option( 'agwp_cht_db_version' );
+delete_option( 'agwp_sn_version' );
+delete_option( 'agwp_sn_db_version' );
 
 // Delete plugin tables.
 global $wpdb;
 
-$comments_table = $wpdb->prefix . 'agwp_cht_comments';
-$replies_table  = $wpdb->prefix . 'agwp_cht_comment_replies';
+$comments_table = $wpdb->prefix . 'agwp_sn_comments';
+$replies_table  = $wpdb->prefix . 'agwp_sn_comment_replies';
 
 $wpdb->query( "DROP TABLE IF EXISTS {$replies_table}" );
 $wpdb->query( "DROP TABLE IF EXISTS {$comments_table}" );
 
 // Delete uploaded screenshots.
 $upload_dir = wp_upload_dir();
-$plugin_dir = $upload_dir['basedir'] . '/agwp-cht-screenshots/';
+$plugin_dir = $upload_dir['basedir'] . '/agwp-sn-screenshots/';
 
 if ( is_dir( $plugin_dir ) ) {
 	$files = glob( $plugin_dir . '*' );

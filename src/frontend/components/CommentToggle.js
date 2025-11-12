@@ -14,27 +14,27 @@ const CommentToggle = ({ isActive, onToggle, commentsCount }) => {
 
     // Update admin bar toggle status
     useEffect(() => {
-        const adminBarToggle = document.getElementById('cht-admin-bar-toggle');
+        const adminBarToggle = document.getElementById('sn-admin-bar-toggle');
         if (adminBarToggle) {
             // Update the entire text content to show the action (not the current state)
             const actionText = isActive 
-                ? __('Turn Comments OFF', 'analogwp-client-handoff')
-                : __('Turn Comments ON', 'analogwp-client-handoff');
+                ? __('Turn Comments OFF', 'analogwp-site-notes')
+                : __('Turn Comments ON', 'analogwp-site-notes');
             
             adminBarToggle.textContent = actionText;
             
             // Add/remove active class for styling
             if (isActive) {
-                adminBarToggle.classList.add('cht-comments-active');
+                adminBarToggle.classList.add('sn-comments-active');
             } else {
-                adminBarToggle.classList.remove('cht-comments-active');
+                adminBarToggle.classList.remove('sn-comments-active');
             }
         }
     }, [isActive]);
 
     // Handle admin bar click
     useEffect(() => {
-        const adminBarItem = document.querySelector('.agwp-cht-admin-bar-toggle');
+        const adminBarItem = document.querySelector('.agwp-sn-admin-bar-toggle');
         if (adminBarItem) {
             const handleClick = (e) => {
                 e.preventDefault();
@@ -54,17 +54,17 @@ const CommentToggle = ({ isActive, onToggle, commentsCount }) => {
     }
 
     return (
-        <div className={`cht-toggle-button ${isActive ? 'active' : ''}`} data-cht-ignore="true">
+        <div className={`sn-toggle-button ${isActive ? 'active' : ''}`} data-sn-ignore="true">
             <button 
                 onClick={() => onToggle(!isActive)}
-                className="cht-toggle-btn"
-                data-cht-ignore="true"
+                className="sn-toggle-btn"
+                data-sn-ignore="true"
                 aria-label={isActive ? 
-                    __('Disable Visual Comments', 'analogwp-client-handoff') : 
-                    __('Enable Visual Comments', 'analogwp-client-handoff')
+                    __('Disable Visual Comments', 'analogwp-site-notes') : 
+                    __('Enable Visual Comments', 'analogwp-site-notes')
                 }
             >
-                <span className="cht-toggle-icon">
+                <span className="sn-toggle-icon">
                     {isActive ? (
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-1 8H4V9h16v5z"/>
@@ -77,13 +77,13 @@ const CommentToggle = ({ isActive, onToggle, commentsCount }) => {
                     )}
                 </span>
                 
-                <span className="cht-toggle-text">
+                <span className="sn-toggle-text">
                     {isActive ? 
-                        __('Comments ON', 'analogwp-client-handoff') : 
-                        __('Comments OFF', 'analogwp-client-handoff')
+                        __('Comments ON', 'analogwp-site-notes') : 
+                        __('Comments OFF', 'analogwp-site-notes')
                     }
                     {commentsCount > 0 && (
-                        <span className="cht-comments-count">
+                        <span className="sn-comments-count">
                             ({commentsCount})
                         </span>
                     )}
@@ -92,9 +92,9 @@ const CommentToggle = ({ isActive, onToggle, commentsCount }) => {
             
             <button 
                 onClick={() => setIsVisible(false)}
-                className="cht-toggle-hide"
-                data-cht-ignore="true"
-                aria-label={__('Hide toggle button', 'analogwp-client-handoff')}
+                className="sn-toggle-hide"
+                data-sn-ignore="true"
+                aria-label={__('Hide toggle button', 'analogwp-site-notes')}
             >
                 ×
             </button>

@@ -1,58 +1,29 @@
 <?php
 /**
- * Plugin Name: Client Handoff Toolkit
- * Plugin URI: https://github.com/analogwp/analogwp-client-handoff
- * Description: A comprehensive solution for agency-client transitions with visual commenting system, maintenance scheduling, and client-friendly editing mode.
- * Version: 1.0.1
- * Author: AnalogWP
- * License: GPL v2 or later
- * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: analogwp-client-handoff
- * Requires at least: 6.2
- * Tested up to: 6.8.3
- * Requires PHP: 7.4
+ * Main class for the plugin.
  *
- * @package AnalogWP_Client_Handoff
+ * @copyright SmallTownDev
+ * @package AnalogWP\SiteNotes
  */
 
-// Prevent direct access
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+namespace AnalogWP\SiteNotes;
 
-// Define plugin constants
-if ( ! defined( 'AGWP_CHT_VERSION' ) ) {
-	define( 'AGWP_CHT_VERSION', '1.0.1' );
-}
-
-if ( ! defined( 'AGWP_CHT_PLUGIN_URL' ) ) {
-	define( 'AGWP_CHT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-}
-
-if ( ! defined( 'AGWP_CHT_PLUGIN_PATH' ) ) {
-	define( 'AGWP_CHT_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
-}
-
-if ( ! defined( 'AGWP_CHT_PLUGIN_FILE' ) ) {
-	define( 'AGWP_CHT_PLUGIN_FILE', __FILE__ );
-}
-
-if ( ! defined( 'AGWP_CHT_INCLUDES_PATH' ) ) {
-	define( 'AGWP_CHT_INCLUDES_PATH', AGWP_CHT_PLUGIN_PATH . 'includes/' );
-}
+use AnalogWP\SiteNotes\Admin\Admin;
+use AnalogWP\SiteNotes\Ajax\Ajax;
+use AnalogWP\SiteNotes\Assets;
 
 /**
  * Main plugin class
  *
  * @since 1.0.0
  */
-final class AGWP_CHT_Client_Handoff_Toolkit {
+final class Plugin {
 
 	/**
 	 * Plugin instance.
 	 *
 	 * @since 1.0.0
-	 * @var AGWP_CHT_Client_Handoff_Toolkit|null
+	 * @var Plugin|null
 	 */
 	private static $instance = null;
 
@@ -60,7 +31,7 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 	 * Database manager instance.
 	 *
 	 * @since 1.0.0
-	 * @var AGWP_CHT_Database|null
+	 * @var Database|null
 	 */
 	public $database = null;
 
@@ -68,7 +39,7 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 	 * Admin manager instance.
 	 *
 	 * @since 1.0.0
-	 * @var AGWP_CHT_Admin|null
+	 * @var Admin|null
 	 */
 	public $admin = null;
 
@@ -76,7 +47,7 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 	 * AJAX manager instance.
 	 *
 	 * @since 1.0.0
-	 * @var AGWP_CHT_Ajax|null
+	 * @var Ajax|null
 	 */
 	public $ajax = null;
 
@@ -84,7 +55,7 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 	 * Assets manager instance.
 	 *
 	 * @since 1.0.0
-	 * @var AGWP_CHT_Assets|null
+	 * @var Assets|null
 	 */
 	public $assets = null;
 
@@ -92,13 +63,28 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 	 * Get plugin instance.
 	 *
 	 * @since 1.0.0
-	 * @return AGWP_CHT_Client_Handoff_Toolkit
+	 * @return Plugin|null
 	 */
 	public static function get_instance() {
-		if ( null === self::$instance ) {
-			self::$instance = new self();
-		}
 		return self::$instance;
+	}
+
+	/**
+	 * Loads the plugin main instance and initializes it.
+	 *
+	 * @return bool True if the plugin main instance could be loaded, false otherwise.
+	 */
+	public static function load() {
+		if ( null !== self::$instance ) {
+			return false;
+		}
+
+		self::$instance = new self();
+		self::$instance->init();
+
+		do_action( 'analog_site_notes_loaded' );
+
+		return true;
 	}
 
 	/**
@@ -108,7 +94,6 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 	 */
 	private function __construct() {
 		$this->includes();
-		$this->init();
 	}
 
 	/**
@@ -117,12 +102,12 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 	 * @since 1.0.0
 	 */
 	private function includes() {
-		// Core classes
-		require_once AGWP_CHT_INCLUDES_PATH . 'class-database.php';
-		require_once AGWP_CHT_INCLUDES_PATH . 'class-assets.php';
-		require_once AGWP_CHT_INCLUDES_PATH . 'admin/class-admin.php';
-		require_once AGWP_CHT_INCLUDES_PATH . 'ajax/class-ajax.php';
-		require_once AGWP_CHT_INCLUDES_PATH . 'class-pro-extensions.php';
+		// Core classes.
+		require_once AGWP_SN_PLUGIN_PATH . 'includes/class-database.php';
+		require_once AGWP_SN_PLUGIN_PATH . 'includes/class-assets.php';
+		require_once AGWP_SN_PLUGIN_PATH . 'includes/admin/class-admin.php';
+		require_once AGWP_SN_PLUGIN_PATH . 'includes/ajax/class-ajax.php';
+		require_once AGWP_SN_PLUGIN_PATH . 'includes/class-extensions.php';
 	}
 
 	/**
@@ -131,34 +116,21 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 	 * @since 1.0.0
 	 */
 	private function init() {
-		// Initialize core components
-		$this->database = new AGWP_CHT_Database();
-		$this->assets   = new AGWP_CHT_Assets();
-		$this->admin    = new AGWP_CHT_Admin();
-		$this->ajax     = new AGWP_CHT_Ajax();
+		// Initialize core components.
+		$this->database = new Database();
+		$this->assets   = new Assets();
+		$this->admin    = new Admin();
+		$this->ajax     = new Ajax();
 
-		// Hook into WordPress
-		add_action( 'init', array( $this, 'init_plugin' ) );
-
-		// Multisite: Create tables when a new site is created
+		// Multisite: Create tables when a new site is created.
 		if ( is_multisite() ) {
 			add_action( 'wpmu_new_blog', array( $this, 'create_tables_on_new_blog' ), 10, 1 );
 			add_filter( 'wpmu_drop_tables', array( $this, 'drop_tables_on_blog_delete' ) );
 		}
 
-		// Register activation and deactivation hooks
+		// Register activation and deactivation hooks.
 		register_activation_hook( __FILE__, array( $this, 'activate' ) );
 		register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
-	}
-
-	/**
-	 * Initialize plugin after WordPress is loaded.
-	 *
-	 * @since 1.0.0
-	 */
-	public function init_plugin() {
-		// Plugin initialization logic
-		do_action( 'agwp_cht_init' );
 	}
 
 	/**
@@ -168,32 +140,32 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 	 * @param bool $network_wide Whether the plugin is being activated network-wide.
 	 */
 	public function activate( $network_wide = false ) {
-		// Create database tables
+		// Create database tables.
 		if ( ! $this->database ) {
-			$this->database = new AGWP_CHT_Database();
+			$this->database = new Database();
 		}
 
-		// Handle multisite activation
+		// Handle multisite activation.
 		if ( is_multisite() && $network_wide ) {
-			// Get all blogs
+			// Get all blogs.
 			$blog_ids = get_sites( array( 'fields' => 'ids' ) );
 
 			foreach ( $blog_ids as $blog_id ) {
 				switch_to_blog( $blog_id );
 				$this->database->create_tables();
-				update_option( 'agwp_cht_version', AGWP_CHT_VERSION );
+				update_option( 'agwp_sn_version', AGWP_SN_VERSION );
 				restore_current_blog();
 			}
 		} else {
-			// Single site or single blog activation
+			// Single site or single blog activation.
 			$this->database->create_tables();
-			update_option( 'agwp_cht_version', AGWP_CHT_VERSION );
+			update_option( 'agwp_sn_version', AGWP_SN_VERSION );
 		}
 
-		// Flush rewrite rules
+		// Flush rewrite rules.
 		flush_rewrite_rules();
 
-		do_action( 'agwp_cht_activated' );
+		do_action( 'agwp_sn_activated' );
 	}
 
 	/**
@@ -202,10 +174,10 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 	 * @since 1.0.0
 	 */
 	public function deactivate() {
-		// Flush rewrite rules
+		// Flush rewrite rules.
 		flush_rewrite_rules();
 
-		do_action( 'agwp_cht_deactivated' );
+		do_action( 'agwp_sn_deactivated' );
 	}
 
 	/**
@@ -221,7 +193,7 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 
 		switch_to_blog( $blog_id );
 		$this->database->create_tables();
-		update_option( 'agwp_cht_version', AGWP_CHT_VERSION );
+		update_option( 'agwp_sn_version', AGWP_SN_VERSION );
 		restore_current_blog();
 	}
 
@@ -235,41 +207,41 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 	public function drop_tables_on_blog_delete( $tables ) {
 		global $wpdb;
 
-		$tables[] = $wpdb->prefix . 'agwp_cht_comments';
-		$tables[] = $wpdb->prefix . 'agwp_cht_comment_replies';
+		$tables[] = $wpdb->prefix . 'agwp_sn_comments';
+		$tables[] = $wpdb->prefix . 'agwp_sn_comment_replies';
 
 		return $tables;
 	}
 
 	/**
-	 * Check if current user has access to client handoff functionality.
+	 * Check if current user has access to site notes functionality.
 	 *
 	 * @since 1.0.0
 	 * @return bool True if user has access.
 	 */
 	public static function user_has_access() {
-		// Administrators always have access
+		// Administrators always have access.
 		if ( current_user_can( 'manage_options' ) ) {
 			return true;
 		}
 
-		// Get allowed roles from settings
-		$settings      = get_option( 'agwp_cht_settings', array() );
+		// Get allowed roles from settings.
+		$settings      = get_option( 'agwp_sn_settings', array() );
 		$allowed_roles = isset( $settings['general']['allowed_roles'] ) ? $settings['general']['allowed_roles'] : array( 'administrator', 'editor' );
 
-		// Ensure administrator is always in the list
+		// Ensure administrator is always in the list.
 		if ( ! in_array( 'administrator', $allowed_roles, true ) ) {
 			$allowed_roles[] = 'administrator';
 		}
 
-		// Get current user
+		// Get current user.
 		$user = wp_get_current_user();
 
 		if ( ! $user || ! $user->exists() ) {
 			return false;
 		}
 
-		// Check if user has any of the allowed roles
+		// Check if user has any of the allowed roles.
 		foreach ( $allowed_roles as $role ) {
 			if ( in_array( $role, $user->roles, true ) ) {
 				return true;
@@ -286,7 +258,7 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 	 * @return bool True if frontend comments are enabled.
 	 */
 	public static function frontend_comments_enabled() {
-		$settings = get_option( 'agwp_cht_settings', array() );
+		$settings = get_option( 'agwp_sn_settings', array() );
 		return isset( $settings['general']['enable_frontend_comments'] ) ? (bool) $settings['general']['enable_frontend_comments'] : true;
 	}
 
@@ -304,11 +276,3 @@ final class AGWP_CHT_Client_Handoff_Toolkit {
 	 */
 	public function __wakeup() {}
 }
-
-// Initialize the plugin
-function agwp_cht() {
-	return AGWP_CHT_Client_Handoff_Toolkit::get_instance();
-}
-
-// Start the plugin
-agwp_cht();

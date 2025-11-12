@@ -1,22 +1,22 @@
 #!/bin/bash
 
-# Client Handoff Toolkit - Build and Package Script
+# AnalogWP Site Notes - Build and Package Script
 # For internal testing releases
 
 set -e  # Exit on any error
 
 # Get plugin directory and version
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PLUGIN_SLUG="analogwp-client-handoff"
+PLUGIN_SLUG="analogwp-site-notes"
 
 # Extract version from main plugin file
-VERSION=$(grep "Version:" "$PLUGIN_DIR/analogwp-client-handoff.php" | awk '{print $3}')
+VERSION=$(grep "Version:" "$PLUGIN_DIR/analogwp-site-notes.php" | awk '{print $3}')
 if [ -z "$VERSION" ]; then
     echo "❌ Error: Could not extract version from plugin file"
     exit 1
 fi
 
-echo "🚀 Building Client Handoff Toolkit v${VERSION} for Internal Testing"
+echo "🚀 Building AnalogWP Site Notes Toolkit v${VERSION} for Internal Testing"
 echo "================================================================"
 
 BUILD_DIR="$PLUGIN_DIR/build-package"
@@ -79,7 +79,7 @@ PACKAGE_PATH="$BUILD_DIR/$PACKAGE_NAME"
 mkdir -p "$PACKAGE_PATH"
 
 # Copy main plugin files
-cp analogwp-client-handoff.php "$PACKAGE_PATH/"
+cp analogwp-site-notes.php "$PACKAGE_PATH/"
 cp README.md "$PACKAGE_PATH/"
 cp CHANGELOG.md "$PACKAGE_PATH/"
 cp TESTING_GUIDE.md "$PACKAGE_PATH/"
@@ -124,7 +124,7 @@ print_success "Plugin files copied"
 print_step "Creating package information..."
 
 cat > "$PACKAGE_PATH/PACKAGE_INFO.txt" << EOF
-Client Handoff Toolkit - Internal Testing Package
+AnalogWP Site Notes - Internal Testing Package
 ================================================
 
 Version: ${VERSION}
@@ -144,9 +144,9 @@ Package Type: Internal Testing Release
 4. Report bugs using the template in TESTING_GUIDE.md
 
 🔧 INSTALLATION:
-1. Upload to /wp-content/plugins/analogwp-client-handoff/
+1. Upload to /wp-content/plugins/analogwp-site-notes/
 2. Activate plugin (database will auto-upgrade)
-3. Navigate to Client Handoff dashboard
+3. Navigate to Site Notes dashboard
 4. Start testing!
 
 ⚠️  IMPORTANT NOTES:
@@ -157,7 +157,7 @@ Package Type: Internal Testing Release
 
 📞 SUPPORT:
 - GitHub Issues: Create detailed bug reports
-- Slack: #client-handoff-testing
+- Slack: #site-notes-testing
 - Emergency: Contact @lushkant directly
 
 Built on: $(hostname)
@@ -170,7 +170,7 @@ print_success "Package information created"
 print_step "Verifying package contents..."
 
 REQUIRED_FILES=(
-    "analogwp-client-handoff.php"
+    "analogwp-site-notes.php"
     "README.md"
     "CHANGELOG.md"
     "TESTING_GUIDE.md"

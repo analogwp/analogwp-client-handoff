@@ -105,7 +105,7 @@ const CommentMarker = ({
     return (
         <>
             <div
-                className={`cht-comment-marker ${isSelected ? 'selected' : ''} ${comment.status}`}
+                className={`sn-comment-marker ${isSelected ? 'selected' : ''} ${comment.status}`}
                 style={{
                     position: 'absolute',
                     left: `${comment.x_position}px`,
@@ -117,24 +117,24 @@ const CommentMarker = ({
                 onClick={onSelect}
                 title={comment.comment_text}
             >
-                <div className="cht-marker-dot">
-                    <span className="cht-marker-icon">{getStatusIcon(comment.status)}</span>
-                    <span className="cht-marker-number">{comment.id}</span>
+                <div className="sn-marker-dot">
+                    <span className="sn-marker-icon">{getStatusIcon(comment.status)}</span>
+                    <span className="sn-marker-number">{comment.id}</span>
                 </div>
                 
-                <div className="cht-marker-pulse"></div>
+                <div className="sn-marker-pulse"></div>
             </div>
 
             {isSelected && (
                 <Draggable 
-                    handle=".cht-popup-header"
+                    handle=".sn-popup-header"
                     onStart={() => setIsDragging(true)}
                     onStop={() => setTimeout(() => setIsDragging(false), 100)}
                 >
                     <div
                         ref={popupRef}
-                        className="cht-comment-detail-popup"
-                        data-cht-ignore="true"
+                        className="sn-comment-detail-popup"
+                        data-sn-ignore="true"
                         data-dragging={isDragging}
                         style={{
                             position: 'fixed',
@@ -143,52 +143,52 @@ const CommentMarker = ({
                             zIndex: 100001
                         }}
                     >
-                        <div className="cht-popup-header">
-                            <div className="cht-popup-title">
-                                <strong>{__('Comment', 'analogwp-client-handoff')} #{comment.id}</strong>
-                                <span className="cht-status-badge">
-                                    <span className="cht-status-icon">{getStatusIcon(comment.status)}</span>
+                        <div className="sn-popup-header">
+                            <div className="sn-popup-title">
+                                <strong>{__('Comment', 'analogwp-site-notes')} #{comment.id}</strong>
+                                <span className="sn-status-badge">
+                                    <span className="sn-status-icon">{getStatusIcon(comment.status)}</span>
                                     {getStatusLabel(comment.status)}
                                 </span>
                             </div>
-                            <button onClick={onSelect} className="cht-popup-close">×</button>
+                            <button onClick={onSelect} className="sn-popup-close">×</button>
                         </div>
 
-                        <div className="cht-popup-content">
+                        <div className="sn-popup-content">
                             {/* Screenshot */}
                             {comment.screenshot_url && (
-                                <div className="cht-comment-screenshot">
+                                <div className="sn-comment-screenshot">
                                     <img 
                                         src={comment.screenshot_url} 
-                                        alt={__('Comment Screenshot', 'analogwp-client-handoff')}
+                                        alt={__('Comment Screenshot', 'analogwp-site-notes')}
                                         onClick={() => window.open(comment.screenshot_url, '_blank')}
                                     />
                                 </div>
                             )}
 
                             {/* Main Comment */}
-                            <div className="cht-comment-content">
-                                <div className="cht-comment-meta">
+                            <div className="sn-comment-content">
+                                <div className="sn-comment-meta">
                                     <strong>{comment.display_name}</strong>
-                                    <span className="cht-comment-date">
+                                    <span className="sn-comment-date">
                                         {new Date(comment.created_at).toLocaleString()}
                                     </span>
                                 </div>
                                 {comment.comment_title && (
-                                    <h5 className="cht-comment-title">{comment.comment_title}</h5>
+                                    <h5 className="sn-comment-title">{comment.comment_title}</h5>
                                 )}
-                                <p className="cht-comment-text">{comment.comment_text}</p>
+                                <p className="sn-comment-text">{comment.comment_text}</p>
                                 
                                 {comment.element_selector && (
-                                    <div className="cht-element-info">
+                                    <div className="sn-element-info">
                                         <small>
-                                            {__('Element:', 'analogwp-client-handoff')} 
+                                            {__('Element:', 'analogwp-site-notes')} 
                                             <code>{comment.element_selector}</code>
                                             <button 
                                                 onClick={scrollToElement}
-                                                className="cht-goto-element"
+                                                className="sn-goto-element"
                                             >
-                                                {__('Go to', 'analogwp-client-handoff')}
+                                                {__('Go to', 'analogwp-site-notes')}
                                             </button>
                                         </small>
                                     </div>
@@ -197,17 +197,17 @@ const CommentMarker = ({
 
                             {/* Status Management */}
                             {canManageComments && (
-                                <div className="cht-status-controls">
+                                <div className="sn-status-controls">
                                     <label>
-                                        {__('Status:', 'analogwp-client-handoff')}
+                                        {__('Status:', 'analogwp-site-notes')}
                                         <select 
                                             value={comment.status} 
                                             onChange={handleStatusChange}
-                                            className="cht-status-select"
+                                            className="sn-status-select"
                                         >
-                                            <option value="open">{__('Open', 'analogwp-client-handoff')}</option>
-                                            <option value="in_progress">{__('In Progress', 'analogwp-client-handoff')}</option>
-                                            <option value="resolved">{__('Resolved', 'analogwp-client-handoff')}</option>
+                                            <option value="open">{__('Open', 'analogwp-site-notes')}</option>
+                                            <option value="in_progress">{__('In Progress', 'analogwp-site-notes')}</option>
+                                            <option value="resolved">{__('Resolved', 'analogwp-site-notes')}</option>
                                         </select>
                                     </label>
                                 </div>
@@ -215,13 +215,13 @@ const CommentMarker = ({
 
                             {/* Replies */}
                             {comment.replies && comment.replies.length > 0 && (
-                                <div className="cht-replies">
-                                    <h5>{__('Replies:', 'analogwp-client-handoff')}</h5>
+                                <div className="sn-replies">
+                                    <h5>{__('Replies:', 'analogwp-site-notes')}</h5>
                                     {comment.replies.map((reply) => (
-                                        <div key={reply.id} className="cht-reply">
-                                            <div className="cht-reply-meta">
+                                        <div key={reply.id} className="sn-reply">
+                                            <div className="sn-reply-meta">
                                                 <strong>{reply.display_name}</strong>
-                                                <span className="cht-reply-date">
+                                                <span className="sn-reply-date">
                                                     {new Date(reply.created_at).toLocaleString()}
                                                 </span>
                                             </div>
@@ -233,15 +233,15 @@ const CommentMarker = ({
 
                             {/* Reply Form */}
                             {showReplyForm ? (
-                                <form onSubmit={handleReplySubmit} className="cht-reply-form">
+                                <form onSubmit={handleReplySubmit} className="sn-reply-form">
                                     <textarea
                                         value={replyText}
                                         onChange={(e) => setReplyText(e.target.value)}
-                                        placeholder={__('Type your reply...', 'analogwp-client-handoff')}
+                                        placeholder={__('Type your reply...', 'analogwp-site-notes')}
                                         rows="3"
                                         disabled={isSubmittingReply}
                                     />
-                                    <div className="cht-reply-actions">
+                                    <div className="sn-reply-actions">
                                         <Button 
                                             variant="secondary"
                                             onClick={() => {
@@ -250,7 +250,7 @@ const CommentMarker = ({
                                             }}
                                             disabled={isSubmittingReply}
                                         >
-                                            {__('Cancel', 'analogwp-client-handoff')}
+                                            {__('Cancel', 'analogwp-site-notes')}
                                         </Button>
                                         <Button 
                                             type="submit"
@@ -259,19 +259,19 @@ const CommentMarker = ({
                                             loading={isSubmittingReply}
                                         >
                                             {isSubmittingReply ? 
-                                                __('Replying...', 'analogwp-client-handoff') : 
-                                                __('Reply', 'analogwp-client-handoff')
+                                                __('Replying...', 'analogwp-site-notes') : 
+                                                __('Reply', 'analogwp-site-notes')
                                             }
                                         </Button>
                                     </div>
                                 </form>
                             ) : (
-                                <div className="cht-comment-actions">
+                                <div className="sn-comment-actions">
                                     <Button 
                                         variant="secondary"
                                         onClick={() => setShowReplyForm(true)}
                                     >
-                                        {__('Reply', 'analogwp-client-handoff')}
+                                        {__('Reply', 'analogwp-site-notes')}
                                     </Button>
                                 </div>
                             )}

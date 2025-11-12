@@ -6,7 +6,7 @@ $accent-hover: #2d46ba;
 $accent-active: #243a94;
 
 // Base Button Styles
-.cht-button {
+.sn-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -45,13 +45,13 @@ $accent-active: #243a94;
 }
 
 // Button Content
-.cht-button__content {
+.sn-button__content {
   display: inline-flex;
   align-items: center;
 }
 
 // Button Icons
-.cht-button__icon {
+.sn-button__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -67,21 +67,21 @@ $accent-active: #243a94;
 }
 
 // Loading Spinner
-.cht-button__spinner {
+.sn-button__spinner {
   width: 16px;
   height: 16px;
-  animation: cht-spin 1s linear infinite;
+  animation: sn-spin 1s linear infinite;
 }
 
-.cht-button__spinner-track {
+.sn-button__spinner-track {
   opacity: 0.25;
 }
 
-.cht-button__spinner-path {
+.sn-button__spinner-path {
   opacity: 0.75;
 }
 
-@keyframes cht-spin {
+@keyframes sn-spin {
   from {
     transform: rotate(0deg);
   }
@@ -91,12 +91,12 @@ $accent-active: #243a94;
 }
 
 // Button Sizes
-.cht-button--sm {
+.sn-button--sm {
   padding: 6px 12px;
   font-size: 12px;
   line-height: 1.5;
 
-  .cht-button__icon {
+  .sn-button__icon {
     &--left {
       margin-right: 6px;
     }
@@ -105,24 +105,24 @@ $accent-active: #243a94;
     }
   }
 
-  .cht-button__spinner {
+  .sn-button__spinner {
     width: 14px;
     height: 14px;
   }
 }
 
-.cht-button--md {
+.sn-button--md {
   padding: 8px 16px;
   font-size: 14px;
   line-height: 1.5;
 }
 
-.cht-button--lg {
+.sn-button--lg {
   padding: 12px 24px;
   font-size: 16px;
   line-height: 1.5;
 
-  .cht-button__icon {
+  .sn-button__icon {
     &--left {
       margin-right: 10px;
     }
@@ -131,14 +131,14 @@ $accent-active: #243a94;
     }
   }
 
-  .cht-button__spinner {
+  .sn-button__spinner {
     width: 18px;
     height: 18px;
   }
 }
 
 // Button Variants
-.cht-button--primary {
+.sn-button--primary {
   background: $accent-color;
   color: #ffffff;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -154,7 +154,7 @@ $accent-active: #243a94;
   }
 }
 
-.cht-button--secondary {
+.sn-button--secondary {
   background: #f3f4f6;
   color: #1d2327;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -172,7 +172,7 @@ $accent-active: #243a94;
   }
 }
 
-.cht-button--danger {
+.sn-button--danger {
   background: #d63638;
   color: #ffffff;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -190,7 +190,7 @@ $accent-active: #243a94;
   }
 }
 
-.cht-button--ghost {
+.sn-button--ghost {
   background: transparent;
   color: #1d2327;
 
@@ -207,7 +207,7 @@ $accent-active: #243a94;
   }
 }
 
-.cht-button--link {
+.sn-button--link {
   background: transparent;
   color: $accent-color;
   padding-left: 0;

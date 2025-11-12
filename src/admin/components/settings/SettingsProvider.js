@@ -165,14 +165,14 @@ export const SettingsProvider = ({ children }) => {
     const loadSettings = async () => {
         try {
             setLoading(true);
-            const response = await fetch(agwpChtAjax.ajaxUrl, {
+            const response = await fetch(agwpSnAjax.ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: 'agwp_cht_get_settings',
-                    nonce: agwpChtAjax.nonce
+                    action: 'agwp_sn_get_settings',
+                    nonce: agwpSnAjax.nonce
                 })
             });
 
@@ -188,11 +188,11 @@ export const SettingsProvider = ({ children }) => {
                 ]);
                 setLastSaved(new Date());
             } else {
-                showToast.error(__('Failed to load settings', 'analogwp-client-handoff'));
+                showToast.error(__('Failed to load settings', 'analogwp-site-notes'));
             }
         } catch (error) {
             logger.error('Error loading settings:', error);
-            showToast.error(__('Error loading settings', 'analogwp-client-handoff'));
+            showToast.error(__('Error loading settings', 'analogwp-site-notes'));
         } finally {
             setLoading(false);
         }
@@ -203,7 +203,7 @@ export const SettingsProvider = ({ children }) => {
         const validationErrors = validateSettings(settings);
         if (validationErrors.length > 0) {
             if (!silent) {
-                showToast.error(`${__('Validation failed', 'analogwp-client-handoff')}: ${validationErrors[0]}`);
+                showToast.error(`${__('Validation failed', 'analogwp-site-notes')}: ${validationErrors[0]}`);
             }
             return false;
         }
@@ -215,14 +215,14 @@ export const SettingsProvider = ({ children }) => {
             const categoriesToUse = categoriesToSave !== null ? categoriesToSave : categories;
             const prioritiesToUse = prioritiesToSave !== null ? prioritiesToSave : priorities;
             
-            const response = await fetch(agwpChtAjax.ajaxUrl, {
+            const response = await fetch(agwpSnAjax.ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: 'agwp_cht_save_settings',
-                    nonce: agwpChtAjax.nonce,
+                    action: 'agwp_sn_save_settings',
+                    nonce: agwpSnAjax.nonce,
                     settings: JSON.stringify(settings),
                     categories: JSON.stringify(categoriesToUse),
                     priorities: JSON.stringify(prioritiesToUse)
@@ -234,19 +234,19 @@ export const SettingsProvider = ({ children }) => {
                 setHasUnsavedChanges(false);
                 setLastSaved(new Date());
                 if (!silent) {
-                    showToast.success(__('Settings saved successfully!', 'analogwp-client-handoff'));
+                    showToast.success(__('Settings saved successfully!', 'analogwp-site-notes'));
                 }
                 return true;
             } else {
                 if (!silent) {
-                    showToast.error(data.data?.message || __('Error saving settings', 'analogwp-client-handoff'));
+                    showToast.error(data.data?.message || __('Error saving settings', 'analogwp-site-notes'));
                 }
                 return false;
             }
         } catch (err) {
             logger.error('Error saving settings:', err);
             if (!silent) {
-                showToast.error(__('Error saving settings. Please try again.', 'analogwp-client-handoff'));
+                showToast.error(__('Error saving settings. Please try again.', 'analogwp-site-notes'));
             }
             return false;
         } finally {
@@ -312,7 +312,7 @@ export const SettingsProvider = ({ children }) => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `client-handoff-settings-${new Date().toISOString().split('T')[0]}.json`;
+        a.download = `site-notes-settings-${new Date().toISOString().split('T')[0]}.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -327,7 +327,7 @@ export const SettingsProvider = ({ children }) => {
             if (importedData.settings) {
                 const validationErrors = validateSettings(importedData.settings);
                 if (validationErrors.length > 0) {
-                    showToast.error(`${__('Import validation failed', 'analogwp-client-handoff')}: ${validationErrors[0]}`);
+                    showToast.error(`${__('Import validation failed', 'analogwp-site-notes')}: ${validationErrors[0]}`);
                     return false;
                 }
                 
@@ -339,15 +339,15 @@ export const SettingsProvider = ({ children }) => {
                     setPriorities(importedData.priorities);
                 }
                 setHasUnsavedChanges(true);
-                showToast.success(__('Settings imported successfully!', 'analogwp-client-handoff'));
+                showToast.success(__('Settings imported successfully!', 'analogwp-site-notes'));
                 return true;
             } else {
-                showToast.error(__('Invalid settings file format', 'analogwp-client-handoff'));
+                showToast.error(__('Invalid settings file format', 'analogwp-site-notes'));
                 return false;
             }
         } catch (error) {
             logger.error('Error importing settings:', error);
-            showToast.error(__('Error importing settings file', 'analogwp-client-handoff'));
+            showToast.error(__('Error importing settings file', 'analogwp-site-notes'));
             return false;
         }
     };

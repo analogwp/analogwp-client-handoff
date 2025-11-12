@@ -21,10 +21,10 @@ export const Select = ({
     ...props 
 }) => {
     const selectClasses = classnames(
-        'cht-select',
+        'sn-select',
         {
-            [`cht-select--${size}`]: size !== 'default',
-            [`cht-select--${variant}`]: variant !== 'default',
+            [`sn-select--${size}`]: size !== 'default',
+            [`sn-select--${variant}`]: variant !== 'default',
         },
         className
     );
@@ -47,10 +47,10 @@ export const TextInput = ({
     ...props 
 }) => {
     const inputClasses = classnames(
-        'cht-text-input',
+        'sn-text-input',
         {
-            [`cht-text-input--${size}`]: size !== 'default',
-            [`cht-text-input--${variant}`]: variant !== 'default',
+            [`sn-text-input--${size}`]: size !== 'default',
+            [`sn-text-input--${variant}`]: variant !== 'default',
         },
         className
     );
@@ -73,10 +73,10 @@ export const Textarea = ({
     ...props 
 }) => {
     const textareaClasses = classnames(
-        'cht-textarea',
+        'sn-textarea',
         {
-            [`cht-textarea--${size}`]: size !== 'default',
-            [`cht-textarea--${variant}`]: variant !== 'default',
+            [`sn-textarea--${size}`]: size !== 'default',
+            [`sn-textarea--${variant}`]: variant !== 'default',
         },
         className
     );
@@ -99,10 +99,10 @@ export const Toggle = ({
     ...props 
 }) => {
     const toggleClasses = classnames(
-        'cht-toggle',
+        'sn-toggle',
         {
-            [`cht-toggle--${size}`]: size !== 'default',
-            [`cht-toggle--${variant}`]: variant !== 'default',
+            [`sn-toggle--${size}`]: size !== 'default',
+            [`sn-toggle--${variant}`]: variant !== 'default',
         },
         className
     );
@@ -125,10 +125,10 @@ export const Range = ({
     ...props 
 }) => {
     const rangeClasses = classnames(
-        'cht-range',
+        'sn-range',
         {
-            [`cht-range--${size}`]: size !== 'default',
-            [`cht-range--${variant}`]: variant !== 'default',
+            [`sn-range--${size}`]: size !== 'default',
+            [`sn-range--${variant}`]: variant !== 'default',
         },
         className
     );
@@ -151,10 +151,10 @@ export const ColorPicker = ({
     ...props 
 }) => {
     const colorPickerClasses = classnames(
-        'cht-color-picker',
+        'sn-color-picker',
         {
-            [`cht-color-picker--${size}`]: size !== 'default',
-            [`cht-color-picker--${variant}`]: variant !== 'default',
+            [`sn-color-picker--${size}`]: size !== 'default',
+            [`sn-color-picker--${variant}`]: variant !== 'default',
         },
         className
     );

@@ -2,9 +2,11 @@
 /**
  * Assets management class.
  *
- * @package AnalogWP_Client_Handoff
+ * @package AnalogWP_Site_Notes
  * @since 1.0.0
  */
+
+namespace AnalogWP\SiteNotes;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-class AGWP_CHT_Assets {
+class Assets {
 
 	/**
 	 * Constructor.
@@ -39,7 +41,7 @@ class AGWP_CHT_Assets {
 			return;
 		}
 
-		$asset_file = AGWP_CHT_PLUGIN_PATH . 'build/frontend.asset.php';
+		$asset_file = AGWP_SN_PLUGIN_PATH . 'build/frontend.asset.php';
 
 		if ( ! file_exists( $asset_file ) ) {
 			return;
@@ -48,24 +50,24 @@ class AGWP_CHT_Assets {
 		$asset = include $asset_file;
 
 		wp_enqueue_script(
-			'agwp-cht-frontend',
-			AGWP_CHT_PLUGIN_URL . 'build/frontend.js',
+			'agwp-sn-frontend',
+			AGWP_SN_PLUGIN_URL . 'build/frontend.js',
 			$asset['dependencies'],
 			$asset['version'],
 			true
 		);
 
 		wp_enqueue_style(
-			'agwp-cht-frontend',
-			AGWP_CHT_PLUGIN_URL . 'build/frontend.css',
+			'agwp-sn-frontend',
+			AGWP_SN_PLUGIN_URL . 'build/frontend.css',
 			array(),
 			$asset['version']
 		);
 
 		// Localize script with data.
 		wp_localize_script(
-			'agwp-cht-frontend',
-			'agwpChtAjax',
+			'agwp-sn-frontend',
+			'agwpSnAjax',
 			$this->get_frontend_localized_data()
 		);
 	}
@@ -82,7 +84,7 @@ class AGWP_CHT_Assets {
 			return;
 		}
 
-		$asset_file = AGWP_CHT_PLUGIN_PATH . 'build/admin.asset.php';
+		$asset_file = AGWP_SN_PLUGIN_PATH . 'build/admin.asset.php';
 
 		if ( ! file_exists( $asset_file ) ) {
 			return;
@@ -91,8 +93,8 @@ class AGWP_CHT_Assets {
 		$asset = include $asset_file;
 
 		wp_enqueue_script(
-			'agwp-cht-admin',
-			AGWP_CHT_PLUGIN_URL . 'build/admin.js',
+			'agwp-sn-admin',
+			AGWP_SN_PLUGIN_URL . 'build/admin.js',
 			$asset['dependencies'],
 			$asset['version'],
 			true
@@ -107,16 +109,16 @@ class AGWP_CHT_Assets {
 		);
 
 		wp_enqueue_style(
-			'agwp-cht-admin',
-			AGWP_CHT_PLUGIN_URL . 'build/admin.css',
+			'agwp-sn-admin',
+			AGWP_SN_PLUGIN_URL . 'build/admin.css',
 			array( 'wp-components' ),
 			$asset['version']
 		);
 
 		// Localize script with data.
 		wp_localize_script(
-			'agwp-cht-admin',
-			'agwpChtAjax',
+			'agwp-sn-admin',
+			'agwpSnAjax',
 			$this->get_admin_localized_data()
 		);
 	}
@@ -133,18 +135,18 @@ class AGWP_CHT_Assets {
 			return false;
 		}
 
-		// Check if frontend comments are enabled in settings
-		if ( ! AGWP_CHT_Client_Handoff_Toolkit::frontend_comments_enabled() ) {
+		// Check if frontend comments are enabled in settings.
+		if ( ! Plugin::frontend_comments_enabled() ) {
 			return false;
 		}
 
-		// Check if current user has access
-		if ( ! AGWP_CHT_Client_Handoff_Toolkit::user_has_access() ) {
+		// Check if current user has access.
+		if ( ! Plugin::user_has_access() ) {
 			return false;
 		}
 
 		// Add any additional conditions here.
-		return apply_filters( 'agwp_cht_load_frontend_assets', true );
+		return apply_filters( 'agwp_sn_load_frontend_assets', true );
 	}
 
 	/**
@@ -156,9 +158,9 @@ class AGWP_CHT_Assets {
 	 */
 	private function is_plugin_admin_page( $hook ) {
 		$plugin_pages = array(
-			'toplevel_page_agwp-cht-dashboard',
-			'client-handoff_page_agwp-cht-dashboard',
-			'client-handoff_page_agwp-cht-settings',
+			'toplevel_page_agwp-sn-dashboard',
+			'site-notes_page_agwp-sn-dashboard',
+			'site-notes_page_agwp-sn-settings',
 		);
 
 		return in_array( $hook, $plugin_pages, true );
@@ -178,7 +180,7 @@ class AGWP_CHT_Assets {
 				'screenshot_quality' => 0.8,
 			),
 		);
-		$saved_settings   = get_option( 'agwp_cht_settings', array() );
+		$saved_settings   = get_option( 'agwp_sn_settings', array() );
 		$settings         = wp_parse_args( $saved_settings, $default_settings );
 
 		$debug_enabled = isset( $settings['advanced']['enable_debug_mode'] ) ? $settings['advanced']['enable_debug_mode'] : false;
@@ -186,11 +188,11 @@ class AGWP_CHT_Assets {
 
 		return array(
 			'ajaxUrl'           => admin_url( 'admin-ajax.php' ),
-			'nonce'             => wp_create_nonce( 'agwp_cht_nonce' ),
+			'nonce'             => wp_create_nonce( 'agwp_sn_nonce' ),
 			'postId'            => get_the_ID(),
 			'pageUrl'           => get_permalink(),
 			'currentUser'       => $this->get_current_user_data(),
-			'canManageComments' => AGWP_CHT_Client_Handoff_Toolkit::user_has_access(),
+			'canManageComments' => Plugin::user_has_access(),
 			'settings'          => $settings,
 			'strings'           => $this->get_frontend_strings(),
 			'debug'             => $debug_enabled,
@@ -205,19 +207,19 @@ class AGWP_CHT_Assets {
 	 * @return array Localized data.
 	 */
 	private function get_admin_localized_data() {
-		$settings = get_option( 'agwp_cht_settings', array() );
+		$settings = get_option( 'agwp_sn_settings', array() );
 		$debug_enabled = isset( $settings['advanced']['enable_debug_mode'] ) ? $settings['advanced']['enable_debug_mode'] : false;
 		$log_level = isset( $settings['advanced']['log_level'] ) ? $settings['advanced']['log_level'] : 'error';
 
 		return array(
 			'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
-			'nonce'         => wp_create_nonce( 'agwp_cht_nonce' ),
+			'nonce'         => wp_create_nonce( 'agwp_sn_nonce' ),
 			'currentUser'   => $this->get_current_user_data(),
 			'strings'       => $this->get_admin_strings(),
-			'pluginVersion' => AGWP_CHT_VERSION,
+			'pluginVersion' => AGWP_SN_VERSION,
 			'wpVersion'     => get_bloginfo( 'version' ),
 			'phpVersion'    => phpversion(),
-			'pluginUrl'     => AGWP_CHT_PLUGIN_URL,
+			'pluginUrl'     => AGWP_SN_PLUGIN_URL,
 			'debug'         => $debug_enabled,
 			'logLevel'      => $log_level,
 		);
@@ -251,20 +253,20 @@ class AGWP_CHT_Assets {
 	 */
 	private function get_frontend_strings() {
 		return array(
-			'addComment'         => __( 'Add Comment', 'analogwp-client-handoff' ),
-			'saveComment'        => __( 'Save Comment', 'analogwp-client-handoff' ),
-			'cancel'             => __( 'Cancel', 'analogwp-client-handoff' ),
-			'reply'              => __( 'Reply', 'analogwp-client-handoff' ),
-			'delete'             => __( 'Delete', 'analogwp-client-handoff' ),
-			'confirmDelete'      => __( 'Are you sure you want to delete this comment?', 'analogwp-client-handoff' ),
-			'commentSaved'       => __( 'Comment saved successfully!', 'analogwp-client-handoff' ),
-			'errorSaving'        => __( 'Error saving comment', 'analogwp-client-handoff' ),
-			'statusUpdated'      => __( 'Status updated successfully!', 'analogwp-client-handoff' ),
-			'errorUpdatingStatus' => __( 'Error updating status', 'analogwp-client-handoff' ),
-			'replyAdded'         => __( 'Reply added successfully!', 'analogwp-client-handoff' ),
-			'errorAddingReply'   => __( 'Error adding reply', 'analogwp-client-handoff' ),
-			'commentDeleted'     => __( 'Comment deleted successfully!', 'analogwp-client-handoff' ),
-			'errorDeleting'      => __( 'Error deleting comment', 'analogwp-client-handoff' ),
+			'addComment'         => __( 'Add Comment', 'analogwp-site-notes' ),
+			'saveComment'        => __( 'Save Comment', 'analogwp-site-notes' ),
+			'cancel'             => __( 'Cancel', 'analogwp-site-notes' ),
+			'reply'              => __( 'Reply', 'analogwp-site-notes' ),
+			'delete'             => __( 'Delete', 'analogwp-site-notes' ),
+			'confirmDelete'      => __( 'Are you sure you want to delete this comment?', 'analogwp-site-notes' ),
+			'commentSaved'       => __( 'Comment saved successfully!', 'analogwp-site-notes' ),
+			'errorSaving'        => __( 'Error saving comment', 'analogwp-site-notes' ),
+			'statusUpdated'      => __( 'Status updated successfully!', 'analogwp-site-notes' ),
+			'errorUpdatingStatus' => __( 'Error updating status', 'analogwp-site-notes' ),
+			'replyAdded'         => __( 'Reply added successfully!', 'analogwp-site-notes' ),
+			'errorAddingReply'   => __( 'Error adding reply', 'analogwp-site-notes' ),
+			'commentDeleted'     => __( 'Comment deleted successfully!', 'analogwp-site-notes' ),
+			'errorDeleting'      => __( 'Error deleting comment', 'analogwp-site-notes' ),
 		);
 	}
 
@@ -276,19 +278,19 @@ class AGWP_CHT_Assets {
 	 */
 	private function get_admin_strings() {
 		return array(
-			'dashboard'     => __( 'Dashboard', 'analogwp-client-handoff' ),
-			'comments'      => __( 'Comments', 'analogwp-client-handoff' ),
-			'tasks'         => __( 'Tasks', 'analogwp-client-handoff' ),
-			'settings'      => __( 'Settings', 'analogwp-client-handoff' ),
-			'open'          => __( 'Open', 'analogwp-client-handoff' ),
-			'inProgress'    => __( 'In Progress', 'analogwp-client-handoff' ),
-			'resolved'      => __( 'Resolved', 'analogwp-client-handoff' ),
-			'high'          => __( 'High', 'analogwp-client-handoff' ),
-			'medium'        => __( 'Medium', 'analogwp-client-handoff' ),
-			'low'           => __( 'Low', 'analogwp-client-handoff' ),
-			'loading'       => __( 'Loading...', 'analogwp-client-handoff' ),
-			'noComments'    => __( 'No comments found', 'analogwp-client-handoff' ),
-			'errorLoading'  => __( 'Error loading data', 'analogwp-client-handoff' ),
+			'dashboard'     => __( 'Dashboard', 'analogwp-site-notes' ),
+			'comments'      => __( 'Comments', 'analogwp-site-notes' ),
+			'tasks'         => __( 'Tasks', 'analogwp-site-notes' ),
+			'settings'      => __( 'Settings', 'analogwp-site-notes' ),
+			'open'          => __( 'Open', 'analogwp-site-notes' ),
+			'inProgress'    => __( 'In Progress', 'analogwp-site-notes' ),
+			'resolved'      => __( 'Resolved', 'analogwp-site-notes' ),
+			'high'          => __( 'High', 'analogwp-site-notes' ),
+			'medium'        => __( 'Medium', 'analogwp-site-notes' ),
+			'low'           => __( 'Low', 'analogwp-site-notes' ),
+			'loading'       => __( 'Loading...', 'analogwp-site-notes' ),
+			'noComments'    => __( 'No comments found', 'analogwp-site-notes' ),
+			'errorLoading'  => __( 'Error loading data', 'analogwp-site-notes' ),
 		);
 	}
 }

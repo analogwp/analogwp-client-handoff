@@ -1,9 +1,9 @@
-# Client Handoff Toolkit for WordPress
+# Site Notes Toolkit for WordPress
 
 [![WordPress](https://img.shields.io/badge/WordPress-6.0%2B-blue.svg)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-purple.svg)](https://php.net/)
 [![License](https://img.shields.io/badge/License-GPL%20v2%2B-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
-[![Version](https://img.shields.io/badge/Version-1.1.0-orange.svg)](https://github.com/analogwp/analogwp-client-handoff)
+[![Version](https://img.shields.io/badge/Version-1.1.0-orange.svg)](https://github.com/analogwp/analogwp-site-notes)
 
 **Transform client feedback into action.** Your clients click on any website element to leave comments. You manage everything through a beautiful admin dashboard. No more confusing emails or vague "fix the blue thing" requests.
 
@@ -14,9 +14,9 @@
 ### Installation
 
 1. Download or clone this repository
-2. Upload to `/wp-content/plugins/analogwp-client-handoff`
+2. Upload to `/wp-content/plugins/analogwp-site-notes`
 3. Activate via **WordPress Admin → Plugins**
-4. Configure settings at **Client Handoff → Settings**
+4. Configure settings at **Site Notes → Settings**
 5. Build assets: `npm install && npm run build`
 
 ### First Steps
@@ -28,7 +28,7 @@
 4. Comments are captured automatically with screenshots
 
 **For Administrators:**
-1. View all feedback at **Client Handoff → Dashboard**
+1. View all feedback at **Site Notes → Dashboard**
 2. Track tasks with status (Open, In Progress, Resolved)
 3. Reply to comments and update priorities
 4. Manage user access and settings
@@ -93,7 +93,7 @@
 ### Managing Tasks (Admin)
 
 1. **Dashboard Overview**
-   - Access via **Client Handoff → Dashboard**
+   - Access via **Site Notes → Dashboard**
    - View statistics: total tasks, open, in progress, resolved
    - Filter by status, category, or priority
    - Search across all comments
@@ -106,14 +106,14 @@
    - **Log Time**: Track hours spent on tasks
 
 3. **Timesheet**
-   - Access via **Client Handoff → Timesheet**
+   - Access via **Site Notes → Timesheet**
    - View all time entries across tasks
    - Filter by date range, task, or user
    - Export reports (coming soon)
 
 ### Configuration
 
-Access settings at **Client Handoff → Settings**:
+Access settings at **Site Notes → Settings**:
 
 #### General Settings
 - **Allowed User Roles**: Select which roles can access the plugin
@@ -154,9 +154,9 @@ Access settings at **Client Handoff → Settings**:
 <details>
 <summary><strong>Database Structure</strong></summary>
 
-### Comments Table (\`wp_agwp_cht_comments\`)
+### Comments Table (\`wp_agwp_sn_comments\`)
 \`\`\`sql
-CREATE TABLE wp_agwp_cht_comments (
+CREATE TABLE wp_agwp_sn_comments (
   id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   post_id bigint(20) UNSIGNED NOT NULL,
   user_id bigint(20) UNSIGNED NOT NULL,
@@ -180,9 +180,9 @@ CREATE TABLE wp_agwp_cht_comments (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 \`\`\`
 
-### Replies Table (\`wp_agwp_cht_comment_replies\`)
+### Replies Table (\`wp_agwp_sn_comment_replies\`)
 \`\`\`sql
-CREATE TABLE wp_agwp_cht_comment_replies (
+CREATE TABLE wp_agwp_sn_comment_replies (
   id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   comment_id bigint(20) UNSIGNED NOT NULL,
   user_id bigint(20) UNSIGNED NOT NULL,
@@ -191,13 +191,13 @@ CREATE TABLE wp_agwp_cht_comment_replies (
   PRIMARY KEY (id),
   KEY comment_id (comment_id),
   KEY user_id (user_id),
-  FOREIGN KEY (comment_id) REFERENCES wp_agwp_cht_comments(id) ON DELETE CASCADE
+  FOREIGN KEY (comment_id) REFERENCES wp_agwp_sn_comments(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 \`\`\`
 
-### Timesheet Table (\`wp_agwp_cht_timesheet\`)
+### Timesheet Table (\`wp_agwp_sn_timesheet\`)
 \`\`\`sql
-CREATE TABLE wp_agwp_cht_timesheet (
+CREATE TABLE wp_agwp_sn_timesheet (
   id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
   comment_id bigint(20) UNSIGNED NOT NULL,
   user_id bigint(20) UNSIGNED NOT NULL,
@@ -207,7 +207,7 @@ CREATE TABLE wp_agwp_cht_timesheet (
   PRIMARY KEY (id),
   KEY comment_id (comment_id),
   KEY user_id (user_id),
-  FOREIGN KEY (comment_id) REFERENCES wp_agwp_cht_comments(id) ON DELETE CASCADE
+  FOREIGN KEY (comment_id) REFERENCES wp_agwp_sn_comments(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 \`\`\`
 
@@ -275,7 +275,7 @@ public static function user_has_access() {
         return true; // Admin always has access
     }
     
-    $settings = get_option( 'agwp_cht_settings', array() );
+    $settings = get_option( 'agwp_sn_settings', array() );
     $allowed_roles = $settings['general']['allowed_roles'] ?? array();
     
     $user = wp_get_current_user();
@@ -312,8 +312,8 @@ public static function user_has_access() {
 
 1. **Clone the repository**
    \`\`\`bash
-   git clone https://github.com/analogwp/analogwp-client-handoff.git
-   cd analogwp-client-handoff
+   git clone https://github.com/analogwp/analogwp-site-notes.git
+   cd analogwp-site-notes
    \`\`\`
 
 2. **Install dependencies**
@@ -347,7 +347,7 @@ public static function user_has_access() {
 ### File Structure
 
 **Key PHP Files:**
-- \`analogwp-client-handoff.php\` - Main plugin file with hooks and helper methods
+- \`analogwp-site-notes.php\` - Main plugin file with hooks and helper methods
 - \`includes/class-database.php\` - Database operations
 - \`includes/class-assets.php\` - Asset enqueuing
 - \`includes/ajax/class-ajax.php\` - AJAX endpoint handlers
@@ -367,22 +367,22 @@ public static function user_has_access() {
 \`\`\`scss
 // In your theme or child theme
 :root {
-  --agwp-cht-primary: #your-brand-color;
-  --agwp-cht-danger: #your-error-color;
-  --agwp-cht-success: #your-success-color;
+  --agwp-sn-primary: #your-brand-color;
+  --agwp-sn-danger: #your-error-color;
+  --agwp-sn-success: #your-success-color;
 }
 \`\`\`
 
 **Extend Functionality:**
 \`\`\`php
 // Add custom comment meta
-add_filter( 'agwp_cht_comment_data', function( $data ) {
+add_filter( 'agwp_sn_comment_data', function( $data ) {
     $data['custom_field'] = 'custom_value';
     return $data;
 } );
 
 // Modify allowed roles programmatically
-add_filter( 'agwp_cht_allowed_roles', function( $roles ) {
+add_filter( 'agwp_sn_allowed_roles', function( $roles ) {
     $roles[] = 'shop_manager';
     return $roles;
 } );
@@ -454,8 +454,8 @@ add_filter( 'agwp_cht_allowed_roles', function( $roles ) {
    \`\`\`php
    // Add to functions.php temporarily
    add_action( 'admin_init', function() {
-       if ( class_exists( 'AGWP_CHT_Client_Handoff_Toolkit' ) ) {
-           var_dump( AGWP_CHT_Client_Handoff_Toolkit::user_has_access() );
+       if ( class_exists( 'AGWP_SN_Client_Handoff_Toolkit' ) ) {
+           var_dump( AGWP_SN_Client_Handoff_Toolkit::user_has_access() );
        }
    } );
    \`\`\`
@@ -549,9 +549,9 @@ You are free to use, modify, and distribute this plugin under the terms of the G
 
 ### Get Help
 - 📖 **Documentation**: This README and inline code comments
-- 🐛 **Bug Reports**: [Open an issue](https://github.com/analogwp/analogwp-client-handoff/issues) with reproduction steps
-- 💡 **Feature Requests**: [Suggest improvements](https://github.com/analogwp/analogwp-client-handoff/issues) via GitHub issues
-- 💬 **Discussions**: Join conversations in the [issues section](https://github.com/analogwp/analogwp-client-handoff/issues)
+- 🐛 **Bug Reports**: [Open an issue](https://github.com/analogwp/analogwp-site-notes/issues) with reproduction steps
+- 💡 **Feature Requests**: [Suggest improvements](https://github.com/analogwp/analogwp-site-notes/issues) via GitHub issues
+- 💬 **Discussions**: Join conversations in the [issues section](https://github.com/analogwp/analogwp-site-notes/issues)
 
 ### Professional Support
 For priority support, custom development, or consulting services, contact the development team.

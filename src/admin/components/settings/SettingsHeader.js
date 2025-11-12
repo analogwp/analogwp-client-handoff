@@ -35,30 +35,30 @@ const SettingsHeader = ({ activeTab, onTabChange }) => {
     const baseTabs = [
         { 
             id: 'general', 
-            label: __('General', 'analogwp-client-handoff'),
+            label: __('General', 'analogwp-site-notes'),
             icon: Cog6ToothIcon,
-            description: __('Basic plugin configuration', 'analogwp-client-handoff'),
+            description: __('Basic plugin configuration', 'analogwp-site-notes'),
             isPro: false
         },
         { 
             id: 'access-control', 
-            label: __('Access Control', 'analogwp-client-handoff'),
+            label: __('Access Control', 'analogwp-site-notes'),
             icon: ShieldCheckIcon,
-            description: __('Manage user permissions and access', 'analogwp-client-handoff'),
+            description: __('Manage user permissions and access', 'analogwp-site-notes'),
             isPro: false
         },
         { 
             id: 'labels-filters', 
-            label: __('Labels & Filters', 'analogwp-client-handoff'),
+            label: __('Labels & Filters', 'analogwp-site-notes'),
             icon: TagIcon,
-            description: __('Manage categories and priorities', 'analogwp-client-handoff'),
+            description: __('Manage categories and priorities', 'analogwp-site-notes'),
             isPro: false
         },
         { 
             id: 'advanced', 
-            label: __('Advanced', 'analogwp-client-handoff'),
+            label: __('Advanced', 'analogwp-site-notes'),
             icon: CommandLineIcon,
-            description: __('Advanced configuration options', 'analogwp-client-handoff'),
+            description: __('Advanced configuration options', 'analogwp-site-notes'),
             isPro: false
         }
     ];
@@ -81,9 +81,9 @@ const SettingsHeader = ({ activeTab, onTabChange }) => {
         const minutes = Math.floor(diff / 60000);
         
         if (minutes < 1) {
-            return __('Just now', 'analogwp-client-handoff');
+            return __('Just now', 'analogwp-site-notes');
         } else if (minutes < 60) {
-            return sprintf(__('%d minutes ago', 'analogwp-client-handoff'), minutes);
+            return sprintf(__('%d minutes ago', 'analogwp-site-notes'), minutes);
         } else {
             return date.toLocaleTimeString();
         }
@@ -93,18 +93,18 @@ const SettingsHeader = ({ activeTab, onTabChange }) => {
         <div className="bg-white rounded-t-lg mb-6 shadow-sm">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
                 <div className="flex flex-col">
-                    <h1 className="text-2xl font-bold text-gray-900 m-0">{__('Settings', 'analogwp-client-handoff')}</h1>
+                    <h1 className="text-2xl font-bold text-gray-900 m-0">{__('Settings', 'analogwp-site-notes')}</h1>
                     <div className="mt-1">
                         {hasUnsavedChanges && (
                             <span className="inline-flex items-center text-sm text-amber-600">
                                 <ExclamationTriangleIcon className="w-4 h-4 mr-1" />
-                                {__('Unsaved changes', 'analogwp-client-handoff')}
+                                {__('Unsaved changes', 'analogwp-site-notes')}
                             </span>
                         )}
                         {lastSaved && !hasUnsavedChanges && (
                             <span className="inline-flex items-center text-sm text-blue-600">
                                 <CheckCircleIcon className="w-4 h-4 mr-1" />
-                                {sprintf(__('Last saved: %s', 'analogwp-client-handoff'), formatLastSaved(lastSaved))}
+                                {sprintf(__('Last saved: %s', 'analogwp-site-notes'), formatLastSaved(lastSaved))}
                             </span>
                         )}
                     </div>
@@ -119,7 +119,7 @@ const SettingsHeader = ({ activeTab, onTabChange }) => {
                         size="default"
                         icon={saving ? null : <CheckCircleIcon className="w-6!" />}
                     >
-                        {saving ? __('Saving...', 'analogwp-client-handoff') : __('Save Changes', 'analogwp-client-handoff')}
+                        {saving ? __('Saving...', 'analogwp-site-notes') : __('Save Changes', 'analogwp-site-notes')}
                     </Button>
                 </div>
             </div>

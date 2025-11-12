@@ -47,14 +47,14 @@ const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
 
     const loadPages = async () => {
         try {
-            const response = await fetch(agwpChtAjax.ajaxUrl, {
+            const response = await fetch(agwpSnAjax.ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: 'agwp_cht_get_pages',
-                    nonce: agwpChtAjax.nonce
+                    action: 'agwp_sn_get_pages',
+                    nonce: agwpSnAjax.nonce
                 })
             });
 
@@ -70,14 +70,14 @@ const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
     const loadAdminData = async () => {
         setLoading(true);
         try {
-            const response = await fetch(agwpChtAjax.ajaxUrl, {
+            const response = await fetch(agwpSnAjax.ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: 'agwp_cht_get_admin_data',
-                    nonce: agwpChtAjax.nonce
+                    action: 'agwp_sn_get_admin_data',
+                    nonce: agwpSnAjax.nonce
                 })
             });
 
@@ -132,14 +132,14 @@ const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
 
     const handleAddComment = async (newComment) => {
         try {
-            const response = await fetch(agwpChtAjax.ajaxUrl, {
+            const response = await fetch(agwpSnAjax.ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: 'agwp_cht_add_comment',
-                    nonce: agwpChtAjax.nonce,
+                    action: 'agwp_sn_add_comment',
+                    nonce: agwpSnAjax.nonce,
                     comment: JSON.stringify(newComment)
                 })
             });
@@ -157,14 +157,14 @@ const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
 
     const handleAddTask = async (taskData) => {
         try {
-            const response = await fetch(agwpChtAjax.ajaxUrl, {
+            const response = await fetch(agwpSnAjax.ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: 'agwp_cht_add_new_task',
-                    nonce: agwpChtAjax.nonce,
+                    action: 'agwp_sn_add_new_task',
+                    nonce: agwpSnAjax.nonce,
                     ...taskData
                 })
             });
@@ -187,14 +187,14 @@ const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
         logger.debug('Updating comment with ID:', commentId);
         logger.debug('Updates to apply:', updates);
         try {
-            const response = await fetch(agwpChtAjax.ajaxUrl, {
+            const response = await fetch(agwpSnAjax.ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: 'agwp_cht_update_comment',
-                    nonce: agwpChtAjax.nonce,
+                    action: 'agwp_sn_update_comment',
+                    nonce: agwpSnAjax.nonce,
                     comment_id: commentId,
                     updates: JSON.stringify(updates)
                 })
@@ -221,24 +221,24 @@ const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
                     }
                     return comment;
                 }));
-                showToast.success(__('Task updated successfully!', 'analogwp-client-handoff'));
+                showToast.success(__('Task updated successfully!', 'analogwp-site-notes'));
             } else {
                 const errorMessage = data.data?.message || data.message || 'Unknown error';
                 logger.error('Error updating comment:', errorMessage);
                 logger.error('Full response:', data);
-                showToast.error(__('Error updating task. Please try again.', 'analogwp-client-handoff'));
+                showToast.error(__('Error updating task. Please try again.', 'analogwp-site-notes'));
             }
         } catch (err) {
             logger.error('Error updating comment:', err);
-            showToast.error(__('Error updating task. Please try again.', 'analogwp-client-handoff'));
+            showToast.error(__('Error updating task. Please try again.', 'analogwp-site-notes'));
         }
     };
 
     const handleDelete = async (commentId) => {
         // Show modern confirmation dialog
         const confirmed = await showConfirmation(
-            __('Are you sure you want to delete this task? This action cannot be undone.', 'analogwp-client-handoff'),
-            { confirmText: __('Delete', 'analogwp-client-handoff') }
+            __('Are you sure you want to delete this task? This action cannot be undone.', 'analogwp-site-notes'),
+            { confirmText: __('Delete', 'analogwp-site-notes') }
         );
         
         if (!confirmed) {
@@ -246,14 +246,14 @@ const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
         }
 
         try {
-            const response = await fetch(agwpChtAjax.ajaxUrl, {
+            const response = await fetch(agwpSnAjax.ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: 'agwp_cht_delete_comment',
-                    nonce: agwpChtAjax.nonce,
+                    action: 'agwp_sn_delete_comment',
+                    nonce: agwpSnAjax.nonce,
                     comment_id: commentId
                 })
             });
@@ -262,14 +262,14 @@ const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
             if (data.success) {
                 // Remove the task from the state
                 setComments(comments.filter(comment => comment.id !== commentId));
-                showToast.success(__('Task deleted successfully!', 'analogwp-client-handoff'));
+                showToast.success(__('Task deleted successfully!', 'analogwp-site-notes'));
             } else {
                 logger.error('Error deleting comment:', data.message);
-                showToast.error(__('Error deleting task. Please try again.', 'analogwp-client-handoff'));
+                showToast.error(__('Error deleting task. Please try again.', 'analogwp-site-notes'));
             }
         } catch (err) {
             logger.error('Error deleting comment:', err);
-            showToast.error(__('Error deleting task. Please try again.', 'analogwp-client-handoff'));
+            showToast.error(__('Error deleting task. Please try again.', 'analogwp-site-notes'));
         }
     };
 
@@ -283,9 +283,9 @@ const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
             const baseParams = new URLSearchParams(currentUrl.search);
             
             if (page === 'settings') {
-                baseParams.set('page', 'agwp-cht-settings');
+                baseParams.set('page', 'agwp-sn-settings');
             } else {
-                baseParams.set('page', 'agwp-cht-dashboard');
+                baseParams.set('page', 'agwp-sn-dashboard');
             }
             
             const newUrl = `${currentUrl.origin}${currentUrl.pathname}?${baseParams.toString()}`;
@@ -293,8 +293,8 @@ const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
             
             // Update document title
             document.title = page === 'settings' 
-                ? `${__('Settings', 'analogwp-client-handoff')} - Analog Client Handoff`
-                : `${__('Tasks', 'analogwp-client-handoff')} - Analog Client Handoff`;
+                ? `${__('Settings', 'analogwp-site-notes')} - Analog Site Notes`
+                : `${__('Tasks', 'analogwp-site-notes')} - Analog Site Notes`;
         } catch (error) {
             // Fallback if URL manipulation fails
             logger.navigation('Navigation:', page);
@@ -317,9 +317,9 @@ const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
     const renderPageContent = () => {
         if (loading && currentPage === 'dashboard') {
             return (
-                <div className="cht-admin-loading">
-                    <div className="cht-spinner"></div>
-                    <p>{__('Loading dashboard...', 'analogwp-client-handoff')}</p>
+                <div className="sn-admin-loading">
+                    <div className="sn-spinner"></div>
+                    <p>{__('Loading dashboard...', 'analogwp-site-notes')}</p>
                 </div>
             );
         }
@@ -352,7 +352,7 @@ const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
     };
 
     return (
-        <div className="cht-admin-app-wp">
+        <div className="sn-admin-app-wp">
             {/* Global Admin Header */}
             <AdminHeader 
                 currentPage={currentPage}
@@ -360,7 +360,7 @@ const UnifiedAdminAppContent = ({ initialPage = 'dashboard' }) => {
             />
 
             {/* Page Content */}
-            <div className="cht-page-content">
+            <div className="sn-page-content">
                 {renderPageContent()}
             </div>
         </div>

@@ -15,13 +15,13 @@ const ViewToggle = ({ activeView, onViewChange }) => {
                 variant={activeView === 'kanban' ? 'primary' : 'secondary'}
                 onClick={() => onViewChange('kanban')}
             >
-                {__('Kanban', 'analogwp-client-handoff')}
+                {__('Kanban', 'analogwp-site-notes')}
             </Button>
             <Button 
                 variant={activeView === 'list' ? 'primary' : 'secondary'}
                 onClick={() => onViewChange('list')}
             >
-                {__('List', 'analogwp-client-handoff')}
+                {__('List', 'analogwp-site-notes')}
             </Button>
         </div>
     );

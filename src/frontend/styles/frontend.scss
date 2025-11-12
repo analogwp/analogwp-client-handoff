@@ -11,7 +11,7 @@ $background-color: #fff;
 $overlay-bg: rgba(0, 0, 0, 0.8);
 
 // Base styles
-.cht-visual-comments {
+.sn-visual-comments {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   
   * {
@@ -20,7 +20,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
 }
 
 // Heroicon styles
-.cht-icon {
+.sn-icon {
   width: 16px;
   height: 16px;
   display: inline-block;
@@ -28,15 +28,15 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
 }
 
 // Admin Bar Toggle Status
-#wp-admin-bar-agwp-cht-toggle,
-#wp-admin-bar-cht-toggle {
-  #cht-admin-bar-toggle {
+#wp-admin-bar-agwp-sn-toggle,
+#wp-admin-bar-sn-toggle {
+  #sn-admin-bar-toggle {
     // Default state: Green when comments are OFF (showing "Turn Comments ON")
     color: $success-color;
     font-weight: 600;
     
     // When comments are active (showing "Turn Comments OFF"), use normal color
-    &.cht-comments-active {
+    &.sn-comments-active {
       color: inherit;
       font-weight: normal;
     }
@@ -44,7 +44,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
 }
 
 // Admin Bar Menu Styling
-#wp-admin-bar-agwp-cht-menu {
+#wp-admin-bar-agwp-sn-menu {
   .ab-submenu {
     li {
       min-width: 180px;
@@ -53,7 +53,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
 }
 
 // Toggle Button
-.cht-toggle-button {
+.sn-toggle-button {
   position: fixed;
   bottom: 20px;
   right: 20px;
@@ -71,7 +71,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     transform: translateY(-2px);
   }
   
-  .cht-toggle-btn {
+  .sn-toggle-btn {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -89,7 +89,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       background: rgba(0, 0, 0, 0.05);
     }
     
-    .cht-toggle-icon {
+    .sn-toggle-icon {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -103,18 +103,18 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       }
     }
     
-    &:hover .cht-toggle-icon {
+    &:hover .sn-toggle-icon {
       transform: scale(1.1);
     }
   }
   
-  .cht-toggle-text {
+  .sn-toggle-text {
     display: flex;
     align-items: center;
     white-space: nowrap;
   }
   
-  .cht-toggle-hide {
+  .sn-toggle-hide {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -134,7 +134,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     }
   }
   
-  .cht-comments-count {
+  .sn-comments-count {
     margin-left: 6px;
     padding: 2px 8px;
     background: rgba(56, 88, 233, 0.1);
@@ -148,11 +148,11 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
   &:not(.active) {
     background: rgba(255, 255, 255, 0.95);
     
-    .cht-toggle-btn {
+    .sn-toggle-btn {
       color: #1d2327;
     }
     
-    .cht-toggle-icon {
+    .sn-toggle-icon {
       color: #646970;
     }
   }
@@ -161,15 +161,15 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
   &.active {
     background: linear-gradient(135deg, #3858e9 0%, #4f6bff 100%);
     
-    .cht-toggle-btn {
+    .sn-toggle-btn {
       color: white;
     }
     
-    .cht-toggle-icon {
+    .sn-toggle-icon {
       color: white;
     }
     
-    .cht-toggle-hide {
+    .sn-toggle-hide {
       color: rgba(255, 255, 255, 0.8);
       border-left-color: rgba(255, 255, 255, 0.2);
       
@@ -179,7 +179,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       }
     }
     
-    .cht-comments-count {
+    .sn-comments-count {
       background: rgba(255, 255, 255, 0.25);
       color: white;
     }
@@ -187,7 +187,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
 }
 
 // Overlay
-.cht-overlay {
+.sn-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -201,7 +201,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
   animation: fadeIn 0.3s ease;
   cursor: pointer;
   
-  .cht-overlay-message {
+  .sn-overlay-message {
     background: $background-color;
     padding: 30px;
     border-radius: 8px;
@@ -211,7 +211,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     position: relative;
     cursor: default;
     
-    .cht-overlay-close {
+    .sn-overlay-close {
       position: absolute;
       top: 10px;
       right: 15px;
@@ -237,7 +237,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       color: #646970;
     }
     
-    .cht-overlay-hint {
+    .sn-overlay-hint {
       margin-top: 15px;
       padding-top: 15px;
       border-top: 1px solid #f0f0f1;
@@ -249,20 +249,20 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     }
   }
   
-  .cht-overlay-instructions {
+  .sn-overlay-instructions {
     display: flex;
     flex-direction: column;
     gap: 12px;
     text-align: left;
   }
   
-  .cht-instruction-item {
+  .sn-instruction-item {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 8px 0;
     
-    .cht-instruction-icon {
+    .sn-instruction-icon {
       font-size: 18px;
       width: 24px;
       text-align: center;
@@ -276,7 +276,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
 }
 
 // Comment Popup
-.cht-comment-popup-overlay {
+.sn-comment-popup-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -289,14 +289,14 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
   justify-content: center;
 }
 
-.cht-comment-popup {
+.sn-comment-popup {
   background: $background-color;
   border-radius: 8px;
   width: 350px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   animation: popupSlideIn 0.2s ease;
   
-  .cht-popup-header {
+  .sn-popup-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -336,7 +336,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       margin-left: 20px; // Space for drag handle
     }
     
-    .cht-popup-close {
+    .sn-popup-close {
       background: none;
       border: none;
       font-size: 20px;
@@ -350,10 +350,10 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     }
   }
   
-  .cht-popup-body {
+  .sn-popup-body {
     padding: 20px;
     
-    .cht-element-info {
+    .sn-element-info {
       margin-bottom: 12px;
       
       small {
@@ -369,7 +369,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       }
     }
     
-    .cht-comment-textarea {
+    .sn-comment-textarea {
       width: 100%;
       border: 1px solid $border-color;
       border-radius: 4px;
@@ -385,7 +385,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     }
   }
   
-  .cht-popup-footer {
+  .sn-popup-footer {
     padding: 16px 20px;
     border-top: 1px solid $border-color;
     display: flex;
@@ -395,24 +395,24 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
 }
 
 // Comments Display Container
-.cht-comments-display {
+.sn-comments-display {
   position: relative;
   pointer-events: none; // Allow clicks to pass through to page elements
   
   // Ensure markers are clickable
-  .cht-comment-marker {
+  .sn-comment-marker {
     pointer-events: auto;
   }
 }
 
 // Comment Markers
-.cht-comment-marker {
+.sn-comment-marker {
   position: absolute;
   cursor: pointer;
   z-index: 10000;
   pointer-events: auto;
   
-  .cht-marker-dot {
+  .sn-marker-dot {
     min-width: 40px;
     height: 30px;
     border-radius: 15px;
@@ -430,19 +430,19 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       transform: scale(1.1);
     }
 
-    .cht-marker-icon {
+    .sn-marker-icon {
       font-size: 14px;
       line-height: 1;
     }
 
-    .cht-marker-number {
+    .sn-marker-number {
       color: #2271b1;
       font-weight: bold;
       font-size: 12px;
     }
   }
   
-  .cht-marker-pulse {
+  .sn-marker-pulse {
     position: absolute;
     top: -5px;
     left: -5px;
@@ -453,14 +453,14 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     animation: pulse 2s infinite;
   }
   
-  &.selected .cht-marker-dot {
+  &.selected .sn-marker-dot {
     transform: scale(1.2);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   }
 }
 
 // Comment Detail Popup
-.cht-comment-detail-popup {
+.sn-comment-detail-popup {
   background: $background-color;
   border-radius: 8px;
   width: 380px;
@@ -470,7 +470,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   animation: popupSlideIn 0.2s ease;
   
-  .cht-popup-header {
+  .sn-popup-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -479,7 +479,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     cursor: move;
     background: #f9f9f9;
     
-    .cht-popup-title {
+    .sn-popup-title {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -490,7 +490,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       }
     }
     
-    .cht-status-badge {
+    .sn-status-badge {
       padding: 4px 8px;
       border-radius: 12px;
       background: #f0f0f0;
@@ -502,13 +502,13 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       align-items: center;
       gap: 4px;
 
-      .cht-status-icon {
+      .sn-status-icon {
         font-size: 12px;
         line-height: 1;
       }
     }
     
-    .cht-popup-close {
+    .sn-popup-close {
       background: none;
       border: none;
       font-size: 18px;
@@ -522,11 +522,11 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     }
   }
   
-  .cht-popup-content {
+  .sn-popup-content {
     padding: 16px;
   }
   
-  .cht-comment-screenshot {
+  .sn-comment-screenshot {
     margin-bottom: 16px;
     
     img {
@@ -542,10 +542,10 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     }
   }
   
-  .cht-comment-content {
+  .sn-comment-content {
     margin-bottom: 16px;
     
-    .cht-comment-meta {
+    .sn-comment-meta {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -556,19 +556,19 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
         font-size: 13px;
       }
       
-      .cht-comment-date {
+      .sn-comment-date {
         font-size: 11px;
         color: #646970;
       }
     }
     
-    .cht-comment-text {
+    .sn-comment-text {
       color: $text-color;
       line-height: 1.5;
       margin: 0;
     }
     
-    .cht-element-info {
+    .sn-element-info {
       margin-top: 8px;
       
       small {
@@ -583,7 +583,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
         font-size: 10px;
       }
       
-      .cht-goto-element {
+      .sn-goto-element {
         background: $primary-color;
         color: white;
         border: none;
@@ -600,7 +600,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     }
   }
   
-  .cht-status-controls {
+  .sn-status-controls {
     margin-bottom: 16px;
     
     label {
@@ -612,7 +612,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       gap: 8px;
     }
     
-    .cht-status-select {
+    .sn-status-select {
       padding: 6px 8px;
       border: 1px solid $border-color;
       border-radius: 4px;
@@ -620,7 +620,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     }
   }
   
-  .cht-replies {
+  .sn-replies {
     margin-bottom: 16px;
     
     h5 {
@@ -629,13 +629,13 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       color: $text-color;
     }
     
-    .cht-reply {
+    .sn-reply {
       background: #f9f9f9;
       padding: 12px;
       border-radius: 4px;
       margin-bottom: 8px;
       
-      .cht-reply-meta {
+      .sn-reply-meta {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -646,7 +646,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
           color: $text-color;
         }
         
-        .cht-reply-date {
+        .sn-reply-date {
           font-size: 10px;
           color: #646970;
         }
@@ -661,7 +661,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     }
   }
   
-  .cht-reply-form {
+  .sn-reply-form {
     margin-bottom: 12px;
     
     textarea {
@@ -678,14 +678,14 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       }
     }
     
-    .cht-reply-actions {
+    .sn-reply-actions {
       display: flex;
       gap: 8px;
       justify-content: flex-end;
     }
   }
   
-  .cht-comment-actions {
+  .sn-comment-actions {
     display: flex;
     gap: 8px;
     justify-content: flex-end;
@@ -693,7 +693,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
 }
 
 // Buttons
-.cht-btn {
+.sn-btn {
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
@@ -709,7 +709,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     cursor: not-allowed;
   }
   
-  &.cht-btn-primary {
+  &.sn-btn-primary {
     background: $primary-color;
     color: white;
     
@@ -718,7 +718,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     }
   }
   
-  &.cht-btn-secondary {
+  &.sn-btn-secondary {
     background: $border-color;
     color: $text-color;
     
@@ -729,7 +729,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
 }
 
 // Spinner
-.cht-spinner {
+.sn-spinner {
   width: 12px;
   height: 12px;
   border: 2px solid transparent;
@@ -788,25 +788,25 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
 
 // Responsive
 @media (max-width: 768px) {
-  .cht-comment-popup,
-  .cht-comment-detail-popup {
+  .sn-comment-popup,
+  .sn-comment-detail-popup {
     width: 90vw;
     max-width: 350px;
   }
   
-  .cht-toggle-button {
+  .sn-toggle-button {
     bottom: 15px;
     right: 15px;
   }
   
-  .cht-overlay .cht-overlay-message {
+  .sn-overlay .sn-overlay-message {
     margin: 20px;
     padding: 20px;
   }
 }
 
 // No comments message
-.cht-no-comments {
+.sn-no-comments {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -825,7 +825,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
 }
 
 /* Comment Sidebar Styles */
-.cht-sidebar-close.cht-button {
+.sn-sidebar-close.sn-button {
   position: fixed;
   top: 20px;
   right: 400px; // 380px sidebar width + 20px margin
@@ -838,11 +838,11 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease;
 
-  .cht-button__icon {
+  .sn-button__icon {
     margin: 0;
   }
 
-  .cht-icon {
+  .sn-icon {
     width: 18px;
     height: 18px;
   }
@@ -866,17 +866,17 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
   }
   
   // When sidebar is hidden
-  &.cht-sidebar-hidden {
+  &.sn-sidebar-hidden {
     right: 20px;
   }
   
   // When sidebar is hidden, position button at right edge
-  &.cht-sidebar-hidden {
+  &.sn-sidebar-hidden {
     right: 20px;
   }
 }
 
-.cht-comment-sidebar {
+.sn-comment-sidebar {
   position: fixed;
   top: 0;
   right: 0;
@@ -901,7 +901,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     }
   }
   
-  .cht-sidebar-header {
+  .sn-sidebar-header {
     background: #f9f9f9;
     padding: 20px;
     border-bottom: 1px solid $border-color;
@@ -914,20 +914,20 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       color: $text-color;
     }
     
-    .cht-comments-count {
+    .sn-comments-count {
       font-size: 14px;
       color: #646970;
       margin: 0;
     }
   }
   
-  .cht-sidebar-content {
+  .sn-sidebar-content {
     flex: 1;
     overflow-y: auto;
     padding: 0;
   }
   
-  .cht-no-comments-sidebar {
+  .sn-no-comments-sidebar {
     padding: 40px 20px;
     text-align: center;
     color: #646970;
@@ -935,7 +935,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     p {
       margin: 0 0 15px 0;
       
-      &.cht-instruction {
+      &.sn-instruction {
         font-size: 14px;
         font-style: italic;
         opacity: 0.8;
@@ -943,16 +943,16 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     }
   }
   
-  .cht-comments-list {
+  .sn-comments-list {
     padding: 0;
   }
 }
 
 /* Status Groups */
-.cht-status-group {
+.sn-status-group {
   margin-bottom: 20px;
   
-  .cht-status-header {
+  .sn-status-header {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -966,7 +966,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       background: #f0f0f0;
     }
     
-    .cht-status-icon {
+    .sn-status-icon {
       font-size: 16px;
       line-height: 1;
       margin-right: 8px;
@@ -980,7 +980,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       flex: 1;
     }
     
-    .cht-toggle-arrow {
+    .sn-toggle-arrow {
       background: none;
       border: none;
       color: #646970;
@@ -992,7 +992,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       justify-content: center;
       transition: color 0.2s ease, background-color 0.2s ease;
 
-      .cht-icon {
+      .sn-icon {
         width: 14px;
         height: 14px;
       }
@@ -1006,7 +1006,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
 }
 
 /* Comment Tasks */
-.cht-comment-task {
+.sn-comment-task {
   padding: 16px 20px;
   border-bottom: 1px solid #eee;
   transition: background-color 0.2s ease;
@@ -1020,19 +1020,19 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     border-left: 3px solid $primary-color;
   }
   
-  .cht-task-header {
+  .sn-task-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
     
-    .cht-task-info {
+    .sn-task-info {
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
       
-      .cht-task-id {
+      .sn-task-id {
         background: $primary-color;
         color: white;
         padding: 2px 6px;
@@ -1041,19 +1041,19 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
         font-weight: bold;
       }
       
-      .cht-task-author {
+      .sn-task-author {
         font-weight: 500;
         font-size: 13px;
         color: $text-color;
       }
       
-      .cht-task-date {
+      .sn-task-date {
         font-size: 11px;
         color: #646970;
       }
     }
     
-    .cht-locate-btn {
+    .sn-locate-btn {
       background: none;
       border: none;
       cursor: pointer;
@@ -1068,17 +1068,17 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     }
   }
   
-  .cht-task-content {
+  .sn-task-content {
     margin-bottom: 12px;
     
-    .cht-task-text {
+    .sn-task-text {
       margin: 0 0 8px 0;
       font-size: 14px;
       line-height: 1.4;
       color: $text-color;
     }
     
-    .cht-task-selector {
+    .sn-task-selector {
       margin-bottom: 8px;
       
       code {
@@ -1090,7 +1090,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       }
     }
     
-    .cht-task-screenshot {
+    .sn-task-screenshot {
 			margin-top: 8px;
       margin-bottom: 8px;
       
@@ -1110,10 +1110,10 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     }
   }
   
-  .cht-task-status {
+  .sn-task-status {
     margin-bottom: 10px;
     
-    .cht-status-select {
+    .sn-status-select {
       width: 100%;
       padding: 6px 8px;
       border: 1px solid $border-color;
@@ -1123,14 +1123,14 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     }
   }
   
-  .cht-task-replies {
+  .sn-task-replies {
     margin-bottom: 12px;
     background: #f9f9f9;
     padding: 10px;
     border-radius: 4px;
     border-left: 3px solid #ddd;
     
-    .cht-replies-header {
+    .sn-replies-header {
       margin-bottom: 8px;
       
       strong {
@@ -1139,14 +1139,14 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       }
     }
     
-    .cht-task-reply {
+    .sn-task-reply {
       margin-bottom: 8px;
       
       &:last-child {
         margin-bottom: 0;
       }
       
-      .cht-reply-header {
+      .sn-reply-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -1157,13 +1157,13 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
           color: $text-color;
         }
         
-        .cht-reply-date {
+        .sn-reply-date {
           font-size: 10px;
           color: #646970;
         }
       }
       
-      .cht-reply-text {
+      .sn-reply-text {
         margin: 0;
         font-size: 13px;
         line-height: 1.4;
@@ -1172,8 +1172,8 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     }
   }
   
-  .cht-task-actions {
-    .cht-reply-btn {
+  .sn-task-actions {
+    .sn-reply-btn {
       background: $primary-color;
       color: white;
       border: none;
@@ -1188,8 +1188,8 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
       }
     }
     
-    .cht-reply-form {
-      .cht-reply-textarea {
+    .sn-reply-form {
+      .sn-reply-textarea {
         width: 100%;
         padding: 8px;
         border: 1px solid $border-color;
@@ -1201,11 +1201,11 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
         margin-bottom: 8px;
       }
       
-      .cht-reply-actions {
+      .sn-reply-actions {
         display: flex;
         gap: 8px;
         
-        .cht-reply-submit {
+        .sn-reply-submit {
           background: $primary-color;
           color: white;
           border: none;
@@ -1224,7 +1224,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
           }
         }
         
-        .cht-reply-cancel {
+        .sn-reply-cancel {
           background: transparent;
           color: #666;
           border: 1px solid #ccc;
@@ -1244,17 +1244,17 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
 
 /* Responsive Design */
 @media (max-width: 1200px) {
-  .cht-comment-sidebar {
+  .sn-comment-sidebar {
     width: 320px;
   }
   
-  .cht-sidebar-close.cht-button {
+  .sn-sidebar-close.sn-button {
     right: 340px; // 320px sidebar width + 20px margin
   }
 }
 
 @media (max-width: 768px) {
-  .cht-comment-sidebar {
+  .sn-comment-sidebar {
     width: 100%;
     height: 50vh;
     top: auto;
@@ -1262,12 +1262,12 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
     border-left: none;
     border-top: 1px solid $border-color;
     
-    .cht-sidebar-content {
+    .sn-sidebar-content {
       max-height: calc(50vh - 70px);
     }
   }
   
-  .cht-sidebar-close.cht-button {
+  .sn-sidebar-close.sn-button {
     top: auto;
     bottom: 52vh; // Just above the sidebar (50vh + 2vh margin)
     right: 20px;
@@ -1275,7 +1275,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
 }
 
 /* Priority Badges */
-.cht-priority-badge {
+.sn-priority-badge {
   display: inline-block;
   padding: 2px 8px;
   border-radius: 12px;
@@ -1284,19 +1284,19 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   
-  &.cht-priority-low {
+  &.sn-priority-low {
     background: #f0f9ff;
     color: #0369a1;
     border: 1px solid #bae6fd;
   }
   
-  &.cht-priority-medium {
+  &.sn-priority-medium {
     background: #fef3c7;
     color: #d97706;
     border: 1px solid #fde68a;
   }
   
-  &.cht-priority-high {
+  &.sn-priority-high {
     background: #fee2e2;
     color: #dc2626;
     border: 1px solid #fecaca;
@@ -1304,7 +1304,7 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
 }
 
 /* Priority Selector in Comment Popup */
-.cht-priority-selector {
+.sn-priority-selector {
   margin-top: 10px;
   
   label {
@@ -1332,8 +1332,8 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
 }
 
 // Title elements styles
-.cht-task-title,
-.cht-comment-title {
+.sn-task-title,
+.sn-comment-title {
   font-weight: 600;
   font-size: 14px;
   color: #1d2327;
@@ -1341,14 +1341,14 @@ $overlay-bg: rgba(0, 0, 0, 0.8);
   line-height: 1.4;
 }
 
-.cht-comment-title {
+.sn-comment-title {
   color: #2271b1;
   font-size: 13px;
   margin-bottom: 4px;
 }
 
 // Comment input styles for title field
-.cht-comment-title {
+.sn-comment-title {
   width: 100%;
   padding: 8px 12px;
   border: 1px solid #d1d5db;

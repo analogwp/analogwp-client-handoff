@@ -1,4 +1,4 @@
-=== Client Handoff Toolkit ===
+=== Site Notes ===
 Contributors: analogwp, lushkant, johnpixle
 Tags: comments, feedback, collaboration, handoff, task-management
 Requires at least: 6.2
@@ -12,7 +12,7 @@ A comprehensive solution for agency-client transitions with visual commenting sy
 
 == Description ==
 
-Client Handoff Toolkit streamlines the process of handing over websites from agencies to clients. It provides a visual commenting system that allows teams to annotate web pages with feedback, manage tasks, and collaborate effectively during the transition period.
+Site Notes streamlines the process of handing over websites from agencies to clients. It provides a visual commenting system that allows teams to annotate web pages with feedback, manage tasks, and collaborate effectively during the transition period.
 
 = Key Features =
 
@@ -47,9 +47,9 @@ Client Handoff Toolkit streamlines the process of handing over websites from age
 = Automatic Installation =
 
 1. Go to Plugins > Add New in your WordPress admin
-2. Search for "Client Handoff Toolkit"
+2. Search for "Site Notes"
 3. Click Install and then Activate
-4. Navigate to Client Handoff in the admin menu
+4. Navigate to Site Notes in the admin menu
 
 = Manual Installation =
 
@@ -57,7 +57,7 @@ Client Handoff Toolkit streamlines the process of handing over websites from age
 2. Go to Plugins > Add New > Upload Plugin
 3. Choose the ZIP file and click Install Now
 4. Activate the plugin
-5. Navigate to Client Handoff in the admin menu
+5. Navigate to Site Notes in the admin menu
 
 == Frequently Asked Questions ==
 
@@ -75,7 +75,7 @@ Currently, the plugin uses standard statuses: Open, In Progress, and Resolved. C
 
 = Is the plugin translation-ready? =
 
-Yes, the plugin is fully translation-ready with proper internationalization support using the 'analogwp-client-handoff' text domain.
+Yes, the plugin is fully translation-ready with proper internationalization support using the 'analogwp-site-notes' text domain.
 
 = What are the minimum requirements? =
 

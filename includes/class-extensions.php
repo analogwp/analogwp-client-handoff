@@ -1,6 +1,6 @@
 <?php
 /**
- * Pro Plugin Extensions Handler
+ * Plugin Extensions Handler
  *
  * Provides a foundation for future plugin extensibility.
  * This system allows for seamless integration with future add-ons while
@@ -9,13 +9,22 @@
  * The extensibility hooks work in the background and can be utilized
  * by separate plugins without showing any promotional content.
  *
- * @package AnalogWP_Client_Handoff
+ * @package AnalogWP_Site_Notes
  * @since 1.1.0
- */if ( ! defined( 'ABSPATH' ) ) {
+ */
+
+namespace AnalogWP\SiteNotes;
+
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class AGWP_CHT_Pro_Extensions {
+/**
+ * Class to manage extensions and features
+ *
+ * @since 1.1.0
+ */
+class Extensions {
 
 	/**
 	 * Registered pro features
@@ -39,7 +48,7 @@ class AGWP_CHT_Pro_Extensions {
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_pro_data' ) );
 
 		// Hook for pro plugin to register features
-		do_action( 'agwp_cht_register_pro_features' );
+		do_action( 'agwp_sn_register_pro_features' );
 	}
 
 	/**
@@ -114,8 +123,8 @@ class AGWP_CHT_Pro_Extensions {
 	 * @return bool
 	 */
 	public static function is_pro_active() {
-		return defined( 'AGWP_CHT_PRO_VERSION' ) &&
-			   is_plugin_active( 'analogwp-client-handoff-pro/analogwp-client-handoff-pro.php' );
+		return defined( 'AGWP_SN_PRO_VERSION' ) &&
+			   is_plugin_active( 'analogwp-site-notes-pro/analogwp-site-notes-pro.php' );
 	}
 
 	/**
@@ -124,14 +133,14 @@ class AGWP_CHT_Pro_Extensions {
 	 * @return string|null
 	 */
 	public static function get_pro_version() {
-		return defined( 'AGWP_CHT_PRO_VERSION' ) ? AGWP_CHT_PRO_VERSION : null;
+		return defined( 'AGWP_SN_PRO_VERSION' ) ? AGWP_SN_PRO_VERSION : null;
 	}
 
 	/**
 	 * Enqueue pro extension data for JavaScript
 	 */
 	public static function enqueue_pro_data() {
-		if ( ! is_admin() && ! wp_script_is( 'agwp-cht-admin' ) ) {
+		if ( ! is_admin() && ! wp_script_is( 'agwp-sn-admin' ) ) {
 			return;
 		}
 
@@ -142,7 +151,7 @@ class AGWP_CHT_Pro_Extensions {
 			'tabs'          => self::get_pro_tabs(),
 		);
 
-		wp_localize_script( 'agwp-cht-admin', 'agwpChtPro', $pro_data );
+		wp_localize_script( 'agwp-sn-admin', 'agwpSnPro', $pro_data );
 	}
 
 	/**
@@ -173,7 +182,7 @@ class AGWP_CHT_Pro_Extensions {
 			return self::is_feature_available( $pro_settings_map[ $main_setting ] );
 		}
 
-		return true; // Allow non-pro settings
+		return true; // Allow non-pro settings.
 	}
 
 	/**
@@ -187,7 +196,7 @@ class AGWP_CHT_Pro_Extensions {
 			return $settings;
 		}
 
-		// Remove pro-only settings if pro is not active
+		// Remove pro-only settings if pro is not active.
 		$pro_sections = array( 'notifications', 'users', 'security', 'advanced' );
 
 		foreach ( $pro_sections as $section ) {
@@ -200,56 +209,56 @@ class AGWP_CHT_Pro_Extensions {
 	}
 }
 
-// Initialize pro extensions
-add_action( 'init', array( 'AGWP_CHT_Pro_Extensions', 'init' ) );
+// Initialize pro extensions.
+add_action( 'init', array( Extensions::class, 'init' ) );
 
 /**
  * Helper functions for pro features
  */
 
-if ( ! function_exists( 'agwp_cht_is_pro_active' ) ) {
+if ( ! function_exists( 'agwp_sn_is_pro_active' ) ) {
 	/**
 	 * Check if pro plugin is active
 	 *
 	 * @return bool
 	 */
-	function agwp_cht_is_pro_active() {
-		return AGWP_CHT_Pro_Extensions::is_pro_active();
+	function agwp_sn_is_pro_active() {
+		return Extensions::is_pro_active();
 	}
 }
 
-if ( ! function_exists( 'agwp_cht_is_feature_available' ) ) {
+if ( ! function_exists( 'agwp_sn_is_feature_available' ) ) {
 	/**
 	 * Check if a pro feature is available
 	 *
 	 * @param string $feature_name Feature name
 	 * @return bool
 	 */
-	function agwp_cht_is_feature_available( $feature_name ) {
-		return AGWP_CHT_Pro_Extensions::is_feature_available( $feature_name );
+	function agwp_sn_is_feature_available( $feature_name ) {
+		return Extensions::is_feature_available( $feature_name );
 	}
 }
 
-if ( ! function_exists( 'agwp_cht_register_pro_feature' ) ) {
+if ( ! function_exists( 'agwp_sn_register_pro_feature' ) ) {
 	/**
 	 * Register a pro feature
 	 *
 	 * @param string $feature_name Feature name
 	 * @param array  $config       Feature configuration
 	 */
-	function agwp_cht_register_pro_feature( $feature_name, $config = array() ) {
-		AGWP_CHT_Pro_Extensions::register_feature( $feature_name, $config );
+	function agwp_sn_register_pro_feature( $feature_name, $config = array() ) {
+		Extensions::register_feature( $feature_name, $config );
 	}
 }
 
-if ( ! function_exists( 'agwp_cht_register_pro_tab' ) ) {
+if ( ! function_exists( 'agwp_sn_register_pro_tab' ) ) {
 	/**
 	 * Register a pro settings tab
 	 *
 	 * @param string $tab_id Tab ID
 	 * @param array  $config Tab configuration
 	 */
-	function agwp_cht_register_pro_tab( $tab_id, $config = array() ) {
-		AGWP_CHT_Pro_Extensions::register_tab( $tab_id, $config );
+	function agwp_sn_register_pro_tab( $tab_id, $config = array() ) {
+		Extensions::register_tab( $tab_id, $config );
 	}
 }

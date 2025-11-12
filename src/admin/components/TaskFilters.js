@@ -19,7 +19,7 @@ const TaskFilters = ({ filters, onFilterChange, sortBy, onSortChange, users }) =
                 value={filters.status}
                 onChange={(value) => onFilterChange({status: value})}
                 options={[
-                    { value: '', label: __('Filter by Status', 'analogwp-client-handoff') },
+                    { value: '', label: __('Filter by Status', 'analogwp-site-notes') },
                     ...TASK_STATUSES.map(status => ({
                         value: status.key,
                         label: status.title
@@ -31,7 +31,7 @@ const TaskFilters = ({ filters, onFilterChange, sortBy, onSortChange, users }) =
                 value={filters.user}
                 onChange={(value) => onFilterChange({user: value})}
                 options={[
-                    { value: '', label: __('Filter by User', 'analogwp-client-handoff') },
+                    { value: '', label: __('Filter by User', 'analogwp-site-notes') },
                     ...users.map(user => ({
                         value: user.id.toString(),
                         label: user.name
@@ -43,9 +43,9 @@ const TaskFilters = ({ filters, onFilterChange, sortBy, onSortChange, users }) =
                 value={sortBy}
                 onChange={(value) => onSortChange(value)}
                 options={[
-                    { value: 'created_at', label: __('Sort by Date', 'analogwp-client-handoff') },
-                    { value: 'updated_at', label: __('Sort by Updated', 'analogwp-client-handoff') },
-                    { value: 'priority', label: __('Sort by Priority', 'analogwp-client-handoff') }
+                    { value: 'created_at', label: __('Sort by Date', 'analogwp-site-notes') },
+                    { value: 'updated_at', label: __('Sort by Updated', 'analogwp-site-notes') },
+                    { value: 'priority', label: __('Sort by Priority', 'analogwp-site-notes') }
                 ]}
             />
             
@@ -53,13 +53,13 @@ const TaskFilters = ({ filters, onFilterChange, sortBy, onSortChange, users }) =
                 value={filters.category}
                 onChange={(value) => onFilterChange({category: value})}
                 options={[
-                    { value: '', label: __('Filter by Category', 'analogwp-client-handoff') },
+                    { value: '', label: __('Filter by Category', 'analogwp-site-notes') },
                     ...(categories && categories.length > 0 
                         ? categories.map(category => ({
                             value: category.name,
                             label: category.name
                         }))
-                        : [{ value: '', label: __('No categories available', 'analogwp-client-handoff'), disabled: true }]
+                        : [{ value: '', label: __('No categories available', 'analogwp-site-notes'), disabled: true }]
                     )
                 ]}
             />

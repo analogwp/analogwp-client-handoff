@@ -10,19 +10,19 @@ import { __ } from '@wordpress/i18n';
 export const TASK_STATUSES = [
     { 
         key: 'open', 
-        title: __('Open', 'analogwp-client-handoff'),
+        title: __('Open', 'analogwp-site-notes'),
         color: '#f59e0b',
         icon: '📋'
     },
     { 
         key: 'in_progress', 
-        title: __('In Progress', 'analogwp-client-handoff'),
+        title: __('In Progress', 'analogwp-site-notes'),
         color: '#3b82f6',
         icon: '⏳'
     },
     { 
         key: 'resolved', 
-        title: __('Resolved', 'analogwp-client-handoff'),
+        title: __('Resolved', 'analogwp-site-notes'),
         color: '#10b981',
         icon: '✅'
     }

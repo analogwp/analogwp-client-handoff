@@ -2,9 +2,13 @@
 /**
  * Admin functionality class.
  *
- * @package AnalogWP_Client_Handoff
+ * @package AnalogWP_Site_Notes
  * @since 1.0.0
  */
+
+namespace AnalogWP\SiteNotes\Admin;
+
+use AnalogWP\SiteNotes\Plugin;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-class AGWP_CHT_Admin {
+class Admin {
 
 	/**
 	 * Constructor.
@@ -36,7 +40,7 @@ class AGWP_CHT_Admin {
 	 */
 	public function init_admin() {
 		// Admin initialization logic can go here.
-		do_action( 'agwp_cht_admin_init' );
+		do_action( 'agwp_sn_admin_init' );
 	}
 
 	/**
@@ -45,36 +49,36 @@ class AGWP_CHT_Admin {
 	 * @since 1.0.0
 	 */
 	public function add_admin_menu() {
-		// Check if user has access based on allowed roles
-		if ( ! AGWP_CHT_Client_Handoff_Toolkit::user_has_access() ) {
+		// Check if user has access based on allowed roles.
+		if ( ! Plugin::user_has_access() ) {
 			return;
 		}
 
 		add_menu_page(
-			__( 'Client Handoff', 'analogwp-client-handoff' ),
-			__( 'Client Handoff', 'analogwp-client-handoff' ),
-			'read', // Use 'read' capability which all logged-in users have
-			'agwp-cht-dashboard',
+			__( 'Site Notes', 'analogwp-site-notes' ),
+			__( 'Site Notes', 'analogwp-site-notes' ),
+			'read', // Use 'read' capability which all logged-in users have.
+			'agwp-sn-dashboard',
 			array( $this, 'render_admin_page' ),
 			'dashicons-feedback',
 			30
 		);
 
 		add_submenu_page(
-			'agwp-cht-dashboard',
-			__( 'Tasks', 'analogwp-client-handoff' ),
-			__( 'Tasks', 'analogwp-client-handoff' ),
+			'agwp-sn-dashboard',
+			__( 'Tasks', 'analogwp-site-notes' ),
+			__( 'Tasks', 'analogwp-site-notes' ),
 			'read',
-			'agwp-cht-dashboard',
+			'agwp-sn-dashboard',
 			array( $this, 'render_admin_page' )
 		);
 
 		add_submenu_page(
-			'agwp-cht-dashboard',
-			__( 'Settings', 'analogwp-client-handoff' ),
-			__( 'Settings', 'analogwp-client-handoff' ),
-			'manage_options', // Only admins can access settings
-			'agwp-cht-settings',
+			'agwp-sn-dashboard',
+			__( 'Settings', 'analogwp-site-notes' ),
+			__( 'Settings', 'analogwp-site-notes' ),
+			'manage_options', // Only admins can access settings.
+			'agwp-sn-settings',
 			array( $this, 'render_admin_page' )
 		);
 	}
@@ -91,24 +95,24 @@ class AGWP_CHT_Admin {
 			return;
 		}
 
-		// Check if frontend comments are enabled
-		if ( ! AGWP_CHT_Client_Handoff_Toolkit::frontend_comments_enabled() ) {
+		// Check if frontend comments are enabled.
+		if ( ! Plugin::frontend_comments_enabled() ) {
 			return;
 		}
 
-		// Check if user has access
-		if ( ! AGWP_CHT_Client_Handoff_Toolkit::user_has_access() ) {
+		// Check if user has access.
+		if ( ! Plugin::user_has_access() ) {
 			return;
 		}
 
 		// Add parent menu item.
 		$wp_admin_bar->add_node(
 			array(
-				'id'    => 'agwp-cht-menu',
-				'title' => __( 'Tasks & Comments', 'analogwp-client-handoff' ),
+				'id'    => 'agwp-sn-menu',
+				'title' => __( 'Tasks & Comments', 'analogwp-site-notes' ),
 				'href'  => '#',
 				'meta'  => array(
-					'class' => 'agwp-cht-admin-bar-menu',
+					'class' => 'agwp-sn-admin-bar-menu',
 				),
 			)
 		);
@@ -116,12 +120,12 @@ class AGWP_CHT_Admin {
 		// Add "Turn Comments ON/OFF" submenu item.
 		$wp_admin_bar->add_node(
 			array(
-				'parent' => 'agwp-cht-menu',
-				'id'     => 'agwp-cht-toggle',
-				'title'  => '<span id="cht-admin-bar-toggle">' . __( 'Turn Comments ON', 'analogwp-client-handoff' ) . '</span>',
+				'parent' => 'agwp-sn-menu',
+				'id'     => 'agwp-sn-toggle',
+				'title'  => '<span id="sn-admin-bar-toggle">' . __( 'Turn Comments ON', 'analogwp-site-notes' ) . '</span>',
 				'href'   => '#',
 				'meta'   => array(
-					'class' => 'agwp-cht-admin-bar-toggle',
+					'class' => 'agwp-sn-admin-bar-toggle',
 				),
 			)
 		);
@@ -129,20 +133,20 @@ class AGWP_CHT_Admin {
 		// Add "Tasks Board" submenu item.
 		$wp_admin_bar->add_node(
 			array(
-				'parent' => 'agwp-cht-menu',
-				'id'     => 'agwp-cht-tasks-board',
-				'title'  => __( 'Tasks Board', 'analogwp-client-handoff' ),
-				'href'   => admin_url( 'admin.php?page=agwp-cht-dashboard' ),
+				'parent' => 'agwp-sn-menu',
+				'id'     => 'agwp-sn-tasks-board',
+				'title'  => __( 'Tasks Board', 'analogwp-site-notes' ),
+				'href'   => admin_url( 'admin.php?page=agwp-sn-dashboard' ),
 			)
 		);
 
 		// Add "Settings" submenu item.
 		$wp_admin_bar->add_node(
 			array(
-				'parent' => 'agwp-cht-menu',
-				'id'     => 'agwp-cht-settings-link',
-				'title'  => __( 'Settings', 'analogwp-client-handoff' ),
-				'href'   => admin_url( 'admin.php?page=agwp-cht-settings' ),
+				'parent' => 'agwp-sn-menu',
+				'id'     => 'agwp-sn-settings-link',
+				'title'  => __( 'Settings', 'analogwp-site-notes' ),
+				'href'   => admin_url( 'admin.php?page=agwp-sn-settings' ),
 			)
 		);
 	}
@@ -161,25 +165,25 @@ class AGWP_CHT_Admin {
 		}
 
 		// Check permissions based on page type.
-		if ( 'client-handoff_page_agwp-cht-settings' === $page_slug ) {
+		if ( 'site-notes_page_agwp-sn-settings' === $page_slug ) {
 			// Settings page requires admin access.
 			if ( ! current_user_can( 'manage_options' ) ) {
-				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'analogwp-client-handoff' ) );
+				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'analogwp-site-notes' ) );
 			}
 		} else {
 			// Dashboard/Tasks page requires user to have access based on allowed roles.
-			if ( ! AGWP_CHT_Client_Handoff_Toolkit::user_has_access() ) {
-				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'analogwp-client-handoff' ) );
+			if ( ! Plugin::user_has_access() ) {
+				wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'analogwp-site-notes' ) );
 			}
 		}
 
 		// Determine which admin page to render.
 		switch ( $page_slug ) {
-			case 'toplevel_page_agwp-cht-dashboard':
-			case 'client-handoff_page_agwp-cht-dashboard':
+			case 'toplevel_page_agwp-sn-dashboard':
+			case 'site-notes_page_agwp-sn-dashboard':
 				$this->render_dashboard_page();
 				break;
-			case 'client-handoff_page_agwp-cht-settings':
+			case 'site-notes_page_agwp-sn-settings':
 				$this->render_settings_page();
 				break;
 			default:
@@ -196,7 +200,7 @@ class AGWP_CHT_Admin {
 	private function render_dashboard_page() {
 		?>
 		<div class="wrap">
-			<div id="agwp-cht-admin-dashboard"></div>
+			<div id="agwp-sn-admin-dashboard"></div>
 		</div>
 		<?php
 	}
@@ -212,7 +216,7 @@ class AGWP_CHT_Admin {
 	private function render_settings_page() {
 		?>
 		<div class="wrap">
-			<div id="agwp-cht-admin-settings"></div>
+			<div id="agwp-sn-admin-settings"></div>
 		</div>
 		<?php
 	}
@@ -225,9 +229,9 @@ class AGWP_CHT_Admin {
 	 */
 	public function get_admin_capabilities() {
 		return array(
-			'manage_comments' => AGWP_CHT_Client_Handoff_Toolkit::user_has_access(),
-			'delete_comments' => AGWP_CHT_Client_Handoff_Toolkit::user_has_access(),
-			'view_stats'      => AGWP_CHT_Client_Handoff_Toolkit::user_has_access(),
+			'manage_comments' => Plugin::user_has_access(),
+			'delete_comments' => Plugin::user_has_access(),
+			'view_stats'      => Plugin::user_has_access(),
 		);
 	}
 
@@ -238,7 +242,7 @@ class AGWP_CHT_Admin {
 	 * @return bool True if user can manage plugin.
 	 */
 	public function can_manage_plugin() {
-		return AGWP_CHT_Client_Handoff_Toolkit::user_has_access();
+		return Plugin::user_has_access();
 	}
 
 	/**
@@ -250,16 +254,16 @@ class AGWP_CHT_Admin {
 	public function get_admin_pages() {
 		return array(
 			'dashboard' => array(
-				'slug'  => 'analogwp-client-handoff',
-				'title' => __( 'Dashboard', 'analogwp-client-handoff' ),
+				'slug'  => 'analogwp-site-notes',
+				'title' => __( 'Dashboard', 'analogwp-site-notes' ),
 			),
 			'comments'  => array(
-				'slug'  => 'analogwp-client-handoff-comments',
-				'title' => __( 'Comments', 'analogwp-client-handoff' ),
+				'slug'  => 'analogwp-site-notes-comments',
+				'title' => __( 'Comments', 'analogwp-site-notes' ),
 			),
 			'settings'  => array(
-				'slug'  => 'analogwp-client-handoff-settings',
-				'title' => __( 'Settings', 'analogwp-client-handoff' ),
+				'slug'  => 'analogwp-site-notes-settings',
+				'title' => __( 'Settings', 'analogwp-site-notes' ),
 			),
 		);
 	}

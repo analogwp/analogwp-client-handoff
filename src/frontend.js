@@ -13,19 +13,19 @@ import './frontend/styles/frontend.scss';
 // Debug logging
 logger.debug('Frontend script loaded!');
 logger.debug('Document ready state:', document.readyState);
-logger.debug('agwpChtAjax available:', typeof agwpChtAjax !== 'undefined');
+logger.debug('agwpSnAjax available:', typeof agwpSnAjax !== 'undefined');
 
 // Simple initialization function
 function initVisualComments() {
     logger.info('Initializing Visual Comments');
     
-    // Ensure agwpChtAjax is available
-    if (typeof agwpChtAjax === 'undefined') {
-        logger.error('agwpChtAjax object not found');
+    // Ensure agwpSnAjax is available
+    if (typeof agwpSnAjax === 'undefined') {
+        logger.error('agwpSnAjax object not found');
         return;
     }
     
-    logger.debug('agwpChtAjax found:', agwpChtAjax);
+    logger.debug('agwpSnAjax found:', agwpSnAjax);
     
     // Check if React is available
     if (typeof createRoot === 'undefined') {
@@ -37,7 +37,7 @@ function initVisualComments() {
     
     // Create container for the visual comments app
     const appContainer = document.createElement('div');
-    appContainer.id = 'cht-visual-comments-app';
+    appContainer.id = 'sn-visual-comments-app';
     document.body.appendChild(appContainer);
     
     logger.debug('Container created, mounting React app');
@@ -60,7 +60,7 @@ function createSimpleInterface() {
     logger.debug('Creating simple interface fallback');
     
     const appContainer = document.createElement('div');
-    appContainer.id = 'cht-visual-comments-app';
+    appContainer.id = 'sn-visual-comments-app';
     appContainer.style.cssText = `
         position: fixed;
         top: 100px;
@@ -78,10 +78,10 @@ function createSimpleInterface() {
     `;
     
     appContainer.innerHTML = `
-        <h3>CHT Visual Comments (Fallback)</h3>
+        <h3>SN Visual Comments (Fallback)</h3>
         <p>✅ JavaScript is working!</p>
         <p>⚠️ React fallback mode</p>
-        <p><strong>Post ID:</strong> ${agwpChtAjax.postId}</p>
+        <p><strong>Post ID:</strong> ${agwpSnAjax.postId}</p>
         <button onclick="this.parentNode.style.display='none'" style="float: right;">Close</button>
         <hr>
         <div>Basic visual commenting interface would appear here.</div>
@@ -102,7 +102,7 @@ if (document.readyState === 'loading') {
 
 // Fallback - also try after window load
 window.addEventListener('load', function() {
-    if (!document.getElementById('cht-visual-comments-app')) {
+    if (!document.getElementById('sn-visual-comments-app')) {
         logger.debug('Fallback initialization');
         initVisualComments();
     } else {

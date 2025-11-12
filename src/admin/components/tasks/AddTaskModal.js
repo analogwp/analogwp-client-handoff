@@ -125,13 +125,13 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
     const handleSave = async () => {
         // Validation
         if (!formData.taskTitle.trim() && !formData.description.trim()) {
-            showToast.error(__('Please enter a task title or description', 'analogwp-client-handoff'));
+            showToast.error(__('Please enter a task title or description', 'analogwp-site-notes'));
             return;
         }
 
         // Only require page selection for new tasks, not when editing
         if (!editTask && (!formData.pageId || formData.pageId === '')) {
-            showToast.error(__('Please select a page for this task', 'analogwp-client-handoff'));
+            showToast.error(__('Please select a page for this task', 'analogwp-site-notes'));
             return;
         }
 
@@ -164,8 +164,8 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                     hours,
                     minutes,
                     description: editTask ? 
-                        __('Time entry from task update', 'analogwp-client-handoff') : 
-                        __('Initial time entry', 'analogwp-client-handoff'),
+                        __('Time entry from task update', 'analogwp-site-notes') : 
+                        __('Initial time entry', 'analogwp-site-notes'),
                     date: new Date().toISOString().split('T')[0]
                 };
                 
@@ -227,18 +227,18 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
             // Show success message
             if (timesheetData) {
                 showToast.success(editTask ? 
-                    __('Task updated and time entry added to timesheet', 'analogwp-client-handoff') : 
-                    __('Task created and time entry added to timesheet', 'analogwp-client-handoff')
+                    __('Task updated and time entry added to timesheet', 'analogwp-site-notes') : 
+                    __('Task created and time entry added to timesheet', 'analogwp-site-notes')
                 );
             } else {
                 showToast.success(editTask ? 
-                    __('Task updated successfully', 'analogwp-client-handoff') : 
-                    __('Task created successfully', 'analogwp-client-handoff')
+                    __('Task updated successfully', 'analogwp-site-notes') : 
+                    __('Task created successfully', 'analogwp-site-notes')
                 );
             }
         } catch (err) {
             logger.error('Error saving task:', err);
-            showToast.error(__('Error saving task. Please try again.', 'analogwp-client-handoff'));
+            showToast.error(__('Error saving task. Please try again.', 'analogwp-site-notes'));
         }
     };
 
@@ -273,15 +273,15 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                             value={formData.taskTitle}
                             onChange={(e) => handleInputChange('taskTitle', e.target.value)}
                             placeholder={editTask ? 
-                                __('Edit task title', 'analogwp-client-handoff') : 
-                                __('Add task title', 'analogwp-client-handoff')
+                                __('Edit task title', 'analogwp-site-notes') : 
+                                __('Add task title', 'analogwp-site-notes')
                             }
                             className="flex-1 text-lg font-semibold border-none outline-none bg-transparent placeholder-gray-400 text-gray-900"
                         />
                         <button 
                             className="p-2 text-gray-400 hover:text-gray-600 rounded-lg transition-colors duration-200"
                             onClick={handleCancel}
-                            title={__('Close', 'analogwp-client-handoff')}
+                            title={__('Close', 'analogwp-site-notes')}
                         >
                             <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
@@ -291,7 +291,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                     <textarea
                         value={formData.description}
                         onChange={(e) => handleInputChange('description', e.target.value)}
-                        placeholder={__('Add a task description here (optional)', 'analogwp-client-handoff')}
+                        placeholder={__('Add a task description here (optional)', 'analogwp-site-notes')}
                         className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white resize-vertical text-sm"
                         rows="3"
                     />
@@ -300,7 +300,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                 {/* Simple form content for sidebar */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Status', 'analogwp-client-handoff')}</label>
+                        <label className="block text-sm font-medium text-gray-700">{__('Status', 'analogwp-site-notes')}</label>
                         <select
                             value={formData.status}
                             onChange={(e) => handleInputChange('status', e.target.value)}
@@ -315,13 +315,13 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Assign', 'analogwp-client-handoff')}</label>
+                        <label className="block text-sm font-medium text-gray-700">{__('Assign', 'analogwp-site-notes')}</label>
                         <select
                             value={formData.assignedUser}
                             onChange={(e) => handleInputChange('assignedUser', e.target.value)}
                             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
                         >
-                            <option value="">{__('Select User', 'analogwp-client-handoff')}</option>
+                            <option value="">{__('Select User', 'analogwp-site-notes')}</option>
                             {users.map(user => (
                                 <option key={user.id} value={user.id}>{user.name}</option>
                             ))}
@@ -329,13 +329,13 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Page', 'analogwp-client-handoff')}</label>
+                        <label className="block text-sm font-medium text-gray-700">{__('Page', 'analogwp-site-notes')}</label>
                         <select
                             value={formData.pageId}
                             onChange={(e) => handleInputChange('pageId', e.target.value)}
                             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
                         >
-                            <option value="">{__('Select Page', 'analogwp-client-handoff')}</option>
+                            <option value="">{__('Select Page', 'analogwp-site-notes')}</option>
                             {pages.map(page => (
                                 <option key={page.id} value={page.id}>{page.title}</option>
                             ))}
@@ -343,7 +343,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                         {formData.pageId && (
                             <div className="mt-2 p-2 bg-gray-50 rounded-lg">
                                 <small className="text-xs text-gray-600">
-                                    {__('URL:', 'analogwp-client-handoff')} 
+                                    {__('URL:', 'analogwp-site-notes')} 
                                     <a 
                                         href={pages.find(p => String(p.id) === String(formData.pageId))?.url || '#'} 
                                         target="_blank" 
@@ -358,7 +358,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Priority', 'analogwp-client-handoff')}</label>
+                        <label className="block text-sm font-medium text-gray-700">{__('Priority', 'analogwp-site-notes')}</label>
                         <select
                             value={formData.priority}
                             onChange={(e) => handleInputChange('priority', e.target.value)}
@@ -372,16 +372,16 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                                 ))
                             ) : (
                                 <>
-                                    <option value="low">{__('Low', 'analogwp-client-handoff')}</option>
-                                    <option value="medium">{__('Medium', 'analogwp-client-handoff')}</option>
-                                    <option value="high">{__('High', 'analogwp-client-handoff')}</option>
+                                    <option value="low">{__('Low', 'analogwp-site-notes')}</option>
+                                    <option value="medium">{__('Medium', 'analogwp-site-notes')}</option>
+                                    <option value="high">{__('High', 'analogwp-site-notes')}</option>
                                 </>
                             )}
                         </select>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Categories', 'analogwp-client-handoff')}</label>
+                        <label className="block text-sm font-medium text-gray-700">{__('Categories', 'analogwp-site-notes')}</label>
                         {categories && categories.length > 0 ? (
                             <div className="border border-gray-300 rounded-lg p-3 max-h-40 overflow-y-auto bg-white">
                                 <div className="space-y-2">
@@ -400,7 +400,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                             </div>
                         ) : (
                             <p className="text-sm text-gray-500 border border-gray-300 rounded-lg p-3 bg-gray-50">
-                                {__('No categories available. Create categories in Settings.', 'analogwp-client-handoff')}
+                                {__('No categories available. Create categories in Settings.', 'analogwp-site-notes')}
                             </p>
                         )}
                         {formData.categories.length > 0 && (
@@ -427,14 +427,14 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Due Date', 'analogwp-client-handoff')}</label>
+                        <label className="block text-sm font-medium text-gray-700">{__('Due Date', 'analogwp-site-notes')}</label>
                         <div className="relative">
                             <input
                                 type="date"
                                 value={formData.dueDate}
                                 onChange={(e) => handleInputChange('dueDate', e.target.value)}
                                 className="w-full border border-gray-300 rounded-lg px-3 py-2 pr-10 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white text-sm"
-                                placeholder={__('Select Due Date', 'analogwp-client-handoff')}
+                                placeholder={__('Select Due Date', 'analogwp-site-notes')}
                             />
                             <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" className="absolute right-3 top-3 text-gray-400 pointer-events-none">
                                 <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
@@ -443,8 +443,8 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Add time to timesheet', 'analogwp-client-handoff')}</label>
-                        <p className="text-xs text-gray-500 mb-2">{__('Time will be added as an entry to the task timesheet', 'analogwp-client-handoff')}</p>
+                        <label className="block text-sm font-medium text-gray-700">{__('Add time to timesheet', 'analogwp-site-notes')}</label>
+                        <p className="text-xs text-gray-500 mb-2">{__('Time will be added as an entry to the task timesheet', 'analogwp-site-notes')}</p>
                         <div className="flex items-center gap-3">
 														<span className="flex items-center space-x-2">
 															<svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16" className="text-gray-400 ml-1">
@@ -482,13 +482,13 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                             className="flex-1 px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors duration-200"
                             onClick={handleSave}
                         >
-                            {editTask ? __('Update Task', 'analogwp-client-handoff') : __('Create Task', 'analogwp-client-handoff')}
+                            {editTask ? __('Update Task', 'analogwp-site-notes') : __('Create Task', 'analogwp-site-notes')}
                         </button>
                         <button 
                             className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
                             onClick={handleCancel}
                         >
-                            {__('Cancel', 'analogwp-client-handoff')}
+                            {__('Cancel', 'analogwp-site-notes')}
                         </button>
                     </div>
                 </div>
@@ -505,15 +505,15 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                         value={formData.taskTitle}
                         onChange={(e) => handleInputChange('taskTitle', e.target.value)}
                         placeholder={editTask ? 
-                            __('Edit task title', 'analogwp-client-handoff') : 
-                            __('Add task title', 'analogwp-client-handoff')
+                            __('Edit task title', 'analogwp-site-notes') : 
+                            __('Add task title', 'analogwp-site-notes')
                         }
                         className="w-full text-xl font-semibold border-none outline-none bg-transparent placeholder-gray-400 text-gray-900 mb-3"
                     />
                     <textarea
                         value={formData.description}
                         onChange={(e) => handleInputChange('description', e.target.value)}
-                        placeholder={__('Add a task description here (optional)', 'analogwp-client-handoff')}
+                        placeholder={__('Add a task description here (optional)', 'analogwp-site-notes')}
                         className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white resize-vertical text-sm"
                         rows="3"
                     />
@@ -521,7 +521,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                         <button 
                             className="p-2 text-gray-400 hover:text-gray-600 rounded-lg transition-colors duration-200"
                             onClick={handleCancel}
-                            title={__('Close', 'analogwp-client-handoff')}
+                            title={__('Close', 'analogwp-site-notes')}
                         >
                             <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
@@ -533,17 +533,17 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                 <div className="border-b border-gray-200">
                     <nav className="flex">
                         <button className="px-6 py-3 text-sm font-medium text-indigo-600 border-b-2 border-indigo-500">
-                            {__('Details', 'analogwp-client-handoff')}
+                            {__('Details', 'analogwp-site-notes')}
                         </button>
                         <button className="px-6 py-3 text-sm font-medium text-gray-500 hover:text-gray-700">
-                            {__('Timesheet', 'analogwp-client-handoff')}
+                            {__('Timesheet', 'analogwp-site-notes')}
                         </button>
                     </nav>
                 </div>
 
                 <div className="p-6 space-y-6">
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Status', 'analogwp-client-handoff')}</label>
+                        <label className="block text-sm font-medium text-gray-700">{__('Status', 'analogwp-site-notes')}</label>
                         <select
                             value={formData.status}
                             onChange={(e) => handleInputChange('status', e.target.value)}
@@ -558,13 +558,13 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Assign', 'analogwp-client-handoff')}</label>
+                        <label className="block text-sm font-medium text-gray-700">{__('Assign', 'analogwp-site-notes')}</label>
                         <select
                             value={formData.assignedUser}
                             onChange={(e) => handleInputChange('assignedUser', e.target.value)}
                             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
                         >
-                            <option value="">{__('Select User', 'analogwp-client-handoff')}</option>
+                            <option value="">{__('Select User', 'analogwp-site-notes')}</option>
                             {users.map(user => (
                                 <option key={user.id} value={user.id}>{user.name}</option>
                             ))}
@@ -572,13 +572,13 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Page', 'analogwp-client-handoff')}</label>
+                        <label className="block text-sm font-medium text-gray-700">{__('Page', 'analogwp-site-notes')}</label>
                         <select
                             value={formData.pageId}
                             onChange={(e) => handleInputChange('pageId', e.target.value)}
                             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
                         >
-                            <option value="">{__('Select Page', 'analogwp-client-handoff')}</option>
+                            <option value="">{__('Select Page', 'analogwp-site-notes')}</option>
                             {pages.map(page => (
                                 <option key={page.id} value={page.id}>{page.title}</option>
                             ))}
@@ -586,7 +586,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                         {formData.pageId && (
                             <div className="mt-2 p-3 bg-gray-50 rounded-lg">
                                 <small className="text-sm text-gray-600">
-                                    {__('URL:', 'analogwp-client-handoff')} 
+                                    {__('URL:', 'analogwp-site-notes')} 
                                     <a 
                                         href={pages.find(p => String(p.id) === String(formData.pageId))?.url || '#'} 
                                         target="_blank" 
@@ -601,7 +601,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Priority', 'analogwp-client-handoff')}</label>
+                        <label className="block text-sm font-medium text-gray-700">{__('Priority', 'analogwp-site-notes')}</label>
                         <select
                             value={formData.priority}
                             onChange={(e) => handleInputChange('priority', e.target.value)}
@@ -615,16 +615,16 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                                 ))
                             ) : (
                                 <>
-                                    <option value="low">{__('Low', 'analogwp-client-handoff')}</option>
-                                    <option value="medium">{__('Medium', 'analogwp-client-handoff')}</option>
-                                    <option value="high">{__('High', 'analogwp-client-handoff')}</option>
+                                    <option value="low">{__('Low', 'analogwp-site-notes')}</option>
+                                    <option value="medium">{__('Medium', 'analogwp-site-notes')}</option>
+                                    <option value="high">{__('High', 'analogwp-site-notes')}</option>
                                 </>
                             )}
                         </select>
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Categories', 'analogwp-client-handoff')}</label>
+                        <label className="block text-sm font-medium text-gray-700">{__('Categories', 'analogwp-site-notes')}</label>
                         {categories && categories.length > 0 ? (
                             <div className="border border-gray-300 rounded-lg p-3 max-h-40 overflow-y-auto bg-white">
                                 <div className="space-y-2">
@@ -643,7 +643,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                             </div>
                         ) : (
                             <p className="text-sm text-gray-500 border border-gray-300 rounded-lg p-3 bg-gray-50">
-                                {__('No categories available. Create categories in Settings.', 'analogwp-client-handoff')}
+                                {__('No categories available. Create categories in Settings.', 'analogwp-site-notes')}
                             </p>
                         )}
                         {formData.categories.length > 0 && (
@@ -670,14 +670,14 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Due Date', 'analogwp-client-handoff')}</label>
+                        <label className="block text-sm font-medium text-gray-700">{__('Due Date', 'analogwp-site-notes')}</label>
                         <div className="relative">
                             <input
                                 type="date"
                                 value={formData.dueDate}
                                 onChange={(e) => handleInputChange('dueDate', e.target.value)}
                                 className="w-full border border-gray-300 rounded-lg px-3 py-2 pr-10 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white"
-                                placeholder={__('Select Due Date', 'analogwp-client-handoff')}
+                                placeholder={__('Select Due Date', 'analogwp-site-notes')}
                             />
                             <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" className="absolute right-3 top-3 text-gray-400 pointer-events-none">
                                 <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
@@ -686,8 +686,8 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                     </div>
 
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Add time to timesheet', 'analogwp-client-handoff')}</label>
-                        <p className="text-sm text-gray-500 mb-2">{__('Time will be added as an entry to the task timesheet', 'analogwp-client-handoff')}</p>
+                        <label className="block text-sm font-medium text-gray-700">{__('Add time to timesheet', 'analogwp-site-notes')}</label>
+                        <p className="text-sm text-gray-500 mb-2">{__('Time will be added as an entry to the task timesheet', 'analogwp-site-notes')}</p>
                         <div className="flex items-center space-x-2">
                             <input
                                 type="number"
@@ -713,7 +713,7 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                                 <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
                             </svg>
                             <button type="button" className="ml-3 px-3 py-1 text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors duration-200">
-                                {__('Add', 'analogwp-client-handoff')}
+                                {__('Add', 'analogwp-site-notes')}
                             </button>
                         </div>
                     </div>
@@ -724,13 +724,13 @@ const AddTaskModal = ({ isOpen, onClose, onSave, users, pages, editTask = null, 
                         className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors duration-200"
                         onClick={handleCancel}
                     >
-                        {__('Cancel', 'analogwp-client-handoff')}
+                        {__('Cancel', 'analogwp-site-notes')}
                     </button>
                     <button 
                         className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors duration-200"
                         onClick={handleSave}
                     >
-                        {editTask ? __('Update Task', 'analogwp-client-handoff') : __('Save Task', 'analogwp-client-handoff')}
+                        {editTask ? __('Update Task', 'analogwp-site-notes') : __('Save Task', 'analogwp-site-notes')}
                     </button>
                 </div>
             </div>

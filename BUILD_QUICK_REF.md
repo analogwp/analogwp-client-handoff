@@ -20,8 +20,8 @@ npm run clean             # Remove all builds
 ### Internal Testing (`npm run package`)
 ```
 build-package/
-├── analogwp-client-handoff-v1.0.0-testing/
-├── analogwp-client-handoff-v1.0.0-testing.zip
+├── analogwp-site-notes-v1.0.0-testing/
+├── analogwp-site-notes-v1.0.0-testing.zip
 └── TESTING_CHECKLIST.md
 ```
 **Includes:** Source files, docs, testing guides
@@ -29,8 +29,8 @@ build-package/
 ### WordPress.org (`npm run package:wporg`)
 ```
 dist/
-├── analogwp-client-handoff/
-├── analogwp-client-handoff.1.0.0.zip (136K)
+├── analogwp-site-notes/
+├── analogwp-site-notes.1.0.0.zip (136K)
 └── WPORG_SUBMISSION_CHECKLIST.txt
 ```
 **Excludes:** Dev files (clean production build)
@@ -46,7 +46,7 @@ dist/
 
 Before WordPress.org submission:
 
-1. [ ] Update version in `analogwp-client-handoff.php`
+1. [ ] Update version in `analogwp-site-notes.php`
 2. [ ] Update `readme.txt` changelog
 3. [ ] Run `npm run build` and test
 4. [ ] Run `npm run package:wporg`
@@ -71,7 +71,7 @@ cat dist/WPORG_SUBMISSION_CHECKLIST.txt
 
 ## Version Management
 
-Version is auto-detected from `analogwp-client-handoff.php`:
+Version is auto-detected from `analogwp-site-notes.php`:
 ```php
 * Version: 1.0.0
 ```

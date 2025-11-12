@@ -1,5 +1,5 @@
 /**
- * Logger utility for Client Handoff Toolkit
+ * Logger utility for AnalogWP Site Notes
  * Provides conditional logging based on debug settings
  */
 
@@ -22,7 +22,7 @@ const LEVEL_NAMES = {
  * Get current log level from settings
  */
 const getCurrentLogLevel = () => {
-    const config = window.agwpChtAjax || {};
+    const config = window.agwpSnAjax || {};
     const levelName = config.logLevel || 'error';
     return LEVEL_NAMES[levelName] ?? LOG_LEVELS.ERROR;
 };
@@ -31,7 +31,7 @@ const getCurrentLogLevel = () => {
  * Check if debug mode is enabled
  */
 const isDebugEnabled = () => {
-    return window.agwpChtAjax?.debug === true;
+    return window.agwpSnAjax?.debug === true;
 };
 
 /**
@@ -49,7 +49,7 @@ const shouldLog = (level) => {
  */
 const formatMessage = (prefix, message, data) => {
     const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
-    const formatted = `[CHT ${timestamp}] ${prefix}:`;
+    const formatted = `[SN ${timestamp}] ${prefix}:`;
     
     if (data !== undefined) {
         return [formatted, message, data];

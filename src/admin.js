@@ -22,8 +22,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Find the first available container and use it
     const containers = [
-        { id: 'agwp-cht-admin-dashboard', page: 'dashboard' },
-        { id: 'agwp-cht-admin-settings', page: 'settings' }
+        { id: 'agwp-sn-admin-dashboard', page: 'dashboard' },
+        { id: 'agwp-sn-admin-settings', page: 'settings' }
     ];
 
     for (const container of containers) {

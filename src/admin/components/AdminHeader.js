@@ -12,7 +12,7 @@ const AdminHeader = ({
     currentPage = 'dashboard',
     onNavigate
 }) => {
-    const logoUrl = window.agwpChtAjax?.pluginUrl ? `${window.agwpChtAjax.pluginUrl}assets/images/analog-logo.svg` : '';
+    const logoUrl = window.agwpSnAjax?.pluginUrl ? `${window.agwpSnAjax.pluginUrl}assets/images/analog-logo.svg` : '';
 
     return (
         <div className="mb-5 border-b border-b-gray-300">
@@ -22,7 +22,7 @@ const AdminHeader = ({
                         className="text-3xl font-semibold! text-gray-900 m-0 p-0! tracking-tight cursor-pointer"
                         onClick={() => onNavigate && onNavigate('dashboard')}
                     >
-                        {__('Client Handoff', 'analogwp-client-handoff')}
+                        {__('Site Notes', 'analogwp-site-notes')}
                     </h1>
 										<svg 
                         className="w-4! h-4! text-gray-700" 
@@ -56,7 +56,7 @@ const AdminHeader = ({
                             </svg>
                         }
                     >
-                        {__('Tasks', 'analogwp-client-handoff')}
+                        {__('Tasks', 'analogwp-site-notes')}
                     </Button>
                     
                     <Button 
@@ -68,7 +68,7 @@ const AdminHeader = ({
                             </svg>
                         }
                     >
-                        {__('Settings', 'analogwp-client-handoff')}
+                        {__('Settings', 'analogwp-site-notes')}
                     </Button>
                 </div>
             </div>

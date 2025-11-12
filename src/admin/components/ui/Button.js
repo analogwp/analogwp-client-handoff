@@ -62,16 +62,16 @@ const Button = ({
 
     // Additional custom classes for our styling
     const buttonClasses = classnames(
-        'cht-button rounded-full! text-[14px]!', // Base class for our custom styling
+        'sn-button rounded-full! text-[14px]!', // Base class for our custom styling
         {		
 						'px-6! py-2.5! h-auto!': variant !== 'link',
 						'border-none! outline-none! shadow-sm! bg-white/40! text-gray-700!': variant === 'secondary',
 						'text-gray-700! ': variant === 'tertiary',
 						'text-red-800! border! border-red-800! hover:text-red-600! hover:border-red-600!': variant === 'danger',
-            [`cht-button--${variant}`]: variant !== 'default',
-            [`cht-button--${size}`]: size !== 'default',
-            'cht-button--loading': loading,
-            'cht-button--with-icon space-x-2': !!icon,
+            [`sn-button--${variant}`]: variant !== 'default',
+            [`sn-button--${size}`]: size !== 'default',
+            'sn-button--loading': loading,
+            'sn-button--with-icon space-x-2': !!icon,
 						'px-3! no-underline! text-gray-600! hover:text-blue-600! focus:text-blue-600! hover:shadow-none! focus:shadow-none!': variant === 'link',
         },
         className
@@ -101,10 +101,10 @@ export const IconButton = ({
     ...props
 }) => {
     const iconButtonClasses = classnames(
-        'cht-icon-button',
+        'sn-icon-button',
         {
-            [`cht-icon-button--${variant}`]: variant !== 'tertiary',
-            [`cht-icon-button--${size}`]: size !== 'default',
+            [`sn-icon-button--${variant}`]: variant !== 'tertiary',
+            [`sn-icon-button--${size}`]: size !== 'default',
         },
         className
     );

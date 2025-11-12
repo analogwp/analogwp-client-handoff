@@ -36,24 +36,24 @@ const VisualCommentsApp = () => {
         const handleElementClick = (e) => {
             // Prevent creating popups when clicking specific UI elements
             if (
-                e.target.closest('.cht-comment-popup') ||
-                e.target.closest('.cht-comment-sidebar') ||
-                e.target.closest('.cht-toggle-button') ||
-                e.target.closest('#wp-admin-bar-agwp-cht-menu') ||
-                e.target.closest('#wp-admin-bar-agwp-cht-toggle') ||
-                e.target.closest('.cht-admin-bar-item') ||
-                e.target.closest('.cht-overlay') ||
+                e.target.closest('.sn-comment-popup') ||
+                e.target.closest('.sn-comment-sidebar') ||
+                e.target.closest('.sn-toggle-button') ||
+                e.target.closest('#wp-admin-bar-agwp-sn-menu') ||
+                e.target.closest('#wp-admin-bar-agwp-sn-toggle') ||
+                e.target.closest('.sn-admin-bar-item') ||
+                e.target.closest('.sn-overlay') ||
                 e.target.closest('#wpadminbar') ||
-                e.target.hasAttribute('data-cht-ignore') ||
-                e.target.closest('[data-cht-ignore]') ||
+                e.target.hasAttribute('data-sn-ignore') ||
+                e.target.closest('[data-sn-ignore]') ||
                 e.target.closest('.react-draggable') ||
                 e.target.closest('[class*="draggable"]') ||
-                e.target.classList.contains('cht-close-btn') ||
-                e.target.closest('.cht-close-btn') ||
-                e.target.classList.contains('cht-popup-close') ||
-                e.target.closest('.cht-popup-close') ||
-                e.target.classList.contains('cht-sidebar-close') ||
-                e.target.closest('.cht-sidebar-close')
+                e.target.classList.contains('sn-close-btn') ||
+                e.target.closest('.sn-close-btn') ||
+                e.target.classList.contains('sn-popup-close') ||
+                e.target.closest('.sn-popup-close') ||
+                e.target.classList.contains('sn-sidebar-close') ||
+                e.target.closest('.sn-sidebar-close')
             ) {
                 return;
             }
@@ -109,7 +109,7 @@ const VisualCommentsApp = () => {
         
         if (element.className && typeof element.className === 'string') {
             const classes = element.className.trim().split(/\s+/)
-                .filter(cls => cls && !cls.startsWith('cht-'))
+                .filter(cls => cls && !cls.startsWith('sn-'))
                 .slice(0, 3); // Limit to first 3 classes
             if (classes.length > 0) {
                 selector += '.' + classes.join('.');
@@ -134,14 +134,14 @@ const VisualCommentsApp = () => {
     // Load comments from server
     const loadComments = async () => {
         try {
-            const response = await fetch(agwpChtAjax.ajaxUrl, {
+            const response = await fetch(agwpSnAjax.ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: 'agwp_cht_get_comments',
-                    nonce: agwpChtAjax.nonce,
+                    action: 'agwp_sn_get_comments',
+                    nonce: agwpSnAjax.nonce,
                     page_url: window.location.href
                 })
             });
@@ -158,15 +158,15 @@ const VisualCommentsApp = () => {
         if (!selectedElement) return;
 
         try {
-            const response = await fetch(agwpChtAjax.ajaxUrl, {
+            const response = await fetch(agwpSnAjax.ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: 'agwp_cht_save_comment',
-                    nonce: agwpChtAjax.nonce,
-                    post_id: agwpChtAjax.postId || 0,
+                    action: 'agwp_sn_save_comment',
+                    nonce: agwpSnAjax.nonce,
+                    post_id: agwpSnAjax.postId || 0,
                     comment_title: commentTitle,
                     comment_text: commentText,
                     element_selector: selectedElement.selector,
@@ -185,27 +185,27 @@ const VisualCommentsApp = () => {
                 setSelectedElement(null);
                 
                 // Show success message
-                showNotification(__('Comment saved successfully!', 'analogwp-client-handoff'), 'success');
+                showNotification(__('Comment saved successfully!', 'analogwp-site-notes'), 'success');
             } else {
-                showNotification(__('Error saving comment', 'analogwp-client-handoff'), 'error');
+                showNotification(__('Error saving comment', 'analogwp-site-notes'), 'error');
             }
         } catch (error) {
             logger.error('Error saving comment:', error);
-            showNotification(__('Error saving comment', 'analogwp-client-handoff'), 'error');
+            showNotification(__('Error saving comment', 'analogwp-site-notes'), 'error');
         }
     };
 
     // Add reply to comment
     const addReply = async (commentId, replyText) => {
         try {
-            const response = await fetch(agwpChtAjax.ajaxUrl, {
+            const response = await fetch(agwpSnAjax.ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: 'agwp_cht_add_reply',
-                    nonce: agwpChtAjax.nonce,
+                    action: 'agwp_sn_add_reply',
+                    nonce: agwpSnAjax.nonce,
                     comment_id: commentId,
                     reply_text: replyText
                 })
@@ -214,29 +214,29 @@ const VisualCommentsApp = () => {
             const data = await response.json();
             if (data.success) {
                 await loadComments(); // Reload comments
-                showNotification(__('Reply added successfully!', 'analogwp-client-handoff'), 'success');
+                showNotification(__('Reply added successfully!', 'analogwp-site-notes'), 'success');
             } else {
-                showNotification(__('Error adding reply', 'analogwp-client-handoff'), 'error');
+                showNotification(__('Error adding reply', 'analogwp-site-notes'), 'error');
             }
         } catch (error) {
             logger.error('Error adding reply:', error);
-            showNotification(__('Error adding reply', 'analogwp-client-handoff'), 'error');
+            showNotification(__('Error adding reply', 'analogwp-site-notes'), 'error');
         }
     };
 
     // Update comment status
     const updateCommentStatus = async (commentId, status) => {
-        if (!agwpChtAjax.canManageComments) return;
+        if (!agwpSnAjax.canManageComments) return;
 
         try {
-            const response = await fetch(agwpChtAjax.ajaxUrl, {
+            const response = await fetch(agwpSnAjax.ajaxUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: new URLSearchParams({
-                    action: 'agwp_cht_update_comment_status',
-                    nonce: agwpChtAjax.nonce,
+                    action: 'agwp_sn_update_comment_status',
+                    nonce: agwpSnAjax.nonce,
                     comment_id: commentId,
                     status: status
                 })
@@ -245,20 +245,20 @@ const VisualCommentsApp = () => {
             const data = await response.json();
             if (data.success) {
                 await loadComments(); // Reload comments
-                showNotification(__('Status updated successfully!', 'analogwp-client-handoff'), 'success');
+                showNotification(__('Status updated successfully!', 'analogwp-site-notes'), 'success');
             } else {
-                showNotification(__('Error updating status', 'analogwp-client-handoff'), 'error');
+                showNotification(__('Error updating status', 'analogwp-site-notes'), 'error');
             }
         } catch (error) {
             logger.error('Error updating status:', error);
-            showNotification(__('Error updating status', 'analogwp-client-handoff'), 'error');
+            showNotification(__('Error updating status', 'analogwp-site-notes'), 'error');
         }
     };
 
     // Show notification
     const showNotification = (message, type = 'info') => {
         const notification = document.createElement('div');
-        notification.className = `cht-notification cht-notification-${type}`;
+        notification.className = `sn-notification sn-notification-${type}`;
         notification.textContent = message;
         notification.style.cssText = `
             position: fixed;
@@ -281,7 +281,7 @@ const VisualCommentsApp = () => {
     };
 
     return (
-        <div className="cht-visual-comments">
+        <div className="sn-visual-comments">
             <CommentToggle 
                 isActive={isActive} 
                 onToggle={setIsActive}
@@ -296,7 +296,7 @@ const VisualCommentsApp = () => {
                         comments={comments}
                         onAddReply={addReply}
                         onUpdateStatus={updateCommentStatus}
-                        canManageComments={agwpChtAjax.canManageComments}
+                        canManageComments={agwpSnAjax.canManageComments}
                         isVisible={sidebarVisible}
                         onClose={() => setSidebarVisible(!sidebarVisible)}
                     />

@@ -50,7 +50,7 @@ const LabelsAndFiltersSettings = () => {
             await saveSettings(true, newCategories, null);
         } catch (error) {
             logger.error('Error saving categories:', error);
-            showToast.error(__('Failed to save categories', 'analogwp-client-handoff'));
+            showToast.error(__('Failed to save categories', 'analogwp-site-notes'));
         }
     };
 
@@ -61,19 +61,19 @@ const LabelsAndFiltersSettings = () => {
             await saveSettings(true, null, newPriorities);
         } catch (error) {
             logger.error('Error saving priorities:', error);
-            showToast.error(__('Failed to save priorities', 'analogwp-client-handoff'));
+            showToast.error(__('Failed to save priorities', 'analogwp-site-notes'));
         }
     };
 
     // Category functions
     const addCategory = async () => {
         if (!newCategory.name.trim()) {
-            showToast.error(__('Category name is required', 'analogwp-client-handoff'));
+            showToast.error(__('Category name is required', 'analogwp-site-notes'));
             return;
         }
 
         if (categories.some(cat => cat.name.toLowerCase() === newCategory.name.toLowerCase())) {
-            showToast.error(__('Category name already exists', 'analogwp-client-handoff'));
+            showToast.error(__('Category name already exists', 'analogwp-site-notes'));
             return;
         }
 
@@ -84,7 +84,7 @@ const LabelsAndFiltersSettings = () => {
 
         await updateCategories([...categories, category]);
         setNewCategory({ name: '' });
-        showToast.success(__('Category added successfully', 'analogwp-client-handoff'));
+        showToast.success(__('Category added successfully', 'analogwp-site-notes'));
     };
 
     const startEditCategory = (category) => {
@@ -99,12 +99,12 @@ const LabelsAndFiltersSettings = () => {
 
     const saveEditCategory = async () => {
         if (!editCategoryForm.name.trim()) {
-            showToast.error(__('Category name is required', 'analogwp-client-handoff'));
+            showToast.error(__('Category name is required', 'analogwp-site-notes'));
             return;
         }
 
         if (categories.some(cat => cat.id !== editingCategoryId && cat.name.toLowerCase() === editCategoryForm.name.toLowerCase())) {
-            showToast.error(__('Category name already exists', 'analogwp-client-handoff'));
+            showToast.error(__('Category name already exists', 'analogwp-site-notes'));
             return;
         }
 
@@ -116,23 +116,23 @@ const LabelsAndFiltersSettings = () => {
         
         setEditingCategoryId(null);
         setEditCategoryForm({ name: '' });
-        showToast.success(__('Category updated successfully', 'analogwp-client-handoff'));
+        showToast.success(__('Category updated successfully', 'analogwp-site-notes'));
     };
 
     const deleteCategory = async (id) => {
         await updateCategories(categories.filter(cat => cat.id !== id));
-        showToast.success(__('Category deleted successfully', 'analogwp-client-handoff'));
+        showToast.success(__('Category deleted successfully', 'analogwp-site-notes'));
     };
 
     // Priority functions
     const addPriority = async () => {
         if (!newPriority.name.trim()) {
-            showToast.error(__('Priority name is required', 'analogwp-client-handoff'));
+            showToast.error(__('Priority name is required', 'analogwp-site-notes'));
             return;
         }
 
         if (priorities.some(pri => pri.name.toLowerCase() === newPriority.name.toLowerCase())) {
-            showToast.error(__('Priority name already exists', 'analogwp-client-handoff'));
+            showToast.error(__('Priority name already exists', 'analogwp-site-notes'));
             return;
         }
 
@@ -145,7 +145,7 @@ const LabelsAndFiltersSettings = () => {
 
         await updatePriorities([...priorities, priority]);
         setNewPriority({ name: '', color: '#f59e0b' });
-        showToast.success(__('Priority added successfully', 'analogwp-client-handoff'));
+        showToast.success(__('Priority added successfully', 'analogwp-site-notes'));
     };
 
     const startEditPriority = (priority) => {
@@ -160,12 +160,12 @@ const LabelsAndFiltersSettings = () => {
 
     const saveEditPriority = async () => {
         if (!editPriorityForm.name.trim()) {
-            showToast.error(__('Priority name is required', 'analogwp-client-handoff'));
+            showToast.error(__('Priority name is required', 'analogwp-site-notes'));
             return;
         }
 
         if (priorities.some(pri => pri.id !== editingPriorityId && pri.name.toLowerCase() === editPriorityForm.name.toLowerCase())) {
-            showToast.error(__('Priority name already exists', 'analogwp-client-handoff'));
+            showToast.error(__('Priority name already exists', 'analogwp-site-notes'));
             return;
         }
 
@@ -177,12 +177,12 @@ const LabelsAndFiltersSettings = () => {
         
         setEditingPriorityId(null);
         setEditPriorityForm({ name: '', color: '' });
-        showToast.success(__('Priority updated successfully', 'analogwp-client-handoff'));
+        showToast.success(__('Priority updated successfully', 'analogwp-site-notes'));
     };
 
     const deletePriority = async (id) => {
         await updatePriorities(priorities.filter(pri => pri.id !== id));
-        showToast.success(__('Priority deleted successfully', 'analogwp-client-handoff'));
+        showToast.success(__('Priority deleted successfully', 'analogwp-site-notes'));
     };
 
     const predefinedColors = [
@@ -194,30 +194,30 @@ const LabelsAndFiltersSettings = () => {
         <div className="p-6 max-w-4xl">
             {/* Priorities Section */}
             <SettingsSection
-                title={__('Priorities', 'analogwp-client-handoff')}
-                description={__('Define priority levels for tasks with customizable colors.', 'analogwp-client-handoff')}
+                title={__('Priorities', 'analogwp-site-notes')}
+                description={__('Define priority levels for tasks with customizable colors.', 'analogwp-site-notes')}
             >
-                <SettingsCard title={__('Add New Priority', 'analogwp-client-handoff')}>
+                <SettingsCard title={__('Add New Priority', 'analogwp-site-notes')}>
                     <div className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <TextInputField
                                 id="new_priority_name"
-                                label={__('Priority Name', 'analogwp-client-handoff')}
+                                label={__('Priority Name', 'analogwp-site-notes')}
                                 value={newPriority.name}
                                 onChange={(value) => setNewPriority({ ...newPriority, name: value })}
-                                placeholder={__('Enter priority name...', 'analogwp-client-handoff')}
+                                placeholder={__('Enter priority name...', 'analogwp-site-notes')}
                             />
                             
                             <ColorInput
                                 id="new_priority_color"
-                                label={__('Priority Color', 'analogwp-client-handoff')}
+                                label={__('Priority Color', 'analogwp-site-notes')}
                                 value={newPriority.color}
                                 onChange={(value) => setNewPriority({ ...newPriority, color: value })}
                             />
                         </div>
                         
                         <div className="space-y-3">
-                            <label className="block text-sm font-medium text-gray-700">{__('Quick Colors:', 'analogwp-client-handoff')}</label>
+                            <label className="block text-sm font-medium text-gray-700">{__('Quick Colors:', 'analogwp-site-notes')}</label>
                             <div className="flex flex-wrap gap-2">
                                 {predefinedColors.map(color => (
                                     <button
@@ -242,15 +242,15 @@ const LabelsAndFiltersSettings = () => {
                             size="default"
                             icon={<PlusIcon className="w-4 h-4" />}
                         >
-                            {__('Add Priority', 'analogwp-client-handoff')}
+                            {__('Add Priority', 'analogwp-site-notes')}
                         </Button>
                     </div>
                 </SettingsCard>
 
-                <SettingsCard title={__('Existing Priorities', 'analogwp-client-handoff')}>
+                <SettingsCard title={__('Existing Priorities', 'analogwp-site-notes')}>
                     {priorities.length === 0 ? (
                         <FieldDescription>
-                            {__('No priorities created yet. Add your first priority above.', 'analogwp-client-handoff')}
+                            {__('No priorities created yet. Add your first priority above.', 'analogwp-site-notes')}
                         </FieldDescription>
                     ) : (
                         <div className="space-y-3">
@@ -262,7 +262,7 @@ const LabelsAndFiltersSettings = () => {
                                                 <TextInputField
                                                     value={editPriorityForm.name}
                                                     onChange={(value) => setEditPriorityForm({ ...editPriorityForm, name: value })}
-                                                    placeholder={__('Priority name...', 'analogwp-client-handoff')}
+                                                    placeholder={__('Priority name...', 'analogwp-site-notes')}
                                                 />
                                                 <ColorInput
                                                     value={editPriorityForm.color}
@@ -275,18 +275,18 @@ const LabelsAndFiltersSettings = () => {
                                                     variant="primary"
                                                     size="small"
                                                     icon={<CheckIcon className="w-4 h-4" />}
-                                                    title={__('Save changes', 'analogwp-client-handoff')}
+                                                    title={__('Save changes', 'analogwp-site-notes')}
                                                 >
-                                                    {__('Save', 'analogwp-client-handoff')}
+                                                    {__('Save', 'analogwp-site-notes')}
                                                 </Button>
                                                 <Button
                                                     onClick={cancelEditPriority}
                                                     variant="secondary"
                                                     size="small"
                                                     icon={<XMarkIcon className="w-4 h-4" />}
-                                                    title={__('Cancel editing', 'analogwp-client-handoff')}
+                                                    title={__('Cancel editing', 'analogwp-site-notes')}
                                                 >
-                                                    {__('Cancel', 'analogwp-client-handoff')}
+                                                    {__('Cancel', 'analogwp-site-notes')}
                                                 </Button>
                                             </div>
                                         </div>
@@ -304,19 +304,19 @@ const LabelsAndFiltersSettings = () => {
                                                     onClick={() => startEditPriority(priority)}
                                                     variant="tertiary"
                                                     size="small"
-                                                    title={__('Edit priority', 'analogwp-client-handoff')}
+                                                    title={__('Edit priority', 'analogwp-site-notes')}
                                                 >
                                                     <PencilIcon className="w-4 h-4" />
                                                 </Button>
                                                 <Button
                                                     onClick={() => {
-                                                        if (confirm(__('Are you sure you want to delete this priority?', 'analogwp-client-handoff'))) {
+                                                        if (confirm(__('Are you sure you want to delete this priority?', 'analogwp-site-notes'))) {
                                                             deletePriority(priority.id);
                                                         }
                                                     }}
                                                     variant="destructive"
                                                     size="small"
-                                                    title={__('Delete priority', 'analogwp-client-handoff')}
+                                                    title={__('Delete priority', 'analogwp-site-notes')}
                                                 >
                                                     <TrashIcon className="w-4 h-4" />
                                                 </Button>
@@ -332,17 +332,17 @@ const LabelsAndFiltersSettings = () => {
 
 						{/* Categories Section */}
             <SettingsSection
-                title={__('Categories', 'analogwp-client-handoff')}
-                description={__('Organize comments and tasks into categories for better project management.', 'analogwp-client-handoff')}
+                title={__('Categories', 'analogwp-site-notes')}
+                description={__('Organize comments and tasks into categories for better project management.', 'analogwp-site-notes')}
             >
-                <SettingsCard title={__('Add New Category', 'analogwp-client-handoff')}>
+                <SettingsCard title={__('Add New Category', 'analogwp-site-notes')}>
                     <div className="space-y-6">
                         <TextInputField
                             id="new_category_name"
-                            label={__('Category Name', 'analogwp-client-handoff')}
+                            label={__('Category Name', 'analogwp-site-notes')}
                             value={newCategory.name}
                             onChange={(value) => setNewCategory({ ...newCategory, name: value })}
-                            placeholder={__('Enter category name...', 'analogwp-client-handoff')}
+                            placeholder={__('Enter category name...', 'analogwp-site-notes')}
                         />
 
                         <Button
@@ -352,15 +352,15 @@ const LabelsAndFiltersSettings = () => {
                             size="default"
                             icon={<PlusIcon className="w-4 h-4" />}
                         >
-                            {__('Add Category', 'analogwp-client-handoff')}
+                            {__('Add Category', 'analogwp-site-notes')}
                         </Button>
                     </div>
                 </SettingsCard>
 
-                <SettingsCard title={__('Existing Categories', 'analogwp-client-handoff')}>
+                <SettingsCard title={__('Existing Categories', 'analogwp-site-notes')}>
                     {categories.length === 0 ? (
                         <FieldDescription>
-                            {__('No categories created yet. Add your first category above.', 'analogwp-client-handoff')}
+                            {__('No categories created yet. Add your first category above.', 'analogwp-site-notes')}
                         </FieldDescription>
                     ) : (
                         <div className="space-y-3">
@@ -371,7 +371,7 @@ const LabelsAndFiltersSettings = () => {
                                             <TextInputField
                                                 value={editCategoryForm.name}
                                                 onChange={(value) => setEditCategoryForm({ ...editCategoryForm, name: value })}
-                                                placeholder={__('Category name...', 'analogwp-client-handoff')}
+                                                placeholder={__('Category name...', 'analogwp-site-notes')}
                                             />
                                             <div className="flex gap-2">
                                                 <Button
@@ -379,18 +379,18 @@ const LabelsAndFiltersSettings = () => {
                                                     variant="primary"
                                                     size="small"
                                                     icon={<CheckIcon className="w-4 h-4" />}
-                                                    title={__('Save changes', 'analogwp-client-handoff')}
+                                                    title={__('Save changes', 'analogwp-site-notes')}
                                                 >
-                                                    {__('Save', 'analogwp-client-handoff')}
+                                                    {__('Save', 'analogwp-site-notes')}
                                                 </Button>
                                                 <Button
                                                     onClick={cancelEditCategory}
                                                     variant="secondary"
                                                     size="small"
                                                     icon={<XMarkIcon className="w-4 h-4" />}
-                                                    title={__('Cancel editing', 'analogwp-client-handoff')}
+                                                    title={__('Cancel editing', 'analogwp-site-notes')}
                                                 >
-                                                    {__('Cancel', 'analogwp-client-handoff')}
+                                                    {__('Cancel', 'analogwp-site-notes')}
                                                 </Button>
                                             </div>
                                         </div>
@@ -404,19 +404,19 @@ const LabelsAndFiltersSettings = () => {
                                                     onClick={() => startEditCategory(category)}
                                                     variant="tertiary"
                                                     size="small"
-                                                    title={__('Edit category', 'analogwp-client-handoff')}
+                                                    title={__('Edit category', 'analogwp-site-notes')}
                                                 >
                                                     <PencilIcon className="w-4 h-4" />
                                                 </Button>
                                                 <Button
                                                     onClick={() => {
-                                                        if (confirm(__('Are you sure you want to delete this category?', 'analogwp-client-handoff'))) {
+                                                        if (confirm(__('Are you sure you want to delete this category?', 'analogwp-site-notes'))) {
                                                             deleteCategory(category.id);
                                                         }
                                                     }}
                                                     variant="destructive"
                                                     size="small"
-                                                    title={__('Delete category', 'analogwp-client-handoff')}
+                                                    title={__('Delete category', 'analogwp-site-notes')}
                                                 >
                                                     <TrashIcon className="w-4 h-4" />
                                                 </Button>

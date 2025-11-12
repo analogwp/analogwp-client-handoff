@@ -77,7 +77,7 @@ const TaskCard = ({
             style={style}
             {...listeners}
             {...attributes}
-            className={`cht-kanban-card relative pl-10! bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer ${
+            className={`sn-kanban-card relative pl-10! bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer ${
                 isActiveDrag ? 'opacity-50' : ''
             }`}
             onClick={() => onCardClick && onCardClick(comment)}
@@ -108,7 +108,7 @@ const TaskCard = ({
                             onEdit && onEdit(comment);
                         }}
                         className="p-1 text-gray-400 hover:text-gray-600 rounded transition-colors duration-200"
-                        title={__('Edit', 'analogwp-client-handoff')}
+                        title={__('Edit', 'analogwp-site-notes')}
                     >
                         <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708L4.5 15.207l-4 1a.5.5 0 0 1-.606-.606l1-4L12.146.146zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
@@ -120,7 +120,7 @@ const TaskCard = ({
                             onDelete(comment.id);
                         }}
                         className="p-1 text-gray-400 hover:text-red-500 rounded transition-colors duration-200"
-                        title={__('Delete', 'analogwp-client-handoff')}
+                        title={__('Delete', 'analogwp-site-notes')}
                     >
                         <svg width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5zM11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0H11z"/>
@@ -152,7 +152,7 @@ const TaskCard = ({
             <div className="border-t border-gray-100 pt-3">
                 <div className="space-y-3">
                     <div className="flex flex-col">
-                        <small className="text-xs text-gray-500 mb-1">{__('Added by', 'analogwp-client-handoff')}</small>
+                        <small className="text-xs text-gray-500 mb-1">{__('Added by', 'analogwp-site-notes')}</small>
                         <div className="flex items-center">
                             <div 
                                 className="w-6 h-6 rounded-full mr-2 flex items-center justify-center text-xs font-medium text-white"
@@ -167,13 +167,13 @@ const TaskCard = ({
                                 {!user?.avatar && getUserInitials(user?.name || 'Unknown')}
                             </div>
                             <span className="text-xs text-gray-700">
-                                {user?.name || __('Unknown User', 'analogwp-client-handoff')}
+                                {user?.name || __('Unknown User', 'analogwp-site-notes')}
                             </span>
                         </div>
                     </div>
                     {comment.assignee && (
                         <div className="flex flex-col">
-                            <small className="text-xs text-gray-500 mb-1">{__('Assigned to', 'analogwp-client-handoff')}</small>
+                            <small className="text-xs text-gray-500 mb-1">{__('Assigned to', 'analogwp-site-notes')}</small>
                             <div className="flex items-center">
                                 <div 
                                     className="w-6 h-6 rounded-full mr-2 flex items-center justify-center text-xs font-medium text-white"
@@ -188,7 +188,7 @@ const TaskCard = ({
                                     {!comment.assignee?.avatar && getUserInitials(comment.assignee?.name || 'Unknown')}
                                 </div>
                                 <span className="text-xs text-gray-700">
-                                    {comment.assignee?.name || __('Unknown User', 'analogwp-client-handoff')}
+                                    {comment.assignee?.name || __('Unknown User', 'analogwp-site-notes')}
                                 </span>
                             </div>
                         </div>

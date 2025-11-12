@@ -1,19 +1,19 @@
 #!/bin/bash
 
-# Client Handoff Toolkit - WordPress.org Package Builder
+# AnalogWP Site Notes - WordPress.org Package Builder
 # Creates a clean distribution package ready for WordPress.org submission
 
 set -e  # Exit on any error
 
-echo "🎯 Building Client Handoff Toolkit for WordPress.org"
+echo "🎯 Building AnalogWP Site Notes for WordPress.org"
 echo "===================================================="
 
 # Get plugin directory and version
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PLUGIN_SLUG="analogwp-client-handoff"
+PLUGIN_SLUG="analogwp-site-notes"
 
 # Extract version from main plugin file
-VERSION=$(grep "Version:" "$PLUGIN_DIR/analogwp-client-handoff.php" | awk '{print $3}')
+VERSION=$(grep "Version:" "$PLUGIN_DIR/analogwp-site-notes.php" | awk '{print $3}')
 if [ -z "$VERSION" ]; then
     echo "❌ Error: Could not extract version from plugin file"
     exit 1
@@ -94,7 +94,7 @@ should_ignore() {
 cd "$PLUGIN_DIR"
 
 # Copy main plugin file
-cp analogwp-client-handoff.php "$PACKAGE_PATH/"
+cp analogwp-site-notes.php "$PACKAGE_PATH/"
 
 # Copy readme.txt (WordPress.org format)
 if [ -f "readme.txt" ]; then
@@ -180,7 +180,7 @@ print_success "Plugin files copied (excluding development files)"
 print_step "Verifying package contents..."
 
 REQUIRED_FILES=(
-    "analogwp-client-handoff.php"
+    "analogwp-site-notes.php"
     "includes/class-database.php"
     "build/admin.js"
     "build/admin.css"
@@ -328,7 +328,7 @@ SUBMISSION STEPS:
    → https://wordpress.org/plugins/developers/add/
 
 3. Upload plugin information:
-   - Plugin Name: Client Handoff Toolkit
+   - Plugin Name: Site Notes
    - Plugin URL: https://analogwp.com/
    - Description: (Use short description from readme.txt)
 

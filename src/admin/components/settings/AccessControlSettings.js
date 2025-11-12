@@ -18,11 +18,11 @@ const AccessControlSettings = () => {
     const { settings, updateSetting } = useSettings();
 
     const roleOptions = [
-        { value: 'administrator', label: __('Administrator', 'analogwp-client-handoff') },
-        { value: 'editor', label: __('Editor', 'analogwp-client-handoff') },
-        { value: 'author', label: __('Author', 'analogwp-client-handoff') },
-        { value: 'contributor', label: __('Contributor', 'analogwp-client-handoff') },
-        { value: 'subscriber', label: __('Subscriber', 'analogwp-client-handoff') }
+        { value: 'administrator', label: __('Administrator', 'analogwp-site-notes') },
+        { value: 'editor', label: __('Editor', 'analogwp-site-notes') },
+        { value: 'author', label: __('Author', 'analogwp-site-notes') },
+        { value: 'contributor', label: __('Contributor', 'analogwp-site-notes') },
+        { value: 'subscriber', label: __('Subscriber', 'analogwp-site-notes') }
     ];
 
     // Custom role selector that always includes administrator
@@ -56,12 +56,12 @@ const AccessControlSettings = () => {
     return (
         <div className="p-6 max-w-4xl">
             <SettingsSection
-                title={__('Access Control', 'analogwp-client-handoff')}
-                description={__('Manage user permissions and access to the Client Handoff functionality.', 'analogwp-client-handoff')}
+                title={__('Access Control', 'analogwp-site-notes')}
+                description={__('Manage user permissions and access to the Site Notes functionality.', 'analogwp-site-notes')}
             >
-                <SettingsCard title={__('User Roles & Permissions', 'analogwp-client-handoff')}>
+                <SettingsCard title={__('User Roles & Permissions', 'analogwp-site-notes')}>
                     <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">{__('Allowed User Roles', 'analogwp-client-handoff')}</label>
+                        <label className="block text-sm font-medium text-gray-700">{__('Allowed User Roles', 'analogwp-site-notes')}</label>
                         <div className="space-y-2">
                             {roleOptions.map(option => (
                                 <label key={option.value} className="flex items-center space-x-2 cursor-pointer">
@@ -75,21 +75,21 @@ const AccessControlSettings = () => {
                                     <span className="text-sm text-gray-700">
                                         {option.label}
                                         {option.value === 'administrator' && (
-                                            <span className="text-gray-500"> ({__('Always allowed', 'analogwp-client-handoff')})</span>
+                                            <span className="text-gray-500"> ({__('Always allowed', 'analogwp-site-notes')})</span>
                                         )}
                                     </span>
                                 </label>
                             ))}
                         </div>
                         <div className="text-sm text-gray-500">
-                            {__('Select which user roles can access the client handoff functionality. Administrator role is always allowed to prevent lockouts.', 'analogwp-client-handoff')}
+                            {__('Select which user roles can access the site notes functionality. Administrator role is always allowed to prevent lockouts.', 'analogwp-site-notes')}
                         </div>
                     </div>
 
                     <ToggleField
                         id="enable_frontend_comments"
-                        label={__('Enable Frontend Comments', 'analogwp-client-handoff')}
-                        description={__('Allow users to add comments directly on the frontend of your website.', 'analogwp-client-handoff')}
+                        label={__('Enable Frontend Comments', 'analogwp-site-notes')}
+                        description={__('Allow users to add comments directly on the frontend of your website.', 'analogwp-site-notes')}
                         checked={settings.general?.enable_frontend_comments ?? true}
                         onChange={(value) => updateSetting('general.enable_frontend_comments', value)}
                     />

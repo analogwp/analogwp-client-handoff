@@ -2,9 +2,12 @@
 /**
  * Database management class.
  *
- * @package AnalogWP_Client_Handoff
+ * @package AnalogWP_Site_Notes
  * @since 1.0.0
  */
+
+
+namespace AnalogWP\SiteNotes;
 
 // Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -16,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-class AGWP_CHT_Database {
+class Database {
 
 	/**
 	 * Constructor.
@@ -38,7 +41,7 @@ class AGWP_CHT_Database {
 		$charset_collate = $wpdb->get_charset_collate();
 
 		// Comments table.
-		$comments_table = $wpdb->prefix . 'agwp_cht_comments';
+		$comments_table = $wpdb->prefix . 'agwp_sn_comments';
 		$comments_sql   = "CREATE TABLE $comments_table (
 			id int(11) NOT NULL AUTO_INCREMENT,
 			post_id int(11) NOT NULL,
@@ -71,7 +74,7 @@ class AGWP_CHT_Database {
 		) $charset_collate;";
 
 		// Replies table.
-		$replies_table = $wpdb->prefix . 'agwp_cht_comment_replies';
+		$replies_table = $wpdb->prefix . 'agwp_sn_comment_replies';
 		$replies_sql   = "CREATE TABLE $replies_table (
 			id int(11) NOT NULL AUTO_INCREMENT,
 			comment_id int(11) NOT NULL,
@@ -91,7 +94,7 @@ class AGWP_CHT_Database {
 		$this->upgrade_database();
 
 		// Update database version.
-		update_option( 'agwp_cht_db_version', AGWP_CHT_VERSION );
+		update_option( 'agwp_sn_db_version', AGWP_SN_VERSION );
 	}
 
 	/**
@@ -102,7 +105,7 @@ class AGWP_CHT_Database {
 	public function upgrade_database() {
 		global $wpdb;
 
-		$comments_table = $wpdb->prefix . 'agwp_cht_comments';
+		$comments_table = $wpdb->prefix . 'agwp_sn_comments';
 
 		// Check if timesheet column exists, if not add it.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Schema check query.
@@ -147,10 +150,10 @@ class AGWP_CHT_Database {
 	public function get_comments( $page_url = '' ) {
 		global $wpdb;
 
-		$comments_table = $wpdb->prefix . 'agwp_cht_comments';
-		$replies_table  = $wpdb->prefix . 'agwp_cht_comment_replies';
+		$comments_table = $wpdb->prefix . 'agwp_sn_comments';
+		$replies_table  = $wpdb->prefix . 'agwp_sn_comment_replies';
 
-		// Prepare query based on whether page_url is provided
+		// Prepare query based on whether page_url is provided.
 		if ( empty( $page_url ) ) {
 			// Get all comments for admin dashboard.
 			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Complex query with joins, caching handled at application level.
@@ -202,7 +205,7 @@ class AGWP_CHT_Database {
 				)
 			);
 
-			// Add avatar URLs to replies
+			// Add avatar URLs to replies.
 			if ( is_array( $comment->replies ) ) {
 				foreach ( $comment->replies as $reply ) {
 					if ( ! empty( $reply->user_id ) ) {
@@ -215,7 +218,7 @@ class AGWP_CHT_Database {
 				}
 			}
 
-			// Decode categories from JSON
+			// Decode categories from JSON.
 			if ( ! empty( $comment->category ) ) {
 				$decoded_categories = json_decode( $comment->category, true );
 				$comment->categories = is_array( $decoded_categories ) ? $decoded_categories : array();
@@ -251,7 +254,7 @@ class AGWP_CHT_Database {
 			return false;
 		}
 
-		$table_name = $wpdb->prefix . 'agwp_cht_comments';
+		$table_name = $wpdb->prefix . 'agwp_sn_comments';
 
 		$insert_data = array(
 			'post_id'          => isset( $data['post_id'] ) ? intval( $data['post_id'] ) : 0,
@@ -297,7 +300,7 @@ class AGWP_CHT_Database {
 			return false;
 		}
 
-		$table_name = $wpdb->prefix . 'agwp_cht_comments';
+		$table_name = $wpdb->prefix . 'agwp_sn_comments';
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Update operation, no caching needed.
 		$result = $wpdb->update(
@@ -322,11 +325,11 @@ class AGWP_CHT_Database {
 	public function update_comment( $comment_id, $data ) {
 		global $wpdb;
 
-		// Check if comment exists
+		// Check if comment exists.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Existence check before update.
 		$exists = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT id FROM {$wpdb->prefix}agwp_cht_comments WHERE id = %d",
+				"SELECT id FROM {$wpdb->prefix}agwp_sn_comments WHERE id = %d",
 				$comment_id
 			)
 		);
@@ -377,14 +380,14 @@ class AGWP_CHT_Database {
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Update operation, no caching needed.
 		$result = $wpdb->update(
-			$wpdb->prefix . 'agwp_cht_comments',
+			$wpdb->prefix . 'agwp_sn_comments',
 			$filtered_data,
 			array( 'id' => $comment_id ),
 			null,
 			array( '%d' )
 		);
 
-		return $result !== false;
+		return false !== $result;
 	}
 
 	/**
@@ -402,7 +405,7 @@ class AGWP_CHT_Database {
 			return false;
 		}
 
-		$table_name = $wpdb->prefix . 'agwp_cht_comment_replies';
+		$table_name = $wpdb->prefix . 'agwp_sn_comment_replies';
 
 		$insert_data = array(
 			'comment_id' => intval( $data['comment_id'] ),
@@ -434,8 +437,8 @@ class AGWP_CHT_Database {
 			return false;
 		}
 
-		$comments_table = $wpdb->prefix . 'agwp_cht_comments';
-		$replies_table  = $wpdb->prefix . 'agwp_cht_comment_replies';
+		$comments_table = $wpdb->prefix . 'agwp_sn_comments';
+		$replies_table  = $wpdb->prefix . 'agwp_sn_comment_replies';
 
 		// Delete replies first.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Delete operation, no caching needed.
@@ -457,7 +460,7 @@ class AGWP_CHT_Database {
 	public function get_dashboard_stats() {
 		global $wpdb;
 
-		$table_name = $wpdb->prefix . 'agwp_cht_comments';
+		$table_name = $wpdb->prefix . 'agwp_sn_comments';
 
 		// Get counts by status.
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Dashboard stats, frequently changing data.

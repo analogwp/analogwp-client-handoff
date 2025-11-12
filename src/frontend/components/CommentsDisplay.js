@@ -24,7 +24,7 @@ const CommentsDisplay = ({ comments, onAddReply, onUpdateStatus, canManageCommen
 
     return (
         <div 
-            className="cht-comments-display"
+            className="sn-comments-display"
             style={{
                 position: 'absolute',
                 top: 0,
@@ -50,8 +50,8 @@ const CommentsDisplay = ({ comments, onAddReply, onUpdateStatus, canManageCommen
             ))}
             
             {comments.length === 0 && (
-                <div className="cht-no-comments">
-                    <p>{__('No comments on this page yet.', 'analogwp-client-handoff')}</p>
+                <div className="sn-no-comments">
+                    <p>{__('No comments on this page yet.', 'analogwp-site-notes')}</p>
                 </div>
             )}
         </div>

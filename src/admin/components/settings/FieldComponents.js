@@ -278,16 +278,16 @@ export const MultiSelect = ({
     return (
         <FieldGroup className={className}>
             {label && <FieldLabel>{label}</FieldLabel>}
-            <div className="cht-multi-select">
+            <div className="sn-multi-select">
                 {options.map(option => (
-                    <label key={option.value} className="cht-multi-select-option">
+                    <label key={option.value} className="sn-multi-select-option">
                         <input
                             type="checkbox"
                             checked={value.includes(option.value)}
                             onChange={() => handleChange(option.value)}
                             disabled={disabled}
                         />
-                        <span className="cht-checkmark"></span>
+                        <span className="sn-checkmark"></span>
                         {option.label}
                     </label>
                 ))}
@@ -310,17 +310,17 @@ export const FileUpload = ({
 }) => (
     <FieldGroup className={className}>
         {label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
-        <div className="cht-file-upload">
+        <div className="sn-file-upload">
             <input
                 type="file"
                 id={id}
-                className="cht-file-input"
+                className="sn-file-input"
                 onChange={(e) => onChange(e.target.files[0])}
                 accept={accept}
                 disabled={disabled}
             />
-            <label htmlFor={id} className="cht-file-label">
-                {__('Choose file...', 'analogwp-client-handoff')}
+            <label htmlFor={id} className="sn-file-label">
+                {__('Choose file...', 'analogwp-site-notes')}
             </label>
         </div>
         {description && (

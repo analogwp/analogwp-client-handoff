@@ -36,27 +36,27 @@ export const ExtensionsProvider = ({ children }) => {
         checkProPluginStatus();
         
         // Listen for pro plugin registration
-        if (window.chtExtensions) {
+        if (window.snExtensions) {
             loadExtensions();
         }
         
         // Set up event listener for dynamic pro plugin loading
-        document.addEventListener('cht-pro-loaded', loadExtensions);
+        document.addEventListener('sn-pro-loaded', loadExtensions);
         
         return () => {
-            document.removeEventListener('cht-pro-loaded', loadExtensions);
+            document.removeEventListener('sn-pro-loaded', loadExtensions);
         };
     }, []);
 
     const checkProPluginStatus = () => {
         // Check if pro plugin is active via global flag or AJAX
-        const proActive = window.agwpChtAjax?.isProActive || false;
+        const proActive = window.agwpSnAjax?.isProActive || false;
         setIsProActive(proActive);
     };
 
     const loadExtensions = () => {
-        if (window.chtExtensions) {
-            const extensions = window.chtExtensions;
+        if (window.snExtensions) {
+            const extensions = window.snExtensions;
             
             // Register pro tabs
             if (extensions.tabs) {

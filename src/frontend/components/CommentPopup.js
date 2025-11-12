@@ -105,7 +105,7 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
 
             // Create a temporary overlay to show capture area (optional - for debugging)
             const overlay = document.createElement('div');
-            overlay.id = 'cht-debug-overlay';
+            overlay.id = 'sn-debug-overlay';
             overlay.style.cssText = `
                 position: absolute;
                 left: ${startX}px;
@@ -214,17 +214,17 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
                     if (!element) return false;
                     
                     // Ignore our temporary overlay
-                    if (element.id === 'cht-debug-overlay') return true;
+                    if (element.id === 'sn-debug-overlay') return true;
                     
-                    // Ignore all CHT elements and overlays
+                    // Ignore all SN elements and overlays
                     const ignoredClasses = [
-                        'cht-comment-popup-overlay',
-                        'cht-comment-popup', 
-                        'cht-comment-sidebar',
-                        'cht-sidebar-close',
-                        'cht-toggle-button',
-                        'cht-overlay',
-                        'cht-admin-bar-item'
+                        'sn-comment-popup-overlay',
+                        'sn-comment-popup', 
+                        'sn-comment-sidebar',
+                        'sn-sidebar-close',
+                        'sn-toggle-button',
+                        'sn-overlay',
+                        'sn-admin-bar-item'
                     ];
                     
                     // Check if element has any ignored classes
@@ -233,7 +233,7 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
                     }
                     
                     // Check data attributes
-                    if (element.hasAttribute && element.hasAttribute('data-cht-ignore')) {
+                    if (element.hasAttribute && element.hasAttribute('data-sn-ignore')) {
                         return true;
                     }
                     
@@ -260,7 +260,7 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
             });
 
             // Remove the temporary overlay
-            const overlayElement = document.getElementById('cht-debug-overlay');
+            const overlayElement = document.getElementById('sn-debug-overlay');
             if (overlayElement) {
                 document.body.removeChild(overlayElement);
             }
@@ -286,7 +286,7 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
             // Don't add border to screenshots anymore
             
             // Get screenshot quality from settings
-            const settings = window.agwpChtAjax?.settings || {};
+            const settings = window.agwpSnAjax?.settings || {};
             const screenshotQuality = settings.general?.screenshot_quality ?? 0.8;
             
             // Convert to data URL
@@ -299,7 +299,7 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
             logger.error('Screenshot capture failed:', error);
             
             // Clean up temporary elements
-            const overlay = document.querySelector('#cht-debug-overlay');
+            const overlay = document.querySelector('#sn-debug-overlay');
             if (overlay) {
                 document.body.removeChild(overlay);
             }
@@ -331,21 +331,21 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
                     ignoreElements: (element) => {
                         if (!element) return false;
                         
-                        // Ignore CHT elements
+                        // Ignore SN elements
                         if (element.classList && (
-                            element.classList.contains('cht-comment-popup-overlay') ||
-                            element.classList.contains('cht-comment-popup') ||
-                            element.classList.contains('cht-comment-sidebar') ||
-                            element.classList.contains('cht-sidebar-close') ||
-                            element.classList.contains('cht-toggle-button') ||
-                            element.classList.contains('cht-overlay') ||
-                            element.classList.contains('cht-admin-bar-item')
+                            element.classList.contains('sn-comment-popup-overlay') ||
+                            element.classList.contains('sn-comment-popup') ||
+                            element.classList.contains('sn-comment-sidebar') ||
+                            element.classList.contains('sn-sidebar-close') ||
+                            element.classList.contains('sn-toggle-button') ||
+                            element.classList.contains('sn-overlay') ||
+                            element.classList.contains('sn-admin-bar-item')
                         )) {
                             return true;
                         }
 
                         // Ignore debug overlay
-                        if (element.id === 'cht-debug-overlay') return true;
+                        if (element.id === 'sn-debug-overlay') return true;
                         
                         // Ignore potentially problematic elements
                         const tagName = element.tagName;
@@ -401,7 +401,7 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
                 );
 
                 // Get screenshot quality from settings
-                const settings = window.agwpChtAjax?.settings || {};
+                const settings = window.agwpSnAjax?.settings || {};
                 const screenshotQuality = settings.general?.screenshot_quality ?? 0.8;
 
                 const fallbackDataURL = croppedCanvas.toDataURL('image/png', screenshotQuality);
@@ -412,7 +412,7 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
                 logger.error('Fallback screenshot capture also failed:', fallbackError);
                 
                 // Clean up any remaining temporary elements
-                const overlay = document.querySelector('#cht-debug-overlay');
+                const overlay = document.querySelector('#sn-debug-overlay');
                 if (overlay) {
                     document.body.removeChild(overlay);
                 }
@@ -432,11 +432,11 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
         
         try {
             // Get settings from localized data
-            const settings = window.agwpChtAjax?.settings || {};
+            const settings = window.agwpSnAjax?.settings || {};
             const autoScreenshot = settings.general?.auto_screenshot ?? true;
             
             logger.debug('Screenshot settings:', {
-                settings: window.agwpChtAjax?.settings,
+                settings: window.agwpSnAjax?.settings,
                 autoScreenshot,
                 generalSettings: settings.general
             });
@@ -457,24 +457,24 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
     };
 
     return (
-        <div className="cht-comment-popup-overlay">
+        <div className="sn-comment-popup-overlay">
             <Draggable
-                handle=".cht-popup-header"
+                handle=".sn-popup-header"
                 bounds="parent"
                 onStart={() => setIsDragging(true)}
                 onStop={() => setTimeout(() => setIsDragging(false), 100)}
             >
                 <div 
-                    className="cht-comment-popup" 
+                    className="sn-comment-popup" 
                     style={getPopupStyle()}
-                    data-cht-ignore="true"
+                    data-sn-ignore="true"
                     data-dragging={isDragging}
                 >
-                    <div className="cht-popup-header">
-                        <h4>{__('Add Comment', 'analogwp-client-handoff')}</h4>
+                    <div className="sn-popup-header">
+                        <h4>{__('Add Comment', 'analogwp-site-notes')}</h4>
                         <button 
                             onClick={onCancel}
-                            className="cht-popup-close"
+                            className="sn-popup-close"
                             disabled={isLoading}
                         >
                             ×
@@ -482,48 +482,48 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
                     </div>
                 
                 <form onSubmit={handleSubmit}>
-                    <div className="cht-popup-body">
+                    <div className="sn-popup-body">
                         <input
                             type="text"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            placeholder={__('Comment title (optional)', 'analogwp-client-handoff')}
-                            className="cht-comment-title"
+                            placeholder={__('Comment title (optional)', 'analogwp-site-notes')}
+                            className="sn-comment-title"
                             disabled={isLoading}
                         />
                         
                         <textarea
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
-                            placeholder={__('Describe the issue or feedback...', 'analogwp-client-handoff')}
-                            className="cht-comment-textarea"
+                            placeholder={__('Describe the issue or feedback...', 'analogwp-site-notes')}
+                            className="sn-comment-textarea"
                             rows="4"
                             disabled={isLoading}
                             autoFocus
                         />
                         
-                        <div className="cht-priority-selector">
-                            <label htmlFor="priority">{__('Priority:', 'analogwp-client-handoff')}</label>
+                        <div className="sn-priority-selector">
+                            <label htmlFor="priority">{__('Priority:', 'analogwp-site-notes')}</label>
                             <select
                                 id="priority"
                                 value={priority}
                                 onChange={(e) => setPriority(e.target.value)}
                                 disabled={isLoading}
                             >
-                                <option value="low">{__('Low', 'analogwp-client-handoff')}</option>
-                                <option value="medium">{__('Medium', 'analogwp-client-handoff')}</option>
-                                <option value="high">{__('High', 'analogwp-client-handoff')}</option>
+                                <option value="low">{__('Low', 'analogwp-site-notes')}</option>
+                                <option value="medium">{__('Medium', 'analogwp-site-notes')}</option>
+                                <option value="high">{__('High', 'analogwp-site-notes')}</option>
                             </select>
                         </div>
                     </div>
                     
-                    <div className="cht-popup-footer">
+                    <div className="sn-popup-footer">
                         <Button 
                             variant="secondary"
                             onClick={onCancel}
                             disabled={isLoading}
                         >
-                            {__('Cancel', 'analogwp-client-handoff')}
+                            {__('Cancel', 'analogwp-site-notes')}
                         </Button>
                         
                         <Button 
@@ -532,7 +532,7 @@ const CommentPopup = ({ position, onSave, onCancel, selectedElement }) => {
                             disabled={isLoading || !comment.trim()}
                             loading={isLoading}
                         >
-                            {isLoading ? __('Saving...', 'analogwp-client-handoff') : __('Save Comment', 'analogwp-client-handoff')}
+                            {isLoading ? __('Saving...', 'analogwp-site-notes') : __('Save Comment', 'analogwp-site-notes')}
                         </Button>
                     </div>
                 </form>

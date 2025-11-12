@@ -43,8 +43,8 @@ Added to `package.json`:
 npm run package
 
 # Output:
-# - build-package/analogwp-client-handoff-v1.0.0-testing/
-# - build-package/analogwp-client-handoff-v1.0.0-testing.zip
+# - build-package/analogwp-site-notes-v1.0.0-testing/
+# - build-package/analogwp-site-notes-v1.0.0-testing.zip
 # - build-package/TESTING_CHECKLIST.md
 ```
 
@@ -64,8 +64,8 @@ npm run package
 npm run package:wporg
 
 # Output:
-# - dist/analogwp-client-handoff/
-# - dist/analogwp-client-handoff.1.0.0.zip
+# - dist/analogwp-site-notes/
+# - dist/analogwp-site-notes.1.0.0.zip
 # - dist/WPORG_SUBMISSION_CHECKLIST.txt
 ```
 
@@ -140,8 +140,8 @@ Created `.distignore` following WordPress.org standards. This file tells the Wor
 
 ### Internal Testing Package
 ```
-analogwp-client-handoff-v1.0.0-testing/
-├── analogwp-client-handoff.php
+analogwp-site-notes-v1.0.0-testing/
+├── analogwp-site-notes.php
 ├── README.md
 ├── CHANGELOG.md
 ├── TESTING_GUIDE.md
@@ -155,8 +155,8 @@ analogwp-client-handoff-v1.0.0-testing/
 
 ### WordPress.org Package
 ```
-analogwp-client-handoff/
-├── analogwp-client-handoff.php
+analogwp-site-notes/
+├── analogwp-site-notes.php
 ├── readme.txt             ← WordPress.org format
 ├── license.txt
 ├── includes/
@@ -173,8 +173,8 @@ Both scripts automatically extract the version from the main plugin file:
 ```
 
 This ensures consistency across all builds. To release a new version:
-1. Update version in `analogwp-client-handoff.php`
-2. Update `AGWP_CHT_VERSION` constant
+1. Update version in `analogwp-site-notes.php`
+2. Update `AGWP_SN_VERSION` constant
 3. Update `readme.txt` Stable tag
 4. Run build script (version is auto-detected)
 
@@ -182,7 +182,7 @@ This ensures consistency across all builds. To release a new version:
 
 Before running `npm run package:wporg`:
 
-- [ ] Update version in `analogwp-client-handoff.php`
+- [ ] Update version in `analogwp-site-notes.php`
 - [ ] Update `readme.txt` with changes
 - [ ] Run `npm run build` and test locally
 - [ ] Verify debug mode OFF shows no console logs
@@ -224,7 +224,7 @@ npm run package
 ```
 
 ### Version not detected
-Check that `analogwp-client-handoff.php` has this format:
+Check that `analogwp-site-notes.php` has this format:
 ```php
 * Version: 1.0.0
 ```
